@@ -1,15 +1,61 @@
 {
-  "index": "Introduction",
-  "another": "Another Page",
-  "advanced": "Advanced (A Folder)",
-  "about": {
-    "title": "About",
-    "type": "page"
+  "index": {
+    "title": "Getting Started",
+    "display": "hidden",
+    "theme": {
+      "breadcrumb": false,
+      "footer": true,
+      "sidebar": true,
+      "toc": true,
+      "pagination": false
+    }
   },
-  "contact": {
-    "title": "Contact ↗",
-    "type": "page",
-    "href": "https://twitter.com/shuding_",
-    "newWindow": true
+
+  "404": {
+    "title": "404",
+    "display": "hidden",
+    "theme": {
+      "layout": "full",
+      "breadcrumb": false,
+      "footer": true,
+      "sidebar": true,
+      "toc": false,
+      "pagination": false
+    }
+  },
+
+  "500": {
+    "title": "500",
+    "display": "hidden",
+    "theme": {
+      "layout": "full",
+      "breadcrumb": false,
+      "footer": true,
+      "sidebar": true,
+      "toc": false,
+      "pagination": false
+    }
+  },
+
+  "--- BUILDERS": {
+    "title": "BUILDERS",
+    "type": "separator"
+  },
+  "builders": {
+    "title": "Builders",
+    "display": "children"
+  },
+
+  "+++ GOAT MAINNET": {
+    "title": "",
+    "type": "separator"
+  },
+  "--- GOAT Network": {
+    "title": "GOAT NETWORK",
+    "type": "separator"
+  },
+  "network": {
+    "title": "GOAT NETWORK",
+    "display": "children"
   }
 }

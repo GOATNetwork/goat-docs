@@ -1,0 +1,38 @@
+---
+title: Contract Addresses
+lang: en-US
+description: This reference guide lists all the contract addresses for Mainnet and Testnet.
+---
+
+import { Callout } from 'nextra/components'
+import { L1ContractTable } from '@/components/L1ContractTable'
+import { L2ContractTable } from '@/components/L2ContractTable'
+
+# Contract Addresses
+
+This reference guide lists all the contract addresses for Mainnet and Testnet. 
+See the [Smart Contracts Overview](/stack/protocol/rollup/smart-contracts) for high-level details and access to the source code.
+
+<Callout>
+This page is a work in progress. The addresses are mere placeholders.
+</Callout>
+
+## Mainnet
+
+### Bitcoin (L1)
+
+<L1ContractTable chain="10" explorer="1" legacy={false} />
+
+### GOAT Mainnet (L2)
+
+<L2ContractTable chain="10" legacy={false} />
+
+## Testnet 
+
+### Bitcoin Testnet (L1)
+
+<L1ContractTable chain="11155420" explorer="11155111" legacy={false} />
+
+### GOAT Testnet (L2)
+
+<L2ContractTable chain="11155420" legacy={false} />

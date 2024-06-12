@@ -1,0 +1,43 @@
+---
+title: Bitcoin Rollup
+lang: en-US
+description: This guide explains the GOAT Network's Bitcoin Rollup, enhancing Bitcoin scalability and security.
+---
+
+# Introduction to Bitcoin Rollup
+Rollups are blockchain that run on top of another blockchain as a means of scaling the blockchain. They're also referred to as "layer 2s" and are generally deployed on Ethereum as both a consensus layer and a data availability layer. As of recently, modular approaches allows cheaper and more scalable rollups by employing a different data availability layer. 
+
+Other than Ethereum, rollups can also use other chains as their consensus and/or data availability layer. A critical aspect of rollups like this is the trustless nature where logic running on the L1 chain can determine whether something that happened on the rollup was valid. This is not true for sovereign rollups, which use their own consensus layer.
+
+## How does GOAT compare
+The GOAT Network is a rollup that uses Bitcoin as its consensus layer. This means that the GOAT Network is secured by the Bitcoin network. To achieve this, the GOAT Network employs several novel techniques to achieve a trustless blockchain that is secured by Bitcoin. 
+
+The essence of a Bitcoin Rollup lies in its ability to inherit the security properties of Bitcoin (Layer 1). There are two primary aspects to this:
+
+1. **Asset Security:** The assets on Bitcoin are controlled by a native Bitcoin Multisig script. This setup only requires one of the parties to act honestly during the initialization phase to prevent any cheating party from unlocking its staked or bridged assets.
+2. **Transaction Finality:** The transaction inclusion and finalization on the Rollup chain can be verified by Bitcoin miners. This implies a need for a decentralized sequencer and that the L2 transaction batch execution can be verified on Bitcoin.
+
+To address these requirements, GOAT Network introduces the Optimistic Challenge Protocol (GOAT-OCP) on BitVM2, combined with ZKM Entangled Rollup’s trustless and universal settlement infrastructure. This setup aims to create the most decentralized and secure Bitcoin Layer 2 solution​.
+
+
+### Security Components
+1. **Bridged/Staked Bitcoin Asset Security:** Most existing Layer 2 solutions use Multi-Party Computation (MPC) wallets for asset custodian management, which might not be acceptable for all users. GOAT Network uses n-of-n Multisig, which is more native to Bitcoin and integrates naturally with challenge-response mechanisms based on MAST and Taproot. This method provides a better way to mitigate security risks for Bitcoin holders​​​​​​.
+
+2. **Rollup Network Security:** The finality of off-chain computations on Bitcoin is achieved through the fairness, liveness, and scalability of the Rollup network. This network consists of the consensus layer, execution layer, and settlement layer. The finality layer ensures the finality of Rollup transaction batches on Bitcoin​​​​.
+
+### GOAT-OCP Mechanism
+GOAT Network employs an Optimistic Challenge Protocol (GOAT-OCP), which provides Bitcoin-level security for any off-chain computation, such as securing the L2 transaction inclusion in the sequencer network. The protocol works as follows:
+
+1. **Peg-In**: A user deposits Bitcoin into a pool managed by the [GOAT Federation](/network/security/privileged). The assets are locked in a pre-signed n-of-n Multisig script, ensuring that only trustworthy third parties can sign transactions.
+2. **Peg-Out**: The user initiates a withdrawal, and the operator advances the equivalent amount of Bitcoin to the user.
+3. **Challenge Phase**: During this phase, anyone can challenge the operator’s transactions by providing proof of misbehavior. If the challenge is successful, the operator's bond is slashed and awarded to the challenger. If the challenge fails, the challenger loses their bond.
+4. **Reimbursement**: If no challenges are raised, the operator’s bond is released, completing the transaction​​​​.
+
+
+### Finality and Verification
+The GOAT-OCP architecture ensures that the Rollup transactions are eventually settled on Bitcoin, leveraging both the security of Bitcoin’s blockchain and the decentralized nature of the sequencer network. The finality of the Rollup transactions is achieved through a combination of consensus mechanisms and cryptographic proofs, ensuring that the Rollup transactions are secure, verifiable, and immutable​​​​​​.
+
+### Unified Native Liquidity
+GOAT Network, as a Bitcoin Rollup on the Entangled Rollup Network, supports unified native liquidity. This allows assets to be pegged directly from base blockchains without additional consensus mechanisms, ensuring that the pegged assets retain the security of their original blockchains. This unified liquidity model enhances the stability and robustness of the GOAT Network, providing higher yields and deep community consensus​​​​.
+
+In conclusion, the Bitcoin Rollup on the GOAT Network offers a scalable and secure solution for Bitcoin transactions, leveraging the strength of Bitcoin’s security model while providing enhanced functionality and efficiency through Layer 2 operations.
