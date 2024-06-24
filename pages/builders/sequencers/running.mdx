@@ -1,0 +1,78 @@
+---
+title: Running a GOAT Sequencer
+lang: en-US
+description: Learn how to run a GOAT Sequencer.
+---
+
+import { Steps } from 'nextra/components'
+import { Callout } from 'nextra/components'
+
+
+# Running a GOAT Sequencer
+To run a GOAT Sequencer, you need to meet a couple of system and network requirements, as well as meet the on-chain prerequisites. This guide will take you through the steps to ensure you have everything you need to run a GOAT Sequencer.
+
+
+## Pre-requisites
+Before you can run a GOAT Sequencer, you need to meet the following pre-requisites:
+1. Submitted and passed a DAO proposal to become a sequencer. 
+2. Have the technical know-how to smoothly run a GOAT Sequencer.
+3. Have a security system in place to properly store and backup private key shards for MPC service nodes.
+4. Follow the README.md to run a Sequencer node. After initializing the node, you will receive the Sequencer address, private key, and public key.
+
+## System Requirements
+To run a GOAT Sequencer, you need to meet the following system requirements:
+
+| description| requirement|
+| -------| ----|
+| **CPU** | 16-core CPU |
+| **RAM** | 32GB RAM |
+| **Storage** | 1TB SSD |
+
+
+## Get qualified to run a sequencer
+<Steps>
+### Get the skills
+Sequencers are an integral part of the GOAT Network. It is important that all sequencers operate smoothly and therefore it is important that you have the technical know-how to run and maintain your Sequencer. 
+
+### Know how to run Docker (recommended)
+We recommend using Docker to run your Sequencer. It is recommended that you have a good understanding of Docker and how to run containers.
+
+### Securily store private keys
+You'll need to back up your private key to a secure location. This private key will be used for MPC service nodes and is crucial to the operation of your Sequencer. Make sure you have a secure system in place to store and backup your private key.
+
+### Follow the README.md
+After you have met the above requirements, follow the [README.md](https://github.com/MetisProtocol/metis-charts/blob/main/charts/metis-node/README.md) to run your Sequencer node. After initializing the node, you will receive the Sequencer address, private key, and public key. 
+</Steps>
+
+## Register your sequencer
+<Steps>
+### Submit sequencer information
+Once you've done the steps to get qualified to run a Sequencer, you'll need to submit your Sequencer information so that it can be displayed on the GOAT Decentralized Sequencer Dashboard. You do this by following these steps:
+1. Go to the [GOAT Sequencer Resources Github](https://github.com/MetisProtocol/metis-sequencer-resources).
+2. Make a pull request with the following information: 
+```
+name: The name of your Sequencer.
+avatar: The image of your Sequencer.
+url: A link to your website or x.com profile, Must be prefixed with https://
+address: The whitelist address for sequencer lock-up. 
+seq_addr: The sequencer address provided by the server after you run the Sequencer
+pubkey: The public key provided by the server after you run the Sequencer.
+desc: A brief description of yourself or your organization.
+
+``` 
+
+### Start the locking process
+1. Go to the [Sequencer Page](https://sequencer.metis.io/)
+2. Connect your wallet
+3. If your wallet address is whitelisted, you will see a "Become a Sequencer" button. Click on it.
+4. You will be prompted to setup your Sequencer. Follow the instructions we saw [previously](#follow-the-readmemd) to setup your Sequencer if you haven't already done so. 
+5. Once you have setup your Sequencer, you will be prompted to lock up GOAT tokens. Follow the instructions to lock up your tokens.
+
+### You're now a Sequencer!
+After following this process, you're now a sequencer! 🎉
+
+<Callout type="warning" emoji="⚠️">
+ Make sure you actively maintain your Sequencer node and network connection to prevent your deposited tokens from being slashed.
+</Callout>
+
+</Steps>

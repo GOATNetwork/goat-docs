@@ -9,35 +9,79 @@ Rollups are blockchain that run on top of another blockchain as a means of scali
 
 Other than Ethereum, rollups can also use other chains as their consensus and/or data availability layer. A critical aspect of rollups like this is the trustless nature where logic running on the L1 chain can determine whether something that happened on the rollup was valid. This is not true for sovereign rollups, which use their own consensus layer.
 
-## How does GOAT compare
-The GOAT Network is a rollup that uses Bitcoin as its consensus layer. This means that the GOAT Network is secured by the Bitcoin network. To achieve this, the GOAT Network employs several novel techniques to achieve a trustless blockchain that is secured by Bitcoin. 
+## Type 1 zkEVM
+GOAT Network is designed for ”Type 1” zkEVM and features a prover set that generates validity proofs for the EVM. Type 1 ZK-EVMs aim to be fully and uncompromisingly equivalent to Ethereum. They do not alter any part of the Ethereum system to facilitate proof generation. This means they retain all original elements of the Ethereum protocol, including hashes, state trees, transaction trees, precompiles, and other in-consensus logic, regardless of how peripheral these components might be.
 
-The essence of a Bitcoin Rollup lies in its ability to inherit the security properties of Bitcoin (Layer 1). There are two primary aspects to this:
+<img src="/img/diagrams/zkm.png" />
 
-1. **Asset Security:** The assets on Bitcoin are controlled by a native Bitcoin Multisig script. This setup only requires one of the parties to act honestly during the initialization phase to prevent any cheating party from unlocking its staked or bridged assets.
-2. **Transaction Finality:** The transaction inclusion and finalization on the Rollup chain can be verified by Bitcoin miners. This implies a need for a decentralized sequencer and that the L2 transaction batch execution can be verified on Bitcoin.
+With the Continuations supported by ZKM, we introduce a Stake-based prover selection model. Like the Bitcoin-hardened PoS we introduced in the decentralized sequencer, the provers must stake assets to participate in the network. At each proving slot, a prover is selected at random, weighed by their value of staked tokens, and computes the output. The prover is rewarded for producing a proof when chosen.
 
-To address these requirements, GOAT Network introduces the Optimistic Challenge Protocol (GOAT-OCP) on BitVM2, combined with ZKM Entangled Rollup’s trustless and universal settlement infrastructure. This setup aims to create the most decentralized and secure Bitcoin Layer 2 solution​.
-
-
-### Security Components
-1. **Bridged/Staked Bitcoin Asset Security:** Most existing Layer 2 solutions use Multi-Party Computation (MPC) wallets for asset custodian management, which might not be acceptable for all users. GOAT Network uses n-of-n Multisig, which is more native to Bitcoin and integrates naturally with challenge-response mechanisms based on MAST and Taproot. This method provides a better way to mitigate security risks for Bitcoin holders​​​​​​.
-
-2. **Rollup Network Security:** The finality of off-chain computations on Bitcoin is achieved through the fairness, liveness, and scalability of the Rollup network. This network consists of the consensus layer, execution layer, and settlement layer. The finality layer ensures the finality of Rollup transaction batches on Bitcoin​​​​.
-
-### GOAT-OCP Mechanism
-GOAT Network employs an Optimistic Challenge Protocol (GOAT-OCP), which provides Bitcoin-level security for any off-chain computation, such as securing the L2 transaction inclusion in the sequencer network. The protocol works as follows:
-
-1. **Peg-In**: A user deposits Bitcoin into a pool managed by the [GOAT Federation](/network/security/privileged). The assets are locked in a pre-signed n-of-n Multisig script, ensuring that only trustworthy third parties can sign transactions.
-2. **Peg-Out**: The user initiates a withdrawal, and the operator advances the equivalent amount of Bitcoin to the user.
-3. **Challenge Phase**: During this phase, anyone can challenge the operator’s transactions by providing proof of misbehavior. If the challenge is successful, the operator's bond is slashed and awarded to the challenger. If the challenge fails, the challenger loses their bond.
-4. **Reimbursement**: If no challenges are raised, the operator’s bond is released, completing the transaction​​​​.
+As shown in the image above, a proving task is split into multiple subtasks. Different programs, like Minigeth, zkML or REVM, are compiled into MIPS ELF, and submitted to the Request Pool of Stage Service. The Stage Service splits the ELF into segments and notifies the Provers to fetch the task. The Prover consists of the Root Prover, Aggregation Prover, and SNARK Prover. The Root Prover generates the proof for MIPS VM on zkMIPS; the Aggregation Prover aggregates two or more consecutive Root proofs; and the SNARK Proof generates the Groth16 proof for the Stark verifier of Aggregation Prover. Finally, all the SNARK Proofs will be aggregated by the GOAT Node and posted to the settlement layer.
 
 
-### Finality and Verification
-The GOAT-OCP architecture ensures that the Rollup transactions are eventually settled on Bitcoin, leveraging both the security of Bitcoin’s blockchain and the decentralized nature of the sequencer network. The finality of the Rollup transactions is achieved through a combination of consensus mechanisms and cryptographic proofs, ensuring that the Rollup transactions are secure, verifiable, and immutable​​​​​​.
+## Block Storage 
+In GOAT, the content of blocks are stored on an external data availability service. Storing the content of blocks on Bitcoin would lead to excessive gas fees and scaling limitations. The data availability service that GOAT employs has to be trustless and decentralize to ensure the security of the network and prevent data censorship. It must be resilient against liveliness attack and data withholding attacks. 
 
-### Unified Native Liquidity
-GOAT Network, as a Bitcoin Rollup on the Entangled Rollup Network, supports unified native liquidity. This allows assets to be pegged directly from base blockchains without additional consensus mechanisms, ensuring that the pegged assets retain the security of their original blockchains. This unified liquidity model enhances the stability and robustness of the GOAT Network, providing higher yields and deep community consensus​​​​.
+## Block Production
+GOAT block production is managed by the sequencers. In many rollups, this is a single centralized party. For GOAT, the sequencer is rotated among a decentralized cluster of sequencers. Sequencers help the network by providing the following services:
+- Providing confirmations and state updates
+- Constructing, executing, and storing blocks
+- Submitting user transactions to the layer 1
+- Generating ZK-proofs for batches
 
-In conclusion, the Bitcoin Rollup on the GOAT Network offers a scalable and secure solution for Bitcoin transactions, leveraging the strength of Bitcoin’s security model while providing enhanced functionality and efficiency through Layer 2 operations.
+The GOAT sequencers do have mempools, but they are private and therefore can not be accessed for MEV. When a sequencer misbehaves, they can lose their funds and privilege to participate as a sequencer. This ensures a minority consensus security model.
+
+
+## Block Execution 
+The execution engine on GOAT network is a slightly modified version of `op-GETH`, which is Optimism's fork of GETH. Therefore, it receives blocks in the same way optimism does:
+1. **Through peers**: A node can receive blocks through peers that are other execution engines.
+2. **Deriving from L1**: A node can also derive the state by indexing the Bitcoin blockchain and querying the block storage for the block contents. This method is slower, but censorship resistant.
+
+## Bridging BTC
+GOAT is designed so that it can move tokens between Bitcoin and GOAT and vice versa with minimal trust and latency. It achieves this through a novel Trust-minimized bridge protocol that utilizes ZKM to ensure the security of the bridge. 
+
+### Moving BTC to GOAT
+In GOAT Network terminology, transactions going from Bitcoin (L1) to the GOAT Network (L2) are called deposits.
+
+1. **Initiate Deposit:** The user initiates a transaction on the Bitcoin network, sending BTC to an n-of-n Multisig wallet managed by the GOAT Federation.
+2. **Verification:** The ZKM Relayer transmits the latest Bitcoin block header to the ZKM Node. The ZKM Node maintains the Simplified Payment Verification (SPV) Merkle Tree root in the L2 smart contract.
+3. **Claim Submission:** The user submits a claim transaction with SPV proof to the ZKM Node. Upon verification, the smart contract mints the wrapped BTC (zBTC) on the GOAT Network and credits it to the user's L2 wallet.
+
+These deposit transactions become part of the GOAT Network once they are processed and verified by the ZKM infrastructure. This typically occurs a few minutes after the corresponding Bitcoin transaction is confirmed.
+
+### Moving from GOAT Network to Bitcoin
+Withdrawals (the term used for any GOAT Network to Bitcoin message) have several stages:
+
+1. **Initiate Withdrawal:** The user initiates a withdrawal request on the GOAT Network. The corresponding amount of zBTC is burned on the GOAT Network.
+2. **Proof Generation:** The ZKM Node generates a Zero Knowledge Proof (ZKP) to verify the transaction's validity.
+3. **Proof Submission:** The sequencer submits the proof to Bitcoin via the batch submitter.
+4. **Challenge Period:** During this period, any participant can challenge the transaction if they find any discrepancies. If no valid challenges are raised, the transaction is finalized.
+5. **Asset Release:** After the fault challenge period ends, the Bitcoin is released from the n-of-n Multisig wallet back to the user's Bitcoin wallet.
+
+This structured withdrawal process ensures that all transactions are verified and secure before the final assets are released on the Bitcoin network.
+
+
+
+## Validity Proofs on GOAT Network
+
+In the GOAT Network, validity proofs ensure the correctness and security of off-chain transactions before they are committed to the Bitcoin blockchain (Layer 1, L1). These proofs provide a trustless and decentralized way to validate state transitions on the GOAT Network (Layer 2, L2).
+
+### How Validity Proofs Work
+
+1. **Proof Generation**:
+   - The GOAT Network uses the Zero-Knowledge Machine (ZKM) to generate validity proofs for transactions.
+   - Various computational tasks are broken down into segments and processed by different types of provers:
+     - **Root Prover**: Generates initial proofs for segments of the computation.
+     - **Aggregation Prover**: Combines multiple initial proofs into a comprehensive proof.
+     - **SNARK Prover**: Converts the aggregated proofs into a succinct Groth16 proof for efficient on-chain verification.
+
+2. **Proof Submission**:
+   - Once the proofs are generated and aggregated, they are submitted to the Bitcoin blockchain.
+   - The final Groth16 proof is posted on Bitcoin, where it can be verified by anyone.
+
+3. **Challenge Process**:
+   - The Optimistic Challenge Protocol (OCP) allows participants to challenge the validity of a proof if they believe it is incorrect.
+   - If a challenge is raised, the challenger must provide a counter-proof.
+   - Successful challenges invalidate the original proof, and the associated transactions are rolled back. Unsuccessful challenges confirm the proof's validity, and the transaction is finalized.
+
+

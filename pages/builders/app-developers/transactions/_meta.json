@@ -1,6 +1,5 @@
 {
   "fees": "Transaction Fees",
   "estimating": "Estimating Fees",
-  "statuses": "Transaction Statuses",
-  "troubleshooting": "Troubleshooting"
+  "statuses": "Transaction Statuses"
 }
