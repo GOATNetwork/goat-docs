@@ -1,6 +1,8 @@
-const withNextra = require('nextra')({
-  theme: 'nextra-theme-docs',
-  themeConfig: './theme.config.tsx',
-})
+module.exports = async () => {
+  const nextra = (await import('nextra')).default({
+    theme: 'nextra-theme-docs',
+    themeConfig: './theme.config.tsx',
+  });
 
-module.exports = withNextra()
+  return nextra;
+};
