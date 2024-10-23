@@ -1,49 +1,116 @@
 ---
 title: GOAT Networks and Public RPC Endpoints
 lang: en-US
-description: An overview of the different GOAT networks and public RPC endpoints.
+description: An overview of the GOAT network configurations and public RPC endpoints.
 ---
 
 import { Callout } from 'nextra/components'
 
 # GOAT Networks and Public RPC Endpoints
 
-This reference guide provides a listing of the different GOAT networks and public RPC endpoints.
-{/* 
-<Callout>
-  The public RPC URLs provided below are rate limited and do not support websocket connections.
-  If you are experiencing rate limiting issues or need websocket functionality, consider [running your own node](/builders/node-operators/rollup-node) or signing up for a [third-party RPC provider](/builders/tools/connect/rpc-providers).
-</Callout> */}
+This reference guide provides configuration details for connecting to the GOAT network.
+
+<Callout type="info">
+  The public RPC endpoints are rate-limited. For production applications, consider using a dedicated node or professional RPC provider.
+</Callout>
+
+## GOAT Testnet Configuration
+
+| Parameter           | Value                                         |
+| ------------------ | --------------------------------------------- |
+| Network Name       | `GOAT Testnet`                                |
+| Chain ID           | `48815`                                       |
+| Currency Symbol    | `BTC`                                         |
+| Currency Decimals  | `18`                                          |
+| RPC URL            | `https://rpc.testnet.goat.network`           |
+| Block Explorer URL | `https://explorer.testnet.goat.network`       |
+
+### Network Configurations
+
+#### JavaScript (ethers.js v6)
+```javascript
+const network = {
+  name: 'GOAT Testnet',
+  chainId: 48815,
+  network: 'testnet',
+  rpc: 'https://rpc.testnet.goat.network',
+  explorer: 'https://explorer.testnet.goat.network'
+}
+```
+
+#### Python (web3.py)
+```python
+network_config = {
+    "name": "GOAT Testnet",
+    "chain_id": 48815,
+    "rpc_url": "https://rpc.testnet.goat.network",
+    "explorer_url": "https://explorer.testnet.goat.network"
+}
+```
+
+#### Wallet Connection (MetaMask)
+```json
+{
+  "chainId": "0xBEAF", // 48815 in hexadecimal
+  "chainName": "GOAT Testnet",
+  "nativeCurrency": {
+    "name": "Bitcoin",
+    "symbol": "BTC",
+    "decimals": 18
+  },
+  "rpcUrls": ["https://rpc.testnet.goat.network"],
+  "blockExplorerUrls": ["https://explorer.testnet.goat.network"]
+}
+```
+
+### Adding Network to MetaMask
+
+You can add the GOAT Testnet to MetaMask programmatically using the following code:
+
+```javascript
+async function addGoatTestnet() {
+  try {
+    await window.ethereum.request({
+      method: 'wallet_addEthereumChain',
+      params: [{
+        chainId: '0xBEAF',
+        chainName: 'GOAT Testnet',
+        nativeCurrency: {
+          name: 'Bitcoin',
+          symbol: 'BTC',
+          decimals: 18
+        },
+        rpcUrls: ['https://rpc.testnet.goat.network'],
+        blockExplorerUrls: ['https://explorer.testnet.goat.network']
+      }]
+    });
+  } catch (error) {
+    console.error('Failed to add network:', error);
+  }
+}
+```
+
+### Usage Example with ethers.js
+
+```javascript
+import { ethers } from 'ethers';
+
+const provider = new ethers.JsonRpcProvider('https://rpc.testnet.goat.network');
+
+async function getBlockNumber() {
+  const blockNumber = await provider.getBlockNumber();
+  console.log('Current block number:', blockNumber);
+}
+```
 
 ## GOAT Mainnet
 
-| Parameter                   | Value                                                                                    |
-| --------------------------- | ---------------------------------------------------------------------------------------- |
-| Network Name                | `GOAT Mainnet`                                                                             |
-| Chain ID                    | `-1`                                                                                     |
-| Currency Symbol<sup>1</sup> | BTC                                                                                      |
-| Explorer                    | [https://explorer.goat.network](https://explorer.goat.network)                             |
-| Public RPC URL              | [https://mainnet.goat.network](https://mainnet.goat.network)                               |
-| Sequencer URL<sup>2</sup>   | [https://mainnet-sequencer.goat.network](https://mainnet-sequencer.goat.network)           |
-| Contract Addresses          | Refer to the [Contract Addresses page](/chain/addresses#mainnet)                         |
-| Connect Wallet              | [Click here to connect your wallet to GOAT Mainnet](https://chainid.link?network=goat) |
+<Callout type="warning">
+  **Coming Soon!** 
+  GOAT Mainnet is currently under development and will be launched after successful testing phase.
+  Stay tuned for updates and mainnet configuration details.
+</Callout>
 
-1.  The "currency symbol" is required by some wallets like MetaMask.
-2.  The sequencer URL is write only.
+---
 
-## GOAT Testnet
-
-| Parameter                   | Value                                                                                      |
-| --------------------------- | ------------------------------------------------------------------------------------------ |
-| Network Name                | `GOAT Testnet`                                                                               |
-| Chain ID                    | `48815`                                                                                 |
-| Currency Symbol<sup>1</sup> | BTC                                                                                        |
-| Currency Decimals          | 18                                                                                         |
-| Explorer                    | [https://explorer.testnet.goat.network](https://explorer.testnet.goat.network)         |
-| Public RPC URL              | [https://rpc.testnet.goat.network](https://rpc.testnet.goat.network)                                 |
-| Sequencer URL<sup>2</sup>   | [https://testnet-sequencer.goat.network](https://testnet-sequencer.goat.network)             |
-| Contract Addresses          | Refer to the [Contract Addresses page](/chain/addresses#testnet-testnet)                   |
-| Connect Wallet              | [Click here to connect your wallet to GOAT Testnet](https://chainid.link?network=goat-testnet) |
-
-1.  The "currency symbol" is required by some wallets like MetaMask.
-2.  The sequencer URL is write only.
+For the latest updates and detailed documentation, visit our [official documentation](https://docs.goat.network).
