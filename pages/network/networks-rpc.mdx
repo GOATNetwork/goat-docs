@@ -6,6 +6,58 @@ description: An overview of the GOAT network configurations and public RPC endpo
 
 import { Callout } from 'nextra/components'
 
+export function ConnectButton() {
+  const addNetwork = async () => {
+    if (typeof window.ethereum === 'undefined') {
+      alert('Please install MetaMask to connect to GOAT Testnet');
+      return;
+    }
+
+    try {
+      await window.ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [{
+          chainId: '0xBEAF',
+          chainName: 'GOAT Testnet',
+          nativeCurrency: {
+            name: 'Bitcoin',
+            symbol: 'BTC',
+            decimals: 18
+          },
+          rpcUrls: ['https://rpc.testnet.goat.network'],
+          blockExplorerUrls: ['https://explorer.testnet.goat.network']
+        }]
+      });
+    } catch (error) {
+      console.error('Failed to add network:', error);
+      alert('Failed to add network. Please try again.');
+    }
+  };
+
+  return (
+    <button
+      onClick={addNetwork}
+      style={{
+        backgroundColor: '#4F46E5',
+        color: 'white',
+        padding: '12px 24px',
+        borderRadius: '8px',
+        border: 'none',
+        cursor: 'pointer',
+        fontSize: '16px',
+        fontWeight: 'bold',
+        marginTop: '16px',
+        marginBottom: '24px',
+        transition: 'background-color 0.2s'
+      }}
+      onMouseOver={e => e.target.style.backgroundColor = '#4338CA'}
+      onMouseOut={e => e.target.style.backgroundColor = '#4F46E5'}
+    >
+      Connect to GOAT Testnet
+    </button>
+  );
+}
+
 # GOAT Networks and Public RPC Endpoints
 
 This reference guide provides configuration details for connecting to the GOAT network.
@@ -13,6 +65,10 @@ This reference guide provides configuration details for connecting to the GOAT n
 <Callout type="info">
   The public RPC endpoints are rate-limited. For production applications, consider using a dedicated node or professional RPC provider.
 </Callout>
+
+## Quick Connect
+
+<ConnectButton />
 
 ## GOAT Testnet Configuration
 
@@ -36,7 +92,7 @@ const network = {
   rpc: 'https://rpc.testnet.goat.network',
   explorer: 'https://explorer.testnet.goat.network'
 }
-```
+
 
 #### Python (web3.py)
 ```python
