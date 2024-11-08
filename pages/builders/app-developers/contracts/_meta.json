@@ -1,5 +1,3 @@
 {
-  "solidity": "Solidity Compatibility",
-  "contracts": "System Contracts",
-  "cost": "Cost Optimizations"
+  "solidity": "GOAT Network EVM Client"
 }
