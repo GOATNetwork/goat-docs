@@ -14,7 +14,13 @@ Click the button to clone this repository and deploy it on Vercel:
 
 ## Local Development
 
-First, run `pnpm i` to install the dependencies.
+First, install the dependencies:
+
+```bash
+pnpm i
+# or
+yarn install
+```
 
 Then, run `pnpm dev` to start the development server and visit localhost:3000.
 

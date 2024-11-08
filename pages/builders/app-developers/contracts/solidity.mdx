@@ -1,17 +1,173 @@
 ---
-title: Solidity Compatibility
+title: GOAT Network EVM Client
 lang: en-US
-description: Learn about the differences between GOAT Network and Ethereum when building Solidity contracts.
+description: Comprehensive documentation for creating a client to interact with the GOAT Network EVM chain.
 ---
 
-# Solidity Compatibility
+# GOAT Network EVM Client Overview Documentation
 
-GOAT Protocol is designed to be fully compatible with the Ethereum Virtual Machine (EVM). This means that almost all Ethereum tooling, including the Solidity smart contract language, works out of the box on GOAT Protocol. However, there are a few minor differences between GOAT Protocol and Ethereum that developers should be aware of when building Solidity contracts.
+This documentation provides comprehensive instructions for creating a client that can read, write, and communicate with the GOAT Network EVM (Ethereum Virtual Machine) chain using the Ethers.js library. The client will handle wallet management, smart contract interactions, and connectivity to GOAT Network nodes. Additionally, it covers essential security practices, deployment guidelines, and useful tools to enhance your development experience.
 
-## EVM/Opcode Differences
+## Prerequisites
 
-Most smart contracts will work on GOAT Protocol without any changes. Check out the Differences Between Ethereum and GOAT Protocol page for a detailed list of the few differences you should know about.
+Before proceeding, ensure you have the following:
+- Node.js (v14 or later) and npm installed. [Download Node.js](https://nodejs.org/)
+- Git installed. [Download Git](https://git-scm.com/)
+- Basic knowledge of JavaScript/TypeScript and Ethereum concepts
+- Access to the GOAT Network testnet and mainnet
 
-## Gas Differences
+Visit [GOAT Network RPC Documentation](https://docs.goat.network/network/networks-rpc) for help.
 
-TODO
+## Setup and Installation
+
+Create a new directory for your project and initialize it with npm:
+
+```bash
+mkdir goat-network-client
+cd goat-network-client
+npm init -y
+```
+
+Install the necessary libraries:
+
+```bash
+npm install ethers dotenv @ethersproject/hdnode
+```
+
+Your project structure should look like this:
+
+```
+goat-network-client/
+├── contracts/
+│   └── FoundersClub.sol
+├── src/
+│   ├── index.js
+│   └── wallet.js
+├── .env
+├── package.json
+└── README.md
+```
+
+## Network Configuration
+
+For GOAT Testnet configuration details, refer to:
+
+```javascript
+async function addGoatTestnet() {
+  try {
+    await window.ethereum.request({
+      method: 'wallet_addEthereumChain',
+      params: [{
+        chainId: '0xBEAF',
+        chainName: 'GOAT Testnet',
+        nativeCurrency: {
+          name: 'Bitcoin',
+          symbol: 'BTC',
+          decimals: 18
+        },
+        rpcUrls: ['https://rpc.testnet.goat.network'],
+        blockExplorerUrls: ['https://explorer.testnet.goat.network']
+      }]
+    });
+  } catch (error) {
+    console.error('Failed to add network:', error);
+  }
+}
+```
+
+## Wallet Management
+
+### Generating a New Wallet
+
+```javascript
+const { ethers } = require('ethers');
+const fs = require('fs');
+require('dotenv').config();
+
+function generateWallet() {
+    const wallet = ethers.Wallet.createRandom();
+    console.log('New Wallet Address:', wallet.address);
+    console.log('Mnemonic Phrase:', wallet.mnemonic.phrase);
+    
+    const walletJson = wallet.encryptSync(process.env.WALLET_PASSWORD || 'default_password');
+    fs.writeFileSync('wallet.json', walletJson);
+    console.log('Wallet saved to wallet.json');
+    return wallet;
+}
+
+module.exports = { generateWallet };
+```
+
+### Connecting to GOAT Network
+
+```javascript
+const { ethers } = require('ethers');
+
+function connectToGoatTestnet() {
+    const rpcURL = 'https://rpc.testnet.goat.network';
+    const provider = new ethers.providers.JsonRpcProvider(rpcURL, {
+        name: 'GOAT Testnet',
+        chainId: 48815,
+    });
+    console.log('Connected to GOAT Testnet');
+    return provider;
+}
+```
+
+## Local Development
+
+For setting up a local development environment, refer to:
+
+```javascript
+const localNetwork = {
+  name: 'GOAT Local',
+  chainId: 1337,
+  network: 'development',
+  rpc: 'http://localhost:8545'
+}
+```
+
+## Fee Management
+
+For transaction fee details and best practices, refer to:
+
+```mdx:pages/builders/app-developers/transactions/fees.mdx
+startLine: 17
+endLine: 25
+```
+
+## Development Tools
+
+For a complete list of development tools and frameworks, refer to:
+
+```mdx:pages/network/getting-started.mdx
+startLine: 16
+endLine: 51
+```
+
+## Testing Smart Contracts
+
+For local testing configuration:
+
+```javascript
+import { ethers } from 'ethers';
+
+const provider = new ethers.JsonRpcProvider('http://localhost:8545');
+const signer = await provider.getSigner();
+
+// Deploy a contract
+const Contract = await ethers.getContractFactory("YourContract");
+const contract = await Contract.deploy();
+await contract.deployed();
+
+console.log("Contract deployed to:", contract.address);
+```
+
+## Additional Resources
+
+- [Ethers.js Documentation](https://docs.ethers.io/v5/)
+- [GOAT Network Documentation](https://docs.goat.network/)
+- [Remix IDE](https://remix.ethereum.org/)
+- [The Graph (Subgraphs)](https://thegraph.com/)
+- [BIP39 Mnemonic Phrase Generator](https://iancoleman.io/bip39/)
+- [Ethers.js GitHub Repository](https://github.com/ethers-io/ethers.js/)

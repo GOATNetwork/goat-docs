@@ -9,6 +9,30 @@ import { Callout } from 'nextra/components'
 
 # Transaction Fees on GOAT Mainnet
 
-<Callout type="warning" emoji="⚠️">
-  This page is coming soon
-</Callout>
+## Overview
+GOAT Network implements a unique fee structure that combines Bitcoin's security with EVM compatibility.
+
+## Fee Components
+
+### L1 Data Availability Fee
+- Base cost for posting data to Bitcoin
+- Variable based on Bitcoin network congestion
+- Calculated per byte of transaction data
+
+### L2 Execution Fee
+- Computation costs on GOAT Network
+- Storage operations
+- State updates
+
+## Common Pitfalls
+1. Not accounting for Bitcoin network congestion
+2. Ignoring L1 data availability costs
+3. Insufficient fee buffer
+4. Missing batch optimization opportunities
+
+## Fee Optimization Strategies
+1. Use calldata compression
+2. Batch similar transactions
+3. Monitor L1 congestion periods
+4. Implement dynamic fee adjustment
+5. Cache fee estimates for similar transactions
