@@ -4,42 +4,28 @@ lang: en-US
 description: An overview of the GOAT network configurations and public RPC endpoints.
 ---
 
-import { Callout } from 'nextra/components'
+import { Callout } from 'nextra/components';
+import React from 'react';
+import { connectGoatNetwork } from '@/utils/connect-goat';
 
 export function ConnectButton() {
-  const addNetwork = async () => {
-    if (typeof window.ethereum === 'undefined') {
-      alert('Please install MetaMask to connect to GOAT Testnet');
-      return;
-    }
+  const [mounted, setMounted] = React.useState(false);
 
-    try {
-      await window.ethereum.request({
-        method: 'wallet_addEthereumChain',
-        params: [{
-          chainId: '0xBEAF',
-          chainName: 'GOAT Testnet',
-          nativeCurrency: {
-            name: 'Bitcoin',
-            symbol: 'BTC',
-            decimals: 18
-          },
-          rpcUrls: ['https://rpc.testnet.goat.network'],
-          blockExplorerUrls: ['https://explorer.testnet.goat.network']
-        }]
-      });
-    } catch (error) {
-      console.error('Failed to add network:', error);
-      alert('Failed to add network. Please try again.');
-    }
-  };
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <button
-      onClick={addNetwork}
+      onClick={async () => {
+        if (mounted) {
+          await connectGoatNetwork();
+        }
+      }}
+      className="connect-button"
       style={{
-        backgroundColor: '#FAF186',
-        color: 'black',
+        backgroundColor: '#4F46E5',
+        color: 'white',
         padding: '12px 24px',
         borderRadius: '8px',
         border: 'none',
@@ -47,11 +33,8 @@ export function ConnectButton() {
         fontSize: '16px',
         fontWeight: 'bold',
         marginTop: '16px',
-        marginBottom: '24px',
-        transition: 'background-color 0.2s'
+        marginBottom: '24px'
       }}
-      onMouseOver={e => e.target.style.backgroundColor = '#4338CA'}
-      onMouseOut={e => e.target.style.backgroundColor = '#4F46E5'}
     >
       Connect to GOAT Testnet
     </button>
@@ -66,7 +49,7 @@ This reference guide provides configuration details for connecting to the GOAT n
   The public RPC endpoints are rate-limited. For production applications, consider using a dedicated node or professional RPC provider.
 </Callout>
 
-## Quick Connect
+## Get Connected
 
 <ConnectButton />
 
