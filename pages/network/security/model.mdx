@@ -25,6 +25,24 @@ The GOAT Network's security model is designed to ensure the safety, integrity, a
 ### Data Availability (DA)
    - Ensures that all transaction data is accessible and verifiable by every node, preventing data withholding attacks and ensuring transparency.
 
+### Cryptographic Security
+- Zero-knowledge proofs for privacy
+- Multi-party computation for consensus
+- Threshold signatures for validation
+- Hash-based commitment schemes
+
+### Economic Security
+- locked-based Decentralized Sequencer selection. 
+- BitVM2 OCP Challenge incentives
+- Slashing conditions for Operators, (ie : existential honesty)
+- Reward distribution (~30% is shared to the Sequencers, and the rest is Distributed towards BTC delegates)
+
+### Network Security
+- Decentralized sequencer network, branched from the original (Metis) Decentralized Sequencer framework
+- "Comet" Byzantine fault tolerance
+- Sybil resistance
+- MEV protection using ZKM.
+
 ## Security Analysis
 
 The security of the GOAT Network is based on its decentralized, trust-minimized, and permissionless architecture. The network's resilience is enhanced by its ability to handle challenges and verify proofs, ensuring that any dishonest behavior is promptly detected and penalized.
@@ -61,4 +79,24 @@ The network ensures that all transaction data is accessible and verifiable by ev
 
 ### What are the economic incentives for honest behavior in the GOAT Network?
 Participants are incentivized to act honestly as misbehavior results in the slashing of their financial stake, while honest challengers are rewarded for identifying and proving invalid transactions.
+
+### General Security Questions
+
+1. **How are funds secured?**
+   - Multi-signature validation
+   - Threshold cryptography
+   - Economic incentives
+   - Regular security audits
+
+2. **What happens if a sequencer fails?**
+   - Automatic failover
+   - Backup sequencer rotation
+   - State recovery protocol
+   - No loss of funds
+
+3. **How are bridges secured?**
+   - ZKM verification
+   - Multi-party validation
+   - Economic guarantees
+   - Automated monitoring
 

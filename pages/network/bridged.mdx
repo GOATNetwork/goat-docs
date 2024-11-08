@@ -10,5 +10,28 @@ import { Callout } from 'nextra/components'
 
 Various ERC-20 tokens originally deployed to Ethereum also have corresponding "bridged" representations on GOAT Mainnet.
 
+## Token Addresses
 
-todo
+| Token | Mainnet Address | Testnet Address |
+|-------|----------------|-----------------|
+| WBTC | 0x... (coming soon) | 0xTestWBTC... |
+| USDC | 0x... (coming soon) | 0xTestUSDC... |
+| USDT | 0x... (coming soon) | 0xTestUSDT... |
+| DAI | 0x... (coming soon) | 0xTestDAI... |
+
+## Bridge Process
+
+The bridging process involves the following steps:
+
+1. **Lock tokens on L1**: Users lock their tokens in the bridge contract on Bitcoin
+2. **Proof generation**: The bridge generates a proof of the lock
+3. **Mint on L2**: Corresponding tokens are minted on GOAT Network
+4. **Verification**: The transaction is verified through ZKM's infrastructure
+
+## Bridge Security
+
+The bridge security is maintained through:
+- n-of-n multisig validation
+- ZKM's trustless bridge protocol
+- Decentralized verification network
+- Economic security guarantees

@@ -12,3 +12,29 @@ import { Callout } from 'nextra/components'
   This page is coming soon
 </Callout>
 
+# Estimating Transaction Fees
+
+## Overview
+Transaction fees on GOAT consist of two components:
+- L1 Data Availability Fee (Bitcoin)
+- L2 Execution Fee (GOAT Network)
+
+## Fee Calculation Methods
+
+### Using Web3.js
+```javascript
+const estimateGasFee = async (transaction) => {
+const provider = new Web3.providers.HttpProvider('https://rpc.testnet.goat.network');
+const web3 = new Web3(provider);
+const gasPrice = await web3.eth.getGasPrice();
+const gasEstimate = await web3.eth.estimateGas(transaction);
+return web3.utils.toBN(gasPrice).mul(web3.utils.toBN(gasEstimate));
+};
+```
+
+
+## Best Practices
+1. Always add 20% buffer to estimates
+2. Monitor L1 congestion
+3. Use batch transactions when possible
+4. Implement dynamic fee adjustment

@@ -6,12 +6,40 @@ description: Learn about the differences between GOAT Network and Ethereum when 
 
 # Solidity Compatibility
 
-GOAT Protocol is designed to be fully compatible with the Ethereum Virtual Machine (EVM). This means that almost all Ethereum tooling, including the Solidity smart contract language, works out of the box on GOAT Protocol. However, there are a few minor differences between GOAT Protocol and Ethereum that developers should be aware of when building Solidity contracts.
+## Supported Solidity Versions
+- 0.8.0 to 0.8.26 fully supported
+- Earlier versions may have compatibility issues
 
-## EVM/Opcode Differences
+## Key Differences from Ethereum
 
-Most smart contracts will work on GOAT Protocol without any changes. Check out the Differences Between Ethereum and GOAT Protocol page for a detailed list of the few differences you should know about.
+### Gas Optimizations
+- Lower storage costs
+- Modified precompile costs
+- Batch transaction discounts
+- ZK-proof verification optimizations
 
-## Gas Differences
+### Bitcoin-Specific Features
+- Native BTC handling primitives
+- Bitcoin script integration
+- Taproot compatibility
+- Multi-signature optimizations
 
-TODO
+### Available Precompiles
+| Address | Name | Description |
+|---------|------|-------------|
+| 0x01 | btcVerify | Bitcoin transaction verification |
+| 0x02 | zkProof | ZK proof verification |
+| 0x03 | bridge | Bridge contract interface |
+| 0x04 | sequencer | Sequencer interface |
+
+## Development Considerations
+1. Use Bitcoin-aware libraries
+2. Implement proper fee handling
+3. Consider L1/L2 interactions
+4. Optimize for batch transactions
+
+## Testing and Deployment
+1. Use local development environment first
+2. Test on GOAT testnet
+3. Verify Bitcoin interactions
+4. Monitor gas usage patterns

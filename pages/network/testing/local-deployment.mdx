@@ -1,18 +1,185 @@
 ---
-title: Running a Local Development Environment
+title: Running a Local GOAT Node
 lang: en-US
-description: Learn how to setup and run a local development environment.
+description: Learn how to setup and run a local GOAT node for development and testing.
 ---
 
-# Running a Local Development Environment
-This tutorial teaches you how to run a local development environment of the entire GOAT Mainnet system.
+import { Callout } from 'nextra/components'
 
-## What is this?
+# Running a Local GOAT Node
 
-A development environment is a local installation of the entire GOAT Mainnet system.
-Our default development environment includes both L1 and L2 development nodes.
-Running the GOAT Mainnet environment locally is a great way to test your code and see how your contracts will behave on GOAT Mainnet before you graduate to a testnet deployment (and eventually a mainnet deployment).
+This guide will help you set up and run a local GOAT node for development and testing purposes. Running a local node provides a controlled environment for smart contract development and testing without incurring network costs.
 
-## Installation
+<Callout type="info">
+  Running a local node is recommended for development and testing before deploying to the GOAT Testnet or Mainnet.
+</Callout>
 
-**TODO**
+## Prerequisites
+
+Before starting, ensure you have the following installed:
+
+- Go (version 1.22 or later)
+- Git
+- Make (for Unix-based systems) or equivalent build tools
+- Docker Desktop (optional, for containerized deployment)
+
+## System Requirements
+
+### Minimum Requirements
+- CPU with 2+ cores
+- 8GB RAM
+- 100GB free disk space
+- 8 MBit/sec internet connection
+
+### Recommended Requirements
+- CPU with 4+ cores
+- 16GB+ RAM
+- High-performance SSD with at least 1TB free space
+- 25+ MBit/sec internet connection
+
+## Installation Steps
+
+1. Clone the GOAT-GETH repository:
+```bash
+git clone https://github.com/goat-network/go-ethereum.git
+cd go-ethereum
+```
+
+2. Build the GOAT node:
+```bash
+make geth
+```
+
+For all utilities:
+```bash
+make all
+```
+
+## Running a Local Development Node
+
+### Method 1: Direct Execution
+
+Start a local node with development settings:
+
+```bash
+geth --dev --http --http.api eth,net,web3,debug --http.corsdomain "*" --http.addr 0.0.0.0 --http.port 8545
+```
+
+### Method 2: Docker Deployment
+
+```bash
+docker run -d --name goat-node \
+  -v ${HOME}/goat-node:/root \
+  -p 8545:8545 -p 30303:30303 \
+  goat-network/client-go \
+  --dev --http --http.api eth,net,web3,debug \
+  --http.corsdomain "*" --http.addr 0.0.0.0
+```
+
+<Callout type="warning">
+  The above configuration enables all HTTP-RPC APIs and CORS for development. Adjust security settings appropriately for production environments.
+</Callout>
+
+## Configuring Your Development Environment
+
+### Network Configuration
+
+Your local node will use these default development settings:
+
+```javascript
+const localNetwork = {
+  name: 'GOAT Local',
+  chainId: 1337,
+  network: 'development',
+  rpc: 'http://localhost:8545'
+}
+```
+
+### Connecting with MetaMask
+
+1. Open MetaMask
+2. Add a new network with these parameters:
+```json
+{
+  "chainId": "0x539", // 1337 in hexadecimal
+  "chainName": "GOAT Local",
+  "nativeCurrency": {
+    "name": "Bitcoin",
+    "symbol": "BTC",
+    "decimals": 18
+  },
+  "rpcUrls": ["http://localhost:8545"]
+}
+```
+
+## Testing Smart Contracts
+
+### Using ethers.js
+
+```javascript
+import { ethers } from 'ethers';
+
+const provider = new ethers.JsonRpcProvider('http://localhost:8545');
+const signer = await provider.getSigner();
+
+// Deploy a contract
+const Contract = await ethers.getContractFactory("YourContract");
+const contract = await Contract.deploy();
+await contract.deployed();
+
+console.log("Contract deployed to:", contract.address);
+```
+
+### Using Hardhat
+
+1. Configure hardhat.config.js:
+```javascript
+module.exports = {
+  networks: {
+    local: {
+      url: "http://localhost:8545",
+      chainId: 1337
+    }
+  }
+};
+```
+
+2. Deploy and test:
+```bash
+npx hardhat run scripts/deploy.js --network local
+```
+
+## Moving to Testnet
+
+Once you've tested your contracts locally, you can deploy to the GOAT Testnet:
+
+| Parameter           | Value                                   |
+| ------------------ | --------------------------------------- |
+| Chain ID           | `48815`                                 |
+| RPC URL            | `https://rpc.testnet.goat.network`      |
+| Explorer           | `https://explorer.testnet.goat.network` |
+
+<Callout type="info">
+  Remember to acquire testnet BTC from the faucet before deploying to the testnet network.
+</Callout>
+
+## Common Operations
+
+### Check Node Status
+```bash
+geth attach http://localhost:8545
+> eth.blockNumber
+> eth.syncing
+```
+
+### Create New Account
+```bash
+geth account new
+```
+
+### Start Mining (Local Development)
+```bash
+geth --dev --mine --miner.threads=1
+```
+
+For additional configuration options and advanced usage, refer to our [full documentation](https://docs.goat.network).
