@@ -5,34 +5,60 @@ description: This reference guide lists all the contract addresses for Mainnet a
 ---
 
 import { Callout } from 'nextra/components'
-import { L1ContractTable } from '@/components/L1ContractTable'
-import { L2ContractTable } from '@/components/L2ContractTable'
 
 # Contract Addresses
 
-This reference guide lists all the contract addresses for Mainnet and Testnet. 
-See the [Smart Contracts Overview](/stack/protocol/rollup/smart-contracts) for high-level details and access to the source code.
+This reference guide provides a comprehensive list of core contract addresses for the GOAT Network. These contracts form the foundation of the network's functionality, including bridging, governance, and token management.
 
-<Callout>
-This page is a work in progress. The addresses are mere placeholders.
+<Callout type="info">
+  For all other verified contracts on the GOAT Network, visit the [Verified Contracts Explorer](https://explorer.testnet.goat.network/verified-contracts).
 </Callout>
 
-## Mainnet
+## Core Protocol Contracts
 
-### Bitcoin (L1)
+### Pre-Deployed Contracts
 
-<L1ContractTable chain="10" explorer="1" legacy={false} />
+These contracts are pre-deployed at genesis and serve critical network functions:
 
-### GOAT Mainnet (L2)
+| Contract Name | Address | Description |
+|--------------|----------|-------------|
+| WrappedGoatBitcoin | [`0xbC10000000000000000000000000000000000000`](https://explorer.testnet3.goat.network/address/0xbC10000000000000000000000000000000000000) | Native wrapped Bitcoin token on GOAT Network |
+| GoatDAO | [`0xBC10000000000000000000000000000000000Da0`](https://explorer.testnet3.goat.network/address/0xBC10000000000000000000000000000000000Da0) | Governance contract for the GOAT Network |
+| GoatToken | [`0xbC10000000000000000000000000000000000001`](https://explorer.testnet3.goat.network/address/0xbC10000000000000000000000000000000000001) | Native utility token of the GOAT Network |
+| GoatFoundation | [`0xBc10000000000000000000000000000000000002`](https://explorer.testnet3.goat.network/address/0xBc10000000000000000000000000000000000002) | Treasury and foundation management |
+| Bridge | [`0xBC10000000000000000000000000000000000003`](https://explorer.testnet3.goat.network/address/0xBC10000000000000000000000000000000000003) | Cross-chain bridge implementation |
+| Locking | [`0xbC10000000000000000000000000000000000004`](https://explorer.testnet3.goat.network/address/0xbC10000000000000000000000000000000000004) | Token locking and staking mechanism |
+| BitcoinBlocks | [`0xbc10000000000000000000000000000000000005`](https://explorer.testnet3.goat.network/address/0xbc10000000000000000000000000000000000005) | Bitcoin block header verification |
+| Relayer | [`0xBC10000000000000000000000000000000000006`](https://explorer.testnet3.goat.network/address/0xBC10000000000000000000000000000000000006) | Network message relayer |
+| LockingTokenFactory | [`0xBc10000000000000000000000000000000000007`](https://explorer.testnet3.goat.network/address/0xBc10000000000000000000000000000000000007) | Factory for creating new locking tokens |
 
-<L2ContractTable chain="10" legacy={false} />
+### Executor Contracts
 
-## Testnet 
+These contracts handle network execution and validation:
 
-### Bitcoin Testnet (L1)
+| Contract Name | Address | Description |
+|--------------|----------|-------------|
+| ExecutorRelayer | [`0xBc10000000000000000000000000000000001000`](https://explorer.testnet3.goat.network/address/0xBc10000000000000000000000000000000001000) | Handles cross-chain message execution |
+| ExecutorLocking | [`0xBC10000000000000000000000000000000001001`](https://explorer.testnet3.goat.network/address/0xBC10000000000000000000000000000000001001) | Manages execution-specific token locking |
 
-<L1ContractTable chain="11155420" explorer="11155111" legacy={false} />
+## Contract Source Code
 
-### GOAT Testnet (L2)
+For detailed implementation and documentation:
 
-<L2ContractTable chain="11155420" legacy={false} />
+- [Locking Contract Source](https://github.com/GOATNetwork/goat-contracts/blob/main/contracts/locking/Locking.sol)
+- [Full Contract Repository](https://github.com/GOATNetwork/goat-contracts)
+
+<Callout type="warning">
+  Always verify contract addresses through official channels before interacting with them. The GOAT Network explorer provides contract verification and source code viewing capabilities.
+</Callout>
+
+## Contract Interactions
+
+When interacting with these contracts:
+
+1. Use the latest verified contract ABIs from the explorer
+2. Ensure you're connected to the correct network (Testnet: Chain ID 48816)
+3. Follow security best practices for contract interactions
+4. Test interactions on testnet before mainnet deployment
+
+For detailed integration guides and examples, refer to our [Smart Contracts Overview](/stack/protocol/rollup/smart-contracts).
