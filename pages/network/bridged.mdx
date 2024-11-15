@@ -1,37 +1,119 @@
 ---
-title: Bridged Token Addresses
+title: Using the GOAT Network Bridge
 lang: en-US
-description: This reference guide lists the correct bridged token addresses for each token.
+description: A comprehensive guide for bridging assets between Bitcoin and GOAT Network.
 ---
 
 import { Callout } from 'nextra/components'
+import { Steps } from 'nextra/components'
 
-# Bridged Token Addresses
+# Using the GOAT Network Bridge
 
-Various ERC-20 tokens originally deployed to Ethereum also have corresponding "bridged" representations on GOAT Mainnet.
+The GOAT Network Bridge enables secure asset transfers between Bitcoin (L1) and GOAT Network (L2) through ZKM's Trustless Bridge Protocol. This guide will walk you through the bridging process step by step.
 
-## Token Addresses
+<Callout type="info">
+  New to GOAT Network? Visit the [GOAT Testnet Faucet](https://bridge.testnet3.goat.network/faucet) to get started with test BTC.
+</Callout>
 
-| Token | Mainnet Address | Testnet Address |
-|-------|----------------|-----------------|
-| WBTC | 0x... (coming soon) | 0xTestWBTC... |
-| USDC | 0x... (coming soon) | 0xTestUSDC... |
-| USDT | 0x... (coming soon) | 0xTestUSDT... |
-| DAI | 0x... (coming soon) | 0xTestDAI... |
+## Prerequisites
 
-## Bridge Process
+Before bridging assets, ensure you have:
+- A Bitcoin wallet with BTC
+- A Web3 wallet (like MetaMask) configured for GOAT Network
+- Sufficient BTC for gas fees
+- Connected to the correct network (Testnet: Chain ID 48816)
 
-The bridging process involves the following steps:
+## Bridge Interface
 
-1. **Lock tokens on L1**: Users lock their tokens in the bridge contract on Bitcoin
-2. **Proof generation**: The bridge generates a proof of the lock
-3. **Mint on L2**: Corresponding tokens are minted on GOAT Network
-4. **Verification**: The transaction is verified through ZKM's infrastructure
+Access the official GOAT Network bridge at:
+- Testnet: [bridge.testnet3.goat.network](https://bridge.testnet3.goat.network)
+- Mainnet: Coming Soon
 
-## Bridge Security
+## Bridging Process
 
-The bridge security is maintained through:
-- n-of-n multisig validation
-- ZKM's trustless bridge protocol
-- Decentralized verification network
-- Economic security guarantees
+### Bitcoin to GOAT Network (L1 → L2)
+
+<Steps>
+### Connect Wallets
+- Connect your Bitcoin wallet
+- Connect your Web3 wallet to GOAT Network
+- Verify you're on the correct network
+
+### Initiate Bridge Transfer
+- Select "Deposit" on the bridge interface
+- Enter the amount of BTC to bridge
+- Review the transaction details and fees
+
+### Confirm Transaction
+- Approve the Bitcoin transaction
+- Wait for Bitcoin network confirmations (typically 2-3 blocks)
+- Keep the bridge interface open during this process
+
+### Receive Bridged Assets
+- Once confirmed, zBTC will appear in your GOAT wallet
+- Verification typically completes within 10-15 minutes
+</Steps>
+
+### GOAT Network to Bitcoin (L2 → L1)
+
+<Steps>
+### Connect Wallet
+- Connect your Web3 wallet to GOAT Network
+- Ensure sufficient zBTC balance and gas fees
+
+### Initiate Withdrawal
+- Select "Withdraw" on the bridge interface
+- Enter withdrawal amount
+- Provide your Bitcoin receiving address
+
+### Confirm GOAT Transaction
+- Approve the transaction in your Web3 wallet
+- Wait for transaction confirmation on GOAT Network
+
+### Complete Withdrawal
+- Wait for the verification period
+- BTC will be sent to your Bitcoin address
+- Process typically takes 30-60 minutes
+</Steps>
+
+<Callout type="warning">
+  Always verify you're using the official bridge interface and contract addresses. Check the [Contract Addresses](/network/contracts) page for reference.
+</Callout>
+
+## Security Model
+
+The bridge security is maintained through multiple layers:
+
+### Trust-Minimized Design
+- **State Liveness and Safety**: Ensures assets can be moved within finite time while preventing unauthorized access
+- **n-of-n Multisig**: Uses native Bitcoin Multisig scripts for enhanced security
+- **Permissionless Participation**: Allows any Bitcoin holder to participate as a validator
+
+### Cryptographic Security
+- Zero-knowledge proofs for privacy
+- Multi-party computation for consensus
+- Threshold signatures for validation
+- Hash-based commitment schemes
+
+### Challenge Protocol
+- Any participant can challenge invalid transactions
+- Economic incentives for honest behavior
+- Automatic dispute resolution through GOAT-OCP
+
+## Technical Details
+
+For developers interested in bridge integration:
+- [ZKM Bridge Documentation](/network/concepts/ZKM)
+- [Bridge Technical Specification](/network/concepts/bitcoin)
+- [Security Model Documentation](/network/security/model)
+
+## Support
+
+If you encounter any issues:
+1. Check our [FAQ](/network/faq)
+2. Join the [Discord Community](https://discord.gg/goatnetwork)
+3. Contact support through the bridge interface
+
+<Callout type="info">
+  For technical integration details and smart contract interactions, visit our [Smart Contracts Overview](/stack/protocol/rollup/smart-contracts).
+</Callout>
