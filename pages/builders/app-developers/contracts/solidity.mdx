@@ -1,173 +1,303 @@
 ---
-title: GOAT Network EVM Client
-lang: en-US
-description: Comprehensive documentation for creating a client to interact with the GOAT Network EVM chain.
+title: 'Smart Contract Development Guide'
+description: 'Complete guide for developing and deploying smart contracts on GOAT Network'
 ---
+import { Callout } from 'nextra/components'
+import { Tabs, Tab } from 'nextra/components'
 
-# GOAT Network EVM Client Overview Documentation
+# Building on GOAT Network
 
-This documentation provides comprehensive instructions for creating a client that can read, write, and communicate with the GOAT Network EVM (Ethereum Virtual Machine) chain using the Ethers.js library. The client will handle wallet management, smart contract interactions, and connectivity to GOAT Network nodes. Additionally, it covers essential security practices, deployment guidelines, and useful tools to enhance your development experience.
+This guide provides comprehensive instructions for developing and deploying applications on GOAT Network using modern Ethereum development tools and practices.
 
-## Prerequisites
+<Callout type="info">
+  Currently, GOAT Network is in testnet phase (Testnet3). This documentation reflects the latest testnet configuration and will be updated when mainnet launches.
+</Callout>
 
-Before proceeding, ensure you have the following:
-- Node.js (v14 or later) and npm installed. [Download Node.js](https://nodejs.org/)
-- Git installed. [Download Git](https://git-scm.com/)
-- Basic knowledge of JavaScript/TypeScript and Ethereum concepts
-- Access to the GOAT Network testnet and mainnet
+## Network Information
 
-Visit [GOAT Network RPC Documentation](https://docs.goat.network/network/networks-rpc) for help.
+### Testnet3 Configuration
 
-## Setup and Installation
+| Parameter | Value |
+|-----------|-------|
+| Network Name | GOAT Testnet3 |
+| RPC URL | https://rpc.testnet3.goat.network |
+| Chain ID | 48816 |
+| Currency Symbol | BTC |
+| Currency Decimal | 18 |
+| Block Explorer | https://explorer.testnet3.goat.network |
+| Bridge | https://bridge.testnet3.goat.network |
+| Faucet | https://bridge.testnet3.goat.network/faucet |
 
-Create a new directory for your project and initialize it with npm:
+## Development Setup
 
-```bash
-mkdir goat-network-client
-cd goat-network-client
-npm init -y
-```
+### Prerequisites
 
-Install the necessary libraries:
+- Node.js (v16.0.0 or later)
+- Package manager (npm, yarn, or pnpm)
+- Git
+- Code editor (VS Code recommended)
 
-```bash
-npm install ethers dotenv @ethersproject/hdnode
-```
+### Essential Tools
 
-Your project structure should look like this:
+<Tabs items={['Package Installation', 'Recommended Extensions']}>
+  <Tab>
+    ```bash
+    npm init -y
+    npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox
+    npm install --save-dev @openzeppelin/contracts
+    npm install --save ethers@^5.7.2 dotenv
+    ```
+  </Tab>
+  <Tab>
+    - Solidity by Nomic Foundation
+    - Hardhat Solidity
+    - GitLens
+    - ESLint
+  </Tab>
+</Tabs>
 
-```
-goat-network-client/
+### Project Structure
+
+```text
+my-goat-project/
 ├── contracts/
-│   └── FoundersClub.sol
-├── src/
-│   ├── index.js
-│   └── wallet.js
+│   └── MyContract.sol
+├── scripts/
+│   ├── deploy.ts
+│   └── interact.ts
+├── test/
+│   └── MyContract.test.ts
 ├── .env
+├── hardhat.config.ts
 ├── package.json
 └── README.md
 ```
 
 ## Network Configuration
 
-For GOAT Testnet configuration details, refer to:
+### Hardhat Configuration
 
-```javascript
-async function addGoatTestnet() {
+```typescript
+// hardhat.config.ts
+import { HardhatUserConfig } from "hardhat/config";
+import "@nomicfoundation/hardhat-toolbox";
+import * as dotenv from "dotenv";
+
+dotenv.config();
+
+const config: HardhatUserConfig = {
+  solidity: "0.8.19",
+  networks: {
+    goatTestnet: {
+      url: "https://rpc.testnet3.goat.network",
+      chainId: 48816,
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+    },
+    hardhat: {
+      mining: {
+        auto: true,
+        interval: 5000
+      }
+    }
+  },
+  etherscan: {
+    apiKey: {
+      goatTestnet: process.env.EXPLORER_API_KEY || ""
+    },
+    customChains: [
+      {
+        network: "goatTestnet",
+        chainId: 48816,
+        urls: {
+          apiURL: "https://explorer.testnet3.goat.network/api",
+          browserURL: "https://explorer.testnet3.goat.network"
+        }
+      }
+    ]
+  }
+};
+
+export default config;
+```
+
+### MetaMask Integration
+
+```typescript
+export async function addGoatTestnetToMetaMask() {
   try {
     await window.ethereum.request({
       method: 'wallet_addEthereumChain',
       params: [{
-        chainId: '0xBEAF',
-        chainName: 'GOAT Testnet',
+        chainId: '0xBEA0', // 48816 in hex
+        chainName: 'GOAT Testnet3',
         nativeCurrency: {
           name: 'Bitcoin',
           symbol: 'BTC',
           decimals: 18
         },
-        rpcUrls: ['https://rpc.testnet.goat.network'],
-        blockExplorerUrls: ['https://explorer.testnet.goat.network']
+        rpcUrls: ['https://rpc.testnet3.goat.network'],
+        blockExplorerUrls: ['https://explorer.testnet3.goat.network']
       }]
     });
   } catch (error) {
-    console.error('Failed to add network:', error);
+    console.error('Failed to add GOAT Testnet3:', error);
   }
 }
 ```
 
-## Wallet Management
+## Smart Contract Development
 
-### Generating a New Wallet
+### Basic Contract Example
 
-```javascript
-const { ethers } = require('ethers');
-const fs = require('fs');
-require('dotenv').config();
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
 
-function generateWallet() {
-    const wallet = ethers.Wallet.createRandom();
-    console.log('New Wallet Address:', wallet.address);
-    console.log('Mnemonic Phrase:', wallet.mnemonic.phrase);
-    
-    const walletJson = wallet.encryptSync(process.env.WALLET_PASSWORD || 'default_password');
-    fs.writeFileSync('wallet.json', walletJson);
-    console.log('Wallet saved to wallet.json');
-    return wallet;
-}
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-module.exports = { generateWallet };
-```
+contract GOATToken is ERC20, Ownable {
+    constructor() ERC20("GOAT Token", "GOAT") {
+        _mint(msg.sender, 1000000 * 10 ** decimals());
+    }
 
-### Connecting to GOAT Network
-
-```javascript
-const { ethers } = require('ethers');
-
-function connectToGoatTestnet() {
-    const rpcURL = 'https://rpc.testnet.goat.network';
-    const provider = new ethers.providers.JsonRpcProvider(rpcURL, {
-        name: 'GOAT Testnet',
-        chainId: 48815,
-    });
-    console.log('Connected to GOAT Testnet');
-    return provider;
+    function mint(address to, uint256 amount) public onlyOwner {
+        _mint(to, amount);
+    }
 }
 ```
 
-## Local Development
+### Deployment Script
 
-For setting up a local development environment, refer to:
+```typescript
+// scripts/deploy.ts
+import { ethers } from "hardhat";
 
-```javascript
-const localNetwork = {
-  name: 'GOAT Local',
-  chainId: 1337,
-  network: 'development',
-  rpc: 'http://localhost:8545'
+async function main() {
+  const GOATToken = await ethers.getContractFactory("GOATToken");
+  const token = await GOATToken.deploy();
+  await token.deployed();
+
+  console.log(`GOATToken deployed to: ${token.address}`);
 }
+
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
 ```
 
-## Fee Management
+## Testing
 
-For transaction fee details and best practices, refer to:
+### Unit Tests
 
-```mdx:pages/builders/app-developers/transactions/fees.mdx
-startLine: 17
-endLine: 25
+```typescript
+// test/GOATToken.test.ts
+import { expect } from "chai";
+import { ethers } from "hardhat";
+import { GOATToken } from "../typechain-types";
+
+describe("GOATToken", function () {
+  let token: GOATToken;
+
+  beforeEach(async function () {
+    const GOATToken = await ethers.getContractFactory("GOATToken");
+    token = await GOATToken.deploy();
+    await token.deployed();
+  });
+
+  it("Should have correct initial supply", async function () {
+    const totalSupply = await token.totalSupply();
+    expect(totalSupply).to.equal(ethers.utils.parseEther("1000000"));
+  });
+});
 ```
 
-## Development Tools
+## Frontend Integration
 
-For a complete list of development tools and frameworks, refer to:
+### ethers.js Setup
 
-```mdx:pages/network/getting-started.mdx
-startLine: 16
-endLine: 51
-```
-
-## Testing Smart Contracts
-
-For local testing configuration:
-
-```javascript
+```typescript
 import { ethers } from 'ethers';
 
-const provider = new ethers.JsonRpcProvider('http://localhost:8545');
-const signer = await provider.getSigner();
+export function getGoatProvider() {
+  // For browser environments
+  if (window.ethereum) {
+    return new ethers.providers.Web3Provider(window.ethereum);
+  }
+  
+  // For backend or fallback
+  return new ethers.providers.JsonRpcProvider(
+    "https://rpc.testnet3.goat.network"
+  );
+}
 
-// Deploy a contract
-const Contract = await ethers.getContractFactory("YourContract");
-const contract = await Contract.deploy();
-await contract.deployed();
-
-console.log("Contract deployed to:", contract.address);
+export async function connectWallet() {
+  const provider = getGoatProvider();
+  await provider.send("eth_requestAccounts", []);
+  return provider.getSigner();
+}
 ```
 
-## Additional Resources
+### Contract Interaction
 
-- [Ethers.js Documentation](https://docs.ethers.io/v5/)
-- [GOAT Network Documentation](https://docs.goat.network/)
-- [Remix IDE](https://remix.ethereum.org/)
-- [The Graph (Subgraphs)](https://thegraph.com/)
-- [BIP39 Mnemonic Phrase Generator](https://iancoleman.io/bip39/)
-- [Ethers.js GitHub Repository](https://github.com/ethers-io/ethers.js/)
+```typescript
+import { ethers } from 'ethers';
+import GOATTokenABI from './abis/GOATToken.json';
+
+export class GOATTokenClient {
+  private contract: ethers.Contract;
+  private signer: ethers.Signer;
+
+  constructor(
+    contractAddress: string,
+    signer: ethers.Signer
+  ) {
+    this.contract = new ethers.Contract(
+      contractAddress,
+      GOATTokenABI,
+      signer
+    );
+    this.signer = signer;
+  }
+
+  async getBalance(address: string): Promise<string> {
+    const balance = await this.contract.balanceOf(address);
+    return ethers.utils.formatEther(balance);
+  }
+
+  async transfer(to: string, amount: string): Promise<ethers.ContractTransaction> {
+    const parsedAmount = ethers.utils.parseEther(amount);
+    return await this.contract.transfer(to, parsedAmount);
+  }
+}
+```
+
+## Best Practices
+
+<Callout type="warning">
+  Following security best practices is crucial when developing on GOAT Network:
+</Callout>
+
+- Always use the latest stable Solidity version
+- Implement proper access control
+- Use OpenZeppelin contracts whenever possible
+- Thoroughly test contracts before deployment
+- Consider gas optimization patterns
+- Get your contracts audited before mainnet deployment
+
+## Development Resources
+
+- [GOAT Network Documentation](https://founders.goat.network/)
+- [Hardhat Documentation](https://hardhat.org/docs)
+- [OpenZeppelin Contracts](https://docs.openzeppelin.com/contracts)
+- [ethers.js Documentation](https://docs.ethers.io/v5/)
+
+<Callout type="info">
+  Need testnet BTC? Visit the [GOAT Testnet3 Faucet](https://bridge.testnet3.goat.network/faucet)
+</Callout>
+
+## Support
+
+For technical support and community discussions:
+- [Discord Community](https://discord.gg/99WEU3Y4)

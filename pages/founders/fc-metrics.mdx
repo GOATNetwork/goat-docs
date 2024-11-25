@@ -1,0 +1,185 @@
+---
+title: 'GOAT Founders Club: Understanding Metrics'
+description: 'Comprehensive guide to Daily Active Users (DAU), Transactions (TRX), and Total Value Locked (TVL) in blockchain ecosystems'
+nav_title: 'Metrics Guide'
+nav_order: 2
+prev: '/founders/fc-index'
+next: '/founders/fc-implementation'
+---
+import { Callout } from 'nextra/components'
+import { Tabs, Tab } from 'nextra/components'
+
+# Metrics that Matter: DAU, TRX, and TVL
+
+<Callout type="info">
+  Key performance indicators that drive blockchain project success and community engagement
+</Callout>
+
+## Overview of Blockchain Metrics
+
+In the GOAT Founders Club Ecosystem, three critical metrics provide insights into project health and user engagement:
+- Daily Active Users (DAU)
+- Transactions (TRX)
+- Total Value Locked (TVL)
+
+## Daily Active Users (DAU)
+
+### What is DAU?
+
+<Callout type="default">
+  DAU represents the number of unique users interacting with a project within a 24-hour period.
+</Callout>
+
+#### Measurement Methodology
+- Counts unique wallet addresses
+- Tracks meaningful interactions
+- Excludes repeated actions from the same user
+
+### Importance for Founders
+
+- Directly measures project popularity and user retention
+- Evaluate the effectiveness of user acquisition strategies
+- Create targeted challenges to boost daily interactions
+
+### DAU Calculation Example
+
+```typescript
+function calculateDAU(interactions: UserInteraction[]): number {
+  const uniqueUsers = new Set(
+    interactions
+      .filter(interaction => isWithin24Hours(interaction.timestamp))
+      .map(interaction => interaction.walletAddress)
+  );
+  
+  return uniqueUsers.size;
+}
+```
+
+## Transactions (TRX)
+
+### What are Transactions?
+
+<Callout type="default">
+  TRX represents the total number of interactions within a project's smart contracts.
+</Callout>
+
+#### Transaction Types
+- Token transfers
+- Swaps
+- Staking activities
+- Contract calls
+
+### Significance for Founders
+
+- Indicates economic vitality
+- Reflects network usage
+- Potential revenue generation
+- Measures user engagement
+- Identifies popular features
+- Guides product development
+- Higher transactions can mean more fees
+- Attracts potential investors
+- Demonstrates project utility
+
+### TRX Tracking Code
+
+```typescript
+interface TransactionRecord {
+  type: 'transfer' | 'swap' | 'stake';
+  volume: number;
+  timestamp: Date;
+}
+
+function calculateTotalTransactions(records: TransactionRecord[]): number {
+  return records.length;
+}
+
+function calculateTransactionVolume(records: TransactionRecord[]): number {
+  return records.reduce((total, record) => total + record.volume, 0);
+}
+```
+
+## Total Value Locked (TVL)
+
+### What is TVL?
+
+<Callout type="default">
+  TVL represents the total value of assets staked or locked in a project's smart contracts.
+</Callout>
+
+#### TVL Composition
+- Staked tokens
+- Liquidity pool contributions
+- Locked assets
+- Yield-generating positions
+
+### Importance for Project Success
+
+- Reflects user confidence in the project
+- Ensures smooth financial operations
+- Signals project stability to potential investors
+
+### TVL Calculation Method
+
+```typescript
+interface Asset {
+  token: string;
+  amount: number;
+  price: number;
+}
+
+function calculateTVL(assets: Asset[]): number {
+  return assets.reduce((total, asset) => 
+    total + (asset.amount * asset.price), 
+    0
+  );
+}
+```
+
+## Integrated Metrics Strategy
+
+<Callout type="warning">
+  These metrics are interconnected and provide a holistic view of project performance
+</Callout>
+
+### Correlation between Metrics
+
+1. High DAU often leads to increased TRX
+2. More transactions can drive TVL growth
+3. Increased TVL attracts more users
+
+## Quest Design Using Metrics
+
+Founders can create targeted quests:
+- DAU Quest: Daily interaction challenges
+- TRX Quest: Transaction volume incentives
+- TVL Quest: Staking and liquidity provision rewards
+
+## Tools and Analytics
+
+- Real-time dashboard tracking
+- Historical performance graphs
+- Comparative project insights
+- Predictive analytics
+
+<Callout type="success">
+  Mastering these metrics empowers founders to build thriving, user-centric blockchain projects!
+</Callout>
+
+## Next Steps
+
+1. Implement metric tracking
+2. Design engagement quests
+3. Analyze and iterate
+
+## Resources
+
+- [GOAT Developer Documentation](https://founders.goat.network/)
+- [Metrics Best Practices](https://founders.goat.network/)
+- [Community Support](https://discord.gg/99WEU3Y4)
+
+## Next Steps
+
+Curious about the technical implementation?
+
+[Dive into Technical Architecture →](/founders/fc-implementation)

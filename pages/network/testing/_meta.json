@@ -1,3 +1,6 @@
 {
-  "local-deployment": "Running on local deployment"
+  "local-deployment": {
+    "title": "Local Development",
+    "display": "page"
+  }
 }
