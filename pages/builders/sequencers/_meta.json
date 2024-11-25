@@ -1,5 +1,6 @@
 {
-  "overview": "GOAT Decentralized Sequencing Overview",
-  "running": "Running a GOAT Sequencer",
-  "rewards": "Sequencing Rewards"
+  "overview": "Overview",
+  "running": "Running a Node",
+  "validator": "Validator Setup",
+  "rewards": "Rewards"
 }

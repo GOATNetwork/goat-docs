@@ -1,5 +1,10 @@
 {
-  "fees": "Transaction Fees",
-  "estimating": "Estimating Fees",
-  "statuses": "Transaction Statuses"
+  "fees": {
+    "title": "Transaction Fees",
+    "display": "page"
+  },
+  "estimating": {
+    "title": "Fee Estimation",
+    "display": "page"
+  }
 }

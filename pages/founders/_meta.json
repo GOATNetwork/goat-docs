@@ -1,0 +1,22 @@
+{
+    "founders-club": {
+      "title": "Overview",
+      "display": "page"
+    },
+    "fc-index": {
+      "title": "Getting Started",
+      "display": "page"
+    },
+    "fc-metrics": {
+      "title": "Understanding Metrics",
+      "display": "page"
+    },
+    "fc-implementation": {
+      "title": "Technical Implementation",
+      "display": "page"
+    },
+    "fc-participation": {
+      "title": "How to Participate",
+      "display": "page"
+    }
+  }

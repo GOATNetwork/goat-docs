@@ -1,7 +1,26 @@
 {
-  "bitcoin": "Bitcoin Rollup",
-  "ZKM": "ZKM’s Trustless and Universal Settlement Infrastructure",
-  "ocp": "Optimistic Challenge Process (OCP)",
-  "security": "n-of-n Multisig for L1 Asset Security",
-  "decseq": "Decentralized Sequencer"
+  "overview": {
+    "title": "Overview",
+    "display": "page"
+  },
+  "bitcoin": {
+    "title": "Bitcoin Layer 2",
+    "display": "page"
+  },
+  "zkm": {
+    "title": "ZKM Infrastructure",
+    "display": "page"
+  },
+  "ocp": {
+    "title": "Optimistic Challenge Protocol",
+    "display": "page"
+  },
+  "decseq": {
+    "title": "Decentralized Sequencing",
+    "display": "page"
+  },
+  "security": {
+    "title": "Security Model",
+    "display": "page"
+  }
 }

@@ -56,11 +56,13 @@ This reference guide provides configuration details for connecting to the GOAT n
 
 <ConnectButton />
 
-## GOAT Testnet Configuration
-<Callout type="">
-  The public RPC endpoints are rate-limited. For production applications, consider using a dedicated node or professional RPC provider.
+## GOAT Testnet Configurations
+
+<Callout type="warning">
+  **Important**: The Alpha Testnet (Chain ID: 48815) has been deprecated. Please use Testnet 3 for all new deployments and testing.
 </Callout>
 
+### Current Testnet (Testnet 3)
 | Parameter           | Value                                         |
 | ------------------ | --------------------------------------------- |
 | Network Name       | `GOAT Testnet`                                |
@@ -69,6 +71,19 @@ This reference guide provides configuration details for connecting to the GOAT n
 | Currency Decimals  | `18`                                          |
 | RPC URL            | `https://rpc.testnet3.goat.network`          |
 | Block Explorer URL | `https://explorer.testnet3.goat.network`      |
+| Bridge Interface   | `https://bridge.testnet3.goat.network`        |
+
+### Deprecated Alpha Testnet
+| Parameter           | Value                                    |
+| ------------------ | ---------------------------------------- |
+| Network Name       | `GOAT Testnet`                           |
+| Chain ID           | `48818`                                  |
+| RPC URL            | `https://rpc.testnet.goat.network`       |
+| Block Explorer URL | `https://explorer.testnet.goat.network`  |
+
+<Callout type="">
+  The public RPC endpoints are rate-limited. For production applications, consider using a dedicated node or professional RPC provider.
+</Callout>
 
 ### Network Configurations
 

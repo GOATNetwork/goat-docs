@@ -1,0 +1,219 @@
+---
+title: 'Running a Validator on GOAT Testnet3'
+description: 'Complete guide for setting up and running a validator node on GOAT Testnet3'
+---
+
+import { Callout } from 'nextra/components'
+
+# Running a Validator on GOAT Testnet3
+
+This guide provides detailed instructions on how to join GOAT Testnet3 and run a validator node.
+
+## Chain Information
+
+| Parameter | Value |
+|-----------|-------|
+| Network Name | GOAT Testnet3 |
+| RPC URL | https://rpc.testnet3.goat.network |
+| Chain ID | 48816 |
+| Currency Symbol | BTC |
+| Currency Decimal | 18 |
+| Block Explorer | https://explorer.testnet3.goat.network |
+
+## System Requirements
+
+### Hardware Configuration
+
+- **CPU**: Equivalent to c5.2xlarge or similar
+- **Storage**:
+  - Root directory with at least 40 GiB of space
+  - EBS gp3, 100 GiB, 3000 IOPS, mounted to `/data`
+
+### Network Configuration
+
+- IPv4 Elastic IP (EIP) required
+
+#### Security Group Rules
+
+| Port | Description | Protocol | Source |
+|------|-------------|----------|---------|
+| 30303 | goat-geth P2P | UDP | 0.0.0.0/0 |
+| 30303 | goat-geth P2P | TCP | 0.0.0.0/0 |
+| 26656 | goat P2P Port | TCP | 0.0.0.0/0 |
+
+<Callout type="info">
+  Ensure your server's firewall and network security settings allow inbound traffic on these ports.
+</Callout>
+
+### Software Environment
+
+- Ubuntu 20.04 or higher
+- Docker and Docker Compose
+- Golang (latest stable version, currently 1.23)
+
+## Deployment Steps
+
+### 1. Generate Validator Key
+
+Log into your machine and generate the validator key:
+
+```bash
+docker run --rm -v /data/goat:/root/.goat ghcr.io/goatnetwork/goat:v0.1.1 modgen locking sign --owner 0x...abc --eth-chain-id 48816
+```
+
+Replace `0x...abc` with your Ethereum private key. The owner is the node administrator's EVM address responsible for staking, redemption, and other operations.
+
+Expected output format:
+```json
+{
+  "owner": "0x...abc",
+  "pubkey": "0xf93bd3bad63419f0bc201043b433a03e53867b7b01c7f7a08fb5c2a4e14ce89bd6303df7e5bca824c5c6526aa748f4eef20d9879de26bfda0b00414cb6b76ff8",
+  "signature": "0x41b65d5255a7e0006df9c80dc0537c5945e0c7a6f5af2f258ca5969f665f16654449d79355ec2f00d847c4949024216d979057808ccd3dfaf3d8b5d6aa51b1d100"
+}
+```
+
+<Callout type="warning">
+  Back up the generated key at `/data/goat/config/priv_validator_key.json`
+</Callout>
+
+### 2. Start the Validator Node
+
+Create a `docker-compose.yml`:
+
+```yaml
+name: testnet3
+services:
+  geth:
+    image: ghcr.io/goatnetwork/goat-geth:v0.1.0
+    network_mode: host
+    restart: unless-stopped
+    stop_grace_period: 30s
+    command:
+      - --goat=testnet3
+      - --goat.preset=bootnode,rpc
+      # - --gcmode=archive  # Uncomment for archive node
+    volumes:
+      - /data/geth:/root/.ethereum
+    logging:
+      driver: json-file
+      options:
+        max-file: "10"
+        max-size: 50m
+  goat:
+    image: ghcr.io/goatnetwork/goat:v0.1.1
+    network_mode: host
+    restart: unless-stopped
+    stop_grace_period: 30s
+    command:
+      - start
+      - --goat.geth=/geth/geth.ipc
+      - --goat.preset=bootnode,rpc
+      - --chain-id=goat-testnet3
+    depends_on:
+      - geth
+    volumes:
+      - /data/goat:/root/.goat
+      - /data/geth:/geth
+    logging:
+      driver: json-file
+      options:
+        max-file: "10"
+        max-size: 50m
+```
+
+Start the services:
+```bash
+docker-compose up -d
+```
+
+### 3. Sync Status Check
+
+Monitor blockchain sync:
+```bash
+docker exec -i testnet3-goat-1 goatd status | jq .
+```
+
+<Callout type="info">
+  Wait for "catching_up": false to confirm full sync
+</Callout>
+
+### 4. Become a Validator
+
+#### Prerequisites
+- Validator Owner Address (from step 1)
+- Signature (split into 32-32-1 bytes)
+- Sufficient funds for staking and gas
+
+#### Locking Contract Details
+- Testnet3 Address: `0xbC10000000000000000000000000000000000004`
+- Asset Manager Address: `0x218ab55484482409aAfD035066eb1e0315BE0084`
+
+#### Contract Operations
+
+You can use the `locking.ts` script (place in the tasks directory of [GOAT-contracts repository](https://github.com/GOATNetwork/goat-contracts)) for the following operations:
+
+- `locking:changeValidatorOwner` - Change validator owner
+- `locking:claim` - Claim reward
+- `locking:create` - Create a validator
+- `locking:info` - Get basic info
+- `locking:lock` - Lock on validator
+- `locking:reclaim` - Reclaim for validator
+- `locking:unlock` - Unlock amount for validator
+
+#### Staking Process
+
+1. Get whitelisted by contacting GOAT Network team
+2. Check minimum stake:
+```solidity
+// Reference: https://github.com/GOATNetwork/goat-contracts/blob/main/contracts/locking/Locking.sol#L334
+function minimumLockAmount() external view returns (uint256)
+```
+
+3. Create validator:
+```solidity
+// Reference: https://github.com/GOATNetwork/goat-contracts/blob/main/contracts/locking/Locking.sol#L118
+function createValidator(
+    address owner,
+    bytes memory pubkey,
+    bytes32 r,
+    bytes32 s,
+    uint8 v
+) external
+```
+
+### Locking Asset Manager Operations
+
+<Callout type="info">
+  The Locking Asset Manager is designed to optimize the validation mechanism for locked amounts and prevent accidental node exits due to erroneous withdrawals.
+</Callout>
+
+#### Safe Lock
+```solidity
+// Reference: https://github.com/liqingnz/goat-contracts-extension/blob/main/src/SafeLocking.sol#L32
+function safeLock(uint256 amount) external
+```
+
+#### Safe Unlock
+```solidity
+// Reference: https://github.com/liqingnz/goat-contracts-extension/blob/main/src/SafeLocking.sol#L47
+function safeUnlock(uint256 amount) external
+```
+
+#### Exit Validator
+```solidity
+// Reference: https://github.com/liqingnz/goat-contracts-extension/blob/main/src/SafeLocking.sol#L69
+function exit() external
+```
+
+#### Example Contract
+Example Implementation: `0xb1119639cB7bB92B8a3C6d666f159944e89472C1`
+
+## Support Resources
+
+- [Documentation](https://docs.goat.network)
+- Email: support@goat.network
+- [Telegram](https://t.me/+5JwHzveSo4IxMGY5)
+
+<Callout type="warning">
+  The Locking Asset Manager features are under testing. Exercise caution and monitor announcements.
+</Callout>
