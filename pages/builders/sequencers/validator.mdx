@@ -1,13 +1,17 @@
 ---
-title: 'Running a Validator on GOAT Testnet3'
-description: 'Complete guide for setting up and running a validator node on GOAT Testnet3'
+title: 'Running a Sequencer Node on GOAT Testnet3'
+description: 'Complete guide for setting up and running a sequencer node (0.5 BTC stake) on GOAT Testnet3'
 ---
 
 import { Callout } from 'nextra/components'
 
-# Running a Validator on GOAT Testnet3
+# Running a Sequencer Node on GOAT Testnet3
 
-This guide provides detailed instructions on how to join GOAT Testnet3 and run a validator node.
+<Callout type="info">
+  This guide is for running a Sequencer Node, which requires a 0.5 BTC stake. This is similar to Bitcoin mining, where multiple nodes can participate. For running a Sequencer Node Operator position (100 BTC, like Goat.Network, Amber, Metis), see [Running a Sequencer Operator](/builders/sequencers/running).
+</Callout>
+
+This guide provides detailed instructions on how to join GOAT Testnet3 and run a sequencer node.
 
 ## Chain Information
 
@@ -53,9 +57,9 @@ This guide provides detailed instructions on how to join GOAT Testnet3 and run a
 
 ## Deployment Steps
 
-### 1. Generate Validator Key
+### 1. Generate Sequencer Key
 
-Log into your machine and generate the validator key:
+Log into your machine and generate the sequencer key:
 
 ```bash
 docker run --rm -v /data/goat:/root/.goat ghcr.io/goatnetwork/goat:v0.1.1 modgen locking sign --owner 0x...abc --eth-chain-id 48816
@@ -76,7 +80,7 @@ Expected output format:
   Back up the generated key at `/data/goat/config/priv_validator_key.json`
 </Callout>
 
-### 2. Start the Validator Node
+### 2. Start the Sequencer Node
 
 Create a `docker-compose.yml`:
 
@@ -137,12 +141,12 @@ docker exec -i testnet3-goat-1 goatd status | jq .
   Wait for "catching_up": false to confirm full sync
 </Callout>
 
-### 4. Become a Validator
+### 4. Become a Sequencer Node
 
 #### Prerequisites
-- Validator Owner Address (from step 1)
+- Sequencer Node Owner Address (from step 1)
 - Signature (split into 32-32-1 bytes)
-- Sufficient funds for staking and gas
+- Sufficient funds for staking (0.5 BTC) and gas
 
 #### Locking Contract Details
 - Testnet3 Address: `0xbC10000000000000000000000000000000000004`

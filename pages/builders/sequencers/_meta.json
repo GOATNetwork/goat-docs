@@ -1,6 +1,6 @@
 {
   "overview": "Overview",
-  "running": "Running a Node",
-  "validator": "Validator Setup",
+  "running": "Sequencer Node Operator",
+  "validator": "Sequencer Node Setup",
   "rewards": "Rewards"
 }
