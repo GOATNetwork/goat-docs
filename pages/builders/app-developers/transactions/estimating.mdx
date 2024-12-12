@@ -1,7 +1,7 @@
 ---
 title: Estimating Transaction Fees
 lang: en-US
-description: Learn how to estimate transaction fees on GOAT Network Testnet3.
+description: Learn how to estimate transaction fees on the GOAT Network using EIP-1559 standards.
 ---
 
 import { Callout } from 'nextra/components'
@@ -9,20 +9,26 @@ import { Callout } from 'nextra/components'
 # Estimating Transaction Fees
 
 <Callout type="warning">
-  This documentation refers to Testnet3. Gas estimation methods may be adjusted for mainnet.
+  This guide focuses on Testnet3. Gas estimation methods may vary on mainnet based on updated network conditions.
 </Callout>
 
 ## Understanding Gas Estimation on GOAT Network
 
-Accurately estimating transaction fees is crucial for ensuring that your transactions are processed efficiently without unexpected costs. On GOAT Network, gas estimation involves considering both L2 execution costs and L1 data availability fees.
+On the GOAT Network, transaction fees are calculated using **EIP-1559** standards. This model dynamically adjusts gas prices based on network demand, ensuring fair and efficient fee estimation. The transaction fee consists of:
+
+1. **Base Fee**: Determined by network conditions and burned during the transaction.
+2. **Priority Fee (Tip)**: Optional, used to incentivize faster transaction processing.
+3. **L1 Data Availability Fee**: Reflects the cost of storing transaction data on Bitcoin's Layer 1.
+
+---
 
 ## Steps for Estimating Fees
 
 ### 1. Estimating Gas Usage
 
-- **Use Gas Estimation Tools**:
-  - Utilize `web3.js` or `ethers.js` libraries to estimate gas.
-  - Example using `web3.js`:
+- **Leverage Gas Estimation Libraries**:
+  - Use `web3.js` or `ethers.js` to estimate the gas required for transaction execution.
+  - Example with `web3.js`:
 
     ```javascript
     const estimateGasUsage = async (transaction) => {
@@ -31,94 +37,110 @@ Accurately estimating transaction fees is crucial for ensuring that your transac
     };
     ```
 
-- **Consider Batch Operations**:
-  - For EIP-1559 batch operations, gas usage per operation decreases.
-  - Estimate gas for batch transactions accordingly.
+- **Batch Operations with EIP-1559**:
+  - Batch transactions reduce gas usage per operation. Use this for high-volume transfers or contract interactions.
 
-### 2. Determining Gas Price
+---
 
-- **Retrieve Current Gas Price**:
-  - The gas price on GOAT Network includes L2 execution costs and an estimate of L1 data availability fees.
-  - Example:
+### 2. Retrieving Gas Prices
+
+- **Dynamic Gas Price Retrieval**:
+  - Retrieve gas prices (base fee and priority fee) dynamically using the latest network data.
 
     ```javascript
     const getGasPrice = async () => {
-      const gasPrice = await web3.eth.getGasPrice();
+      const gasPrice = await web3.eth.getGasPrice(); // Returns the base fee
       return gasPrice;
     };
     ```
 
-- **Monitor Network Conditions**:
-  - Gas prices might vary based on network congestion on both GOAT Network and Bitcoin.
+- **Include Priority Fee**:
+  - Use an additional **priority fee** for faster confirmations:
 
-### 3. Calculating Total Fee
+    ```javascript
+    const priorityFee = web3.utils.toWei('2', 'gwei'); // Example: 2 gwei tip
+    ```
 
-- **Total Fee Calculation**:
+---
 
-  ```javascript
-  const estimateTransactionFee = async (transaction) => {
-    const gasEstimate = await estimateGasUsage(transaction);
-    const gasPrice = await getGasPrice();
-    const totalFee = web3.utils.toBN(gasEstimate).mul(web3.utils.toBN(gasPrice));
-    return totalFee;
-  };
-  ```
+### 3. Calculating the Total Fee
 
-- **Add Buffer**:
-  - It's recommended to add a 5-20% buffer to account for fluctuations.
+- **EIP-1559 Fee Formula**:
 
-### 4. Example Estimation
+    ```javascript
+    const estimateTransactionFee = async (transaction) => {
+      const gasEstimate = await estimateGasUsage(transaction);
+      const baseFee = await getGasPrice();
+      const totalFee = web3.utils.toBN(gasEstimate).mul(web3.utils.toBN(baseFee));
+      return totalFee;
+    };
+    ```
 
-- **Estimating for a Single Token Transfer**:
+- **Add Priority Fee**:
+  - Include the tip in the total fee calculation for a more accurate estimate:
 
-  ```javascript
-  const transaction = {
-    from: senderAddress,
-    to: tokenContractAddress,
-    data: tokenContract.methods.transfer(recipientAddress, amount).encodeABI(),
-  };
+    ```javascript
+    const totalFeeWithTip = totalFee.add(web3.utils.toBN(priorityFee));
+    ```
 
-  const totalFee = await estimateTransactionFee(transaction);
-  console.log(`Estimated Fee: ${web3.utils.fromWei(totalFee, 'ether')} ETH`);
-  ```
+---
 
-- **Estimating for a Batch Operation**:
+### 4. Example Fee Estimation
 
-  ```javascript
-  const transaction = {
-    from: senderAddress,
-    to: tokenContractAddress,
-    data: tokenContract.methods.safeBatchTransferFrom(
-      senderAddress,
-      recipientAddress,
-      tokenIds,
-      amounts,
-      "0x"
-    ).encodeABI(),
-  };
+#### Single Token Transfer
 
-  const totalFee = await estimateTransactionFee(transaction);
-  console.log(`Estimated Fee for Batch Transfer: ${web3.utils.fromWei(totalFee, 'ether')} ETH`);
-  ```
+```javascript
+const transaction = {
+  from: senderAddress,
+  to: tokenContractAddress,
+  data: tokenContract.methods.transfer(recipientAddress, amount).encodeABI(),
+};
+
+const totalFee = await estimateTransactionFee(transaction);
+console.log(`Estimated Fee: ${web3.utils.fromWei(totalFee, 'ether')} ETH`);
+```
+
+#### Batch Operation Example (EIP-1559 Optimized)
+
+```javascript
+const transaction = {
+  from: senderAddress,
+  to: tokenContractAddress,
+  data: tokenContract.methods.safeBatchTransferFrom(
+    senderAddress,
+    recipientAddress,
+    tokenIds,
+    amounts,
+    "0x"
+  ).encodeABI(),
+};
+
+const totalFee = await estimateTransactionFee(transaction);
+console.log(`Estimated Batch Fee: ${web3.utils.fromWei(totalFee, 'ether')} ETH`);
+```
+
+---
 
 ## Best Practices
 
-1. **Use Accurate Gas Estimation**:
-   - Always use the latest network data for gas estimates.
+1. **Accurate Gas Estimation**:
+   - Use tools like `ethers.js` or `web3.js` for precise gas predictions.
 
-2. **Monitor Bitcoin Network Fees**:
-   - Higher Bitcoin fees can affect the L1 Data Availability Fee component.
+2. **Monitor Base Fee Trends**:
+   - Keep an eye on network conditions through tools like the [GOAT Network Explorer](https://explorer.testnet3.goat.network).
 
-3. **Implement Fee Capping**:
-   - Set maximum fee thresholds to prevent overpaying during congestion.
+3. **Optimize Batch Transactions**:
+   - Leverage EIP-1559's efficiency for batch operations to lower costs.
 
-4. **Test on Testnet3**:
-   - Before deploying to mainnet, test your fee estimation logic on Testnet3.
+4. **Account for L1 Data Costs**:
+   - Bitcoin's Layer 1 fees impact the overall transaction cost. Plan for fluctuations.
 
-5. **Leverage Batch Operations**:
-   - Utilize EIP-1559's batch capabilities to reduce per-operation costs.
+5. **Test on Testnet3**:
+   - Validate your fee estimation logic and transactions on Testnet3 before mainnet deployment.
+
+---
 
 ## Additional Resources
 
-- **Block Explorer**: Monitor network conditions and gas prices on the [GOAT Network Explorer](https://explorer.testnet3.goat.network).
-- **Developer Tools**: Utilize the GOAT Network's SDKs and tools for more efficient development.
+- **EIP-1559 Standard**: You can reference the official [EIP-1559 documention](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1559.md)
+- **GOAT Node**: Checkout the current status of the offial GOAT node on our Github  [GOAT Node](https://github.com/GOATNetwork/goat-geth).
