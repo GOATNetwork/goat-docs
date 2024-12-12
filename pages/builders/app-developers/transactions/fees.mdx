@@ -14,7 +14,7 @@ import { Callout } from 'nextra/components'
 
 ## Overview
 
-GOAT Network implements a gas-efficient fee structure that leverages **EIP-1159** for optimized token operations while ensuring secure settlement on Bitcoin. This dual-layer approach allows for cost-effective batch transactions while maintaining Bitcoin's security guarantees.
+GOAT Network implements a gas-efficient fee structure that leverages **EIP-1559** for optimized token operations while ensuring secure settlement on Bitcoin. This dual-layer approach allows for cost-effective batch transactions while maintaining Bitcoin's security guarantees.
 
 Transactions on GOAT Network involve fees for both Layer 1 (Bitcoin) and Layer 2 (GOAT Network) operations.
 
@@ -32,7 +32,7 @@ Transactions on GOAT Network involve fees for both Layer 1 (Bitcoin) and Layer 2
 
 - **Purpose**: Covers the computational and storage costs of executing transactions on GOAT Network.
 - **Characteristics**:
-  - Benefits from EIP-1159's gas optimizations.
+  - Benefits from EIP-1559's gas optimizations.
   - Includes costs for smart contract execution, storage operations, and state changes.
   - Gas price is determined by GOAT Network's fee market.
 
@@ -66,13 +66,13 @@ Transactions on GOAT Network involve fees for both Layer 1 (Bitcoin) and Layer 2
 
 4. **Not Utilizing Batch Operations**:
    - *Impact*: Paying higher fees for multiple individual transactions.
-   - *Solution*: Use EIP-1159 batch operations to reduce overall fees.
+   - *Solution*: Use EIP-1559 batch operations to reduce overall fees.
 
 ## Fee Optimization Strategies
 
 1. **Use Batch Operations**:
    - **Benefit**: Reduces per-operation gas cost significantly.
-   - **How**: Combine multiple token transfers or actions into a single transaction using EIP-1159's batch functions.
+   - **How**: Combine multiple token transfers or actions into a single transaction using EIP-1559's batch functions.
 
 2. **Monitor Bitcoin Network Conditions**:
    - **Benefit**: Optimize for lower L1 fees.
