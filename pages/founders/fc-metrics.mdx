@@ -1,166 +1,93 @@
 ---
-title: 'GOAT Founders Club: Understanding Metrics'
-description: 'Comprehensive guide to Daily Active Users (DAU), Transactions (TRX), and Total Value Locked (TVL) in blockchain ecosystems'
-nav_title: 'Metrics Guide'
+title: 'GOAT Founders Club: Metrics Guide'
+description: 'Understand key performance indicators for blockchain projects'
+nav_title: 'Metrics'
 nav_order: 2
 prev: '/founders/fc-index'
 next: '/founders/fc-implementation'
 ---
-import { Callout } from 'nextra/components'
-import { Tabs, Tab } from 'nextra/components'
 
-# Metrics that Matter: DAU, TRX, and TVL
+import { Callout } from 'nextra/components'
+
+# Understanding Key Metrics
 
 <Callout type="info">
-  Key performance indicators that drive blockchain project success and community engagement
+  Master key performance indicators to build successful blockchain projects.
 </Callout>
 
-## Overview of Blockchain Metrics
+## Important Note on Points
 
-In the GOAT Founders Club Ecosystem, three critical metrics provide insights into project health and user engagement:
-- Daily Active Users (DAU)
-- Transactions (TRX)
-- Total Value Locked (TVL)
-
-## Daily Active Users (DAU)
-
-### What is DAU?
-
-<Callout type="default">
-  DAU represents the number of unique users interacting with a project within a 24-hour period.
+<Callout type="warning">
+  **All points are subject to change and are here for demonstration purposes only. The initial founders that applied between April 30th - December 7th had applied for the 10,000,000 points. All point/reward ratios will be announced and updated post mainnet launch.**
 </Callout>
 
-#### Measurement Methodology
-- Counts unique wallet addresses
-- Tracks meaningful interactions
-- Excludes repeated actions from the same user
+## Important Metrics
 
-### Importance for Founders
+### Daily Active Users (DAU)
 
-- Directly measures project popularity and user retention
-- Evaluate the effectiveness of user acquisition strategies
-- Create targeted challenges to boost daily interactions
+- Measures user engagement.
+- Indicates platform stickiness.
 
-### DAU Calculation Example
+**Strategies to Improve DAU:**
 
-```typescript
-function calculateDAU(interactions: UserInteraction[]): number {
-  const uniqueUsers = new Set(
-    interactions
-      .filter(interaction => isWithin24Hours(interaction.timestamp))
-      .map(interaction => interaction.walletAddress)
-  );
+- Create daily quests or challenges.
+- Implement rewards for consistent use.
+
+### Transaction Count (TRX)
+
+- Reflects network activity.
+- High TRX can signal platform utility.
+
+**Strategies to Increase TRX:**
+
+- Incentivize frequent transactions.
+- Lower transaction fees to encourage use.
+
+### Total Value Locked (TVL)
+
+- Represents the total assets staked or locked.
+- Indicates trust and confidence in the platform.
+
+**Strategies to Boost TVL:**
+
+- Offer attractive staking rewards.
+- Ensure security to build user trust.
+
+## Points and Rewards System
+
+<Callout type="warning">
+  Transparent point allocation and reward mechanism.
   
-  return uniqueUsers.size;
-}
-```
-
-## Transactions (TRX)
-
-### What are Transactions?
-
-<Callout type="default">
-  TRX represents the total number of interactions within a project's smart contracts.
+  **Note:** All points are subject to change and are here for demonstration purposes only. The initial founders that applied between April 30th - December 7th had applied for the 10,000,000 points. All point/reward ratios will be announced and updated post mainnet launch.
 </Callout>
 
-#### Transaction Types
-- Token transfers
-- Swaps
-- Staking activities
-- Contract calls
+- **Applying Points to Metrics:**
+  - Use points to encourage behaviors that improve DAU, TRX, and TVL.
+  - Design quests that align with your project's goals.
 
-### Significance for Founders
+- **Example Integrations:**
+  - **DAU Quests:** Reward daily logins or interactions.
+  - **TRX Quests:** Offer points for completing transactions.
+  - **TVL Quests:** Assign points for staking or providing liquidity.
 
-- Indicates economic vitality
-- Reflects network usage
-- Potential revenue generation
-- Measures user engagement
-- Identifies popular features
-- Guides product development
-- Higher transactions can mean more fees
-- Attracts potential investors
-- Demonstrates project utility
-
-### TRX Tracking Code
-
-```typescript
-interface TransactionRecord {
-  type: 'transfer' | 'swap' | 'stake';
-  volume: number;
-  timestamp: Date;
-}
-
-function calculateTotalTransactions(records: TransactionRecord[]): number {
-  return records.length;
-}
-
-function calculateTransactionVolume(records: TransactionRecord[]): number {
-  return records.reduce((total, record) => total + record.volume, 0);
-}
-```
-
-## Total Value Locked (TVL)
-
-### What is TVL?
-
-<Callout type="default">
-  TVL represents the total value of assets staked or locked in a project's smart contracts.
-</Callout>
-
-#### TVL Composition
-- Staked tokens
-- Liquidity pool contributions
-- Locked assets
-- Yield-generating positions
-
-### Importance for Project Success
-
-- Reflects user confidence in the project
-- Ensures smooth financial operations
-- Signals project stability to potential investors
-
-### TVL Calculation Method
-
-```typescript
-interface Asset {
-  token: string;
-  amount: number;
-  price: number;
-}
-
-function calculateTVL(assets: Asset[]): number {
-  return assets.reduce((total, asset) => 
-    total + (asset.amount * asset.price), 
-    0
-  );
-}
-```
+**Note:** Specific point amounts are determined by the founder's strategy and are used here as examples.
 
 ## Integrated Metrics Strategy
 
-<Callout type="warning">
-  These metrics are interconnected and provide a holistic view of project performance
-</Callout>
-
-### Correlation between Metrics
-
-1. High DAU often leads to increased TRX
-2. More transactions can drive TVL growth
-3. Increased TVL attracts more users
-
-## Quest Design Using Metrics
-
-Founders can create targeted quests:
-- DAU Quest: Daily interaction challenges
-- TRX Quest: Transaction volume incentives
-- TVL Quest: Staking and liquidity provision rewards
+- **Correlation between Metrics:**
+  1. Increasing DAU can lead to higher TRX.
+  2. More transactions may contribute to a higher TVL.
+  3. A higher TVL can attract more users, enhancing DAU.
 
 ## Tools and Analytics
 
-- Real-time dashboard tracking
-- Historical performance graphs
-- Comparative project insights
-- Predictive analytics
+- Real-time dashboard tracking.
+- Historical performance graphs.
+- Predictive analytics.
+
+**Additional Resources:**
+
+- [Analytics Pipeline Documentation](https://docs.google.com/document/d/1n03nt6gkl7V1ZyuVktSs8DCvydlgVtIpzNuQTRkA2k8/edit)
 
 <Callout type="success">
   Mastering these metrics empowers founders to build thriving, user-centric blockchain projects!
@@ -168,18 +95,8 @@ Founders can create targeted quests:
 
 ## Next Steps
 
-1. Implement metric tracking
-2. Design engagement quests
-3. Analyze and iterate
+1. Implement metric tracking.
+2. Design engagement quests.
+3. Analyze and iterate.
 
-## Resources
-
-- [GOAT Developer Documentation](https://founders.goat.network/)
-- [Metrics Best Practices](https://founders.goat.network/)
-- [Community Support](https://discord.gg/99WEU3Y4)
-
-## Next Steps
-
-Curious about the technical implementation?
-
-[Dive into Technical Architecture →](/founders/fc-implementation)
+---

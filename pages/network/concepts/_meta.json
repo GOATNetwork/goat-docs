@@ -1,26 +1,18 @@
 {
-  "overview": {
-    "title": "Overview",
-    "display": "page"
-  },
   "bitcoin": {
     "title": "Bitcoin Layer 2",
-    "display": "page"
-  },
-  "zkm": {
-    "title": "ZKM Infrastructure",
-    "display": "page"
+    "display": "normal"
   },
   "ocp": {
     "title": "Optimistic Challenge Protocol",
-    "display": "page"
+    "display": "normal"
   },
   "decseq": {
     "title": "Decentralized Sequencing",
-    "display": "page"
+    "display": "normal"
   },
   "security": {
     "title": "Security Model",
-    "display": "page"
+    "display": "normal"
   }
 }

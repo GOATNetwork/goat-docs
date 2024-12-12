@@ -1,39 +1,79 @@
 ---
 title: App Developer Overview
 lang: en-US
-description: An overview for app developers to get started on GOAT.
+description: Start developing decentralized applications on the GOAT Network Testnet3.
 ---
-import { Card, Cards } from 'nextra/components'
 
 # App Developer Overview
-Developing on GOAT Network is not much different from developing on any other EVM equivelant layer 2. In this section, you'll find everything you need to get started. 
 
+Welcome to the GOAT Network App Developer documentation! This guide is designed to help you start building decentralized applications (dApps) on the GOAT Network Testnet3.
 
-## Core Concepts
-The GOAT network is unique in many ways. It is an EVM equivelant Layer 2 on Bitcoin. The GOAT Network introduces an Optimistic Challenge Protocol (GOAT-OCP) on BitVM2, combining it with ZKM Entangled Rollup’s trust-minimized and universal settlement infrastructure to achieve the most decentralized and secure Bitcoin Layer 2 (L2) solution.
-<Cards>
-  <Card title="Core Concepts" href="https://founders.goat.network/network/concepts/bitcoin" />
+## Key Features of GOAT Network
 
-  <Card title="Decentralized Sequencers" href="https://founders.goat.network/network/concepts/decseq" />
-
-  <Card title="Security" href="https://founders.goat.network/network/security/model"  />
-</Cards>
-
+- **Ethereum Compatibility**: GOAT Network is EVM-equivalent, making it easy to port existing Ethereum dApps.
+- **Bitcoin Settlement**: Transactions are settled on the Bitcoin network, leveraging its security.
+- **Gas Efficiency**: Implements EIP-1155 for optimized gas usage, especially for batch operations.
+- **High Throughput**: Capable of processing a large number of transactions with quick confirmation times.
+- **Decentralized Sequencing**: Ensures trustlessness and censorship resistance.
 
 ## Getting Started
-To get started, you'll need to set up your development environment. We recommend using one of the following development stacks:
-*   [Apeworx](https://www.apeworx.io/)
-*   [Brownie](https://eth-brownie.readthedocs.io/en/stable/install.html)
-*   [Foundry](https://getfoundry.sh/)
-*   [Hardhat](https://hardhat.org/)
-*   [Remix](https://remix.ethereum.org)
-*   [Truffle](https://trufflesuite.com/)
-*   [Waffle](https://getwaffle.io/)
 
-Visit the [Networks & RPC Providers](/network/networks-rpc) page to find the RPC endpoint for the GOAT Network.
+### 1. Set Up Your Development Environment
 
-### Join the Community
-- [Developer Telegram](https://t.me/+5JwHzveSo4IxMGY5)
-- [Discord Community](https://discord.gg/99WEU3Y4)
-- [Technical Support](https://founders.goat.network/)
-- [Developer Updates](https://twitter.com/goatnetwork)
+- **Node.js and NPM**: Ensure you have Node.js and NPM installed.
+- **Web3.js or Ethers.js**: Install your preferred Ethereum library.
+- **GOAT Network RPC Endpoint**:
+
+  ```bash
+  https://rpc.testnet3.goat.network
+  ```
+
+### 2. Configure Your Wallet
+
+- **MetaMask**:
+
+  - Add a custom network with the following parameters:
+    - **Network Name**: GOAT Network Testnet3
+    - **New RPC URL**: `https://rpc.testnet3.goat.network`
+    - **Chain ID**: `48816`
+    - **Currency Symbol**: `gETH`
+    - **Block Explorer URL**: `https://explorer.testnet3.goat.network`
+
+### 3. Obtain Testnet Funds
+
+- Use the [GOAT Network Faucet](https://faucet.testnet3.goat.network) to request test gETH.
+
+## Development Resources
+
+### Documentation
+
+- [Technical Whitepaper](https://drive.google.com/file/d/1U-thxS4DRfSTOsLxC2ezQNk1KNrrLBd3/view)
+- [Smart Contract Guide](./contracts/solidity)
+- [GOAT Network Explorer](https://explorer.testnet3.goat.network)
+
+### SDKs and Tools
+
+- **GOAT Network SDK**: Coming soon.
+- **Truffle**: For smart contract development.
+- **Hardhat**: For advanced testing and deployment.
+
+## Smart Contract Development
+
+- **Solidity Support**: Full support for Solidity smart contracts.
+- **Vyper Support**: Compatibility with Vyper is experimental.
+- **Deployment**: Contracts can be deployed using standard Ethereum tools like Truffle and Hardhat.
+
+## Important Considerations
+
+- **Testing on Testnet3**: Always test your contracts thoroughly on Testnet3 before considering mainnet deployment.
+- **Gas Optimization**: Leverage EIP-1155 features for gas-efficient operations.
+- **Security**: Follow best practices for smart contract security.
+
+## Need Help?
+
+- **Community Support**: Join our [Discord](https://discord.gg/goatnetwork) for support.
+- **Developer Forums**: Participate in discussions on our [Developer Chat](https://t.me/+5JwHzveSo4IxMGY5).
+
+---
+
+Happy building on the GOAT Network!

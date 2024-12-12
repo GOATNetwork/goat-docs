@@ -1,6 +1,6 @@
 {
   "local-deployment": {
     "title": "Local Development",
-    "display": "page"
+    "display": "normal"
   }
 }

@@ -1,38 +1,99 @@
 ---
-title: Transaction Fees on GOAT Mainnet
+title: Transaction Fees on GOAT Network
 lang: en-US
-description: Learn how transaction fees work on GOAT Mainnet.
+description: Learn how transaction fees work on GOAT Network Testnet3.
 ---
 
 import { Callout } from 'nextra/components'
 
+# Transaction Fees on GOAT Network
 
-# Transaction Fees on GOAT Mainnet
+<Callout type="warning">
+  This documentation refers to Testnet3. Fee structures may be adjusted for mainnet launch.
+</Callout>
 
 ## Overview
-GOAT Network implements a unique fee structure that combines Bitcoin's security with EVM compatibility.
+
+GOAT Network implements a gas-efficient fee structure that leverages **EIP-1155** for optimized token operations while ensuring secure settlement on Bitcoin. This dual-layer approach allows for cost-effective batch transactions while maintaining Bitcoin's security guarantees.
+
+Transactions on GOAT Network involve fees for both Layer 1 (Bitcoin) and Layer 2 (GOAT Network) operations.
 
 ## Fee Components
 
-### L1 Data Availability Fee
-- Base cost for posting data to Bitcoin
-- Variable based on Bitcoin network congestion
-- Calculated per byte of transaction data
+### L1 Data Availability Fee (Bitcoin)
 
-### L2 Execution Fee
-- Computation costs on GOAT Network
-- Storage operations
-- State updates
+- **Purpose**: Covers the cost of committing transaction data to the Bitcoin blockchain, ensuring data availability and security.
+- **Characteristics**:
+  - Variable based on Bitcoin network congestion and fees.
+  - Calculated per byte of transaction data posted.
+  - Optimized through GOAT's batch processing and data compression techniques.
 
-## Common Pitfalls
-1. Not accounting for Bitcoin network congestion
-2. Ignoring L1 data availability costs
-3. Insufficient fee buffer
-4. Missing batch optimization opportunities
+### L2 Execution Fee (GOAT Network)
+
+- **Purpose**: Covers the computational and storage costs of executing transactions on GOAT Network.
+- **Characteristics**:
+  - Benefits from EIP-1155's gas optimizations.
+  - Includes costs for smart contract execution, storage operations, and state changes.
+  - Gas price is determined by GOAT Network's fee market.
+
+## Detailed Fee Structure
+
+### Gas Price and Gas Limit
+
+- **Gas Price**: The amount you're willing to pay per unit of gas, expressed in Gwei.
+- **Gas Limit**: The maximum amount of gas units you're willing to consume for the transaction.
+
+### Calculating Total Fee
+
+**Total Transaction Fee** = `Gas Price` * `Gas Used`
+
+- **Gas Used**: The actual amount of gas consumed during transaction execution.
+- **Note**: For transactions involving batch operations, gas usage is significantly reduced per operation.
+
+## Common Pitfalls and How to Avoid Them
+
+1. **Not Accounting for Bitcoin Network Congestion**:
+   - *Impact*: Higher L1 fees can lead to unexpected total transaction costs.
+   - *Solution*: Monitor Bitcoin network fees and consider timing transactions during lower congestion periods.
+
+2. **Ignoring L1 Data Availability Costs**:
+   - *Impact*: Underestimating total fees by neglecting the Bitcoin L1 component.
+   - *Solution*: Always factor in both L1 and L2 fees when estimating costs.
+
+3. **Insufficient Fee Buffer**:
+   - *Impact*: Transactions may fail if gas estimates are too tight.
+   - *Solution*: Add a 20% buffer to gas estimates to account for fluctuations.
+
+4. **Not Utilizing Batch Operations**:
+   - *Impact*: Paying higher fees for multiple individual transactions.
+   - *Solution*: Use EIP-1155 batch operations to reduce overall fees.
 
 ## Fee Optimization Strategies
-1. Use calldata compression
-2. Batch similar transactions
-3. Monitor L1 congestion periods
-4. Implement dynamic fee adjustment
-5. Cache fee estimates for similar transactions
+
+1. **Use Batch Operations**:
+   - **Benefit**: Reduces per-operation gas cost significantly.
+   - **How**: Combine multiple token transfers or actions into a single transaction using EIP-1155's batch functions.
+
+2. **Monitor Bitcoin Network Conditions**:
+   - **Benefit**: Optimize for lower L1 fees.
+   - **How**: Schedule transactions during periods of lower Bitcoin network fees. Utilize fee estimation tools.
+
+3. **Optimize Smart Contracts**:
+   - **Benefit**: Minimizes gas consumption.
+   - **How**: Use efficient data structures, minimize state changes, and avoid unnecessary computations within contracts.
+
+4. **Implement Dynamic Fee Adjustment**:
+   - **Benefit**: Balances cost and transaction speed.
+   - **How**: Adjust gas prices dynamically based on current network conditions within your application's logic.
+
+5. **Cache Fee Estimates**:
+   - **Benefit**: Improves performance and user experience.
+   - **How**: For applications with similar transactions, cache gas estimates and update them periodically.
+
+## Current Network Stats
+
+- **Average Gas Price**: Variable depending on network conditions.
+- **Network Utilization**: Monitor via the explorer.
+- **Average Block Time**: Approximately 14.3 seconds on Testnet3.
+
+For real-time network statistics, visit the [GOAT Network Explorer](https://explorer.testnet3.goat.network).

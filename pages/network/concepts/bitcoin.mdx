@@ -5,9 +5,7 @@ description: This guide explains the GOAT Network's Bitcoin Rollup, enhancing Bi
 ---
 
 # Introduction to Bitcoin Rollup
-Rollups are blockchain that run on top of another blockchain as a means of scaling the blockchain. They're also referred to as "layer 2s" and are generally deployed on Ethereum as both a consensus layer and a data availability layer. As of recently, modular approaches allows cheaper and more scalable rollups by employing a different data availability layer. 
-
-Other than Ethereum, rollups can also use other chains as their consensus and/or data availability layer. A critical aspect of rollups like this is the trustless nature where logic running on the L1 chain can determine whether something that happened on the rollup was valid. This is not true for sovereign rollups, which use their own consensus layer.
+Rollups are blockchain that run on top of another blockchain as a means of scaling the blockchain. For a detailed technical overview of GOAT Network's approach to Bitcoin scaling, see our [Technical Whitepaper](https://drive.google.com/file/d/1U-thxS4DRfSTOsLxC2ezQNk1KNrrLBd3/view).
 
 ## Type 1 zkEVM
 GOAT Network is designed for ”Type 1” zkEVM and features a prover set that generates validity proofs for the EVM. Type 1 ZK-EVMs aim to be fully and uncompromisingly equivalent to Ethereum. They do not alter any part of the Ethereum system to facilitate proof generation. This means they retain all original elements of the Ethereum protocol, including hashes, state trees, transaction trees, precompiles, and other in-consensus logic, regardless of how peripheral these components might be.
@@ -45,7 +43,7 @@ In GOAT Network terminology, transactions going from Bitcoin (L1) to the GOAT Ne
 
 1. **Initiate Deposit:** The user initiates a transaction on the Bitcoin network, sending BTC to an n-of-n Multisig wallet managed by the GOAT Federation.
 2. **Verification:** The ZKM Relayer transmits the latest Bitcoin block header to the ZKM Node. The ZKM Node maintains the Simplified Payment Verification (SPV) Merkle Tree root in the L2 smart contract.
-3. **Claim Submission:** The user submits a claim transaction with SPV proof to the ZKM Node. Upon verification, the smart contract mints the wrapped BTC (zBTC) on the GOAT Network and credits it to the user's L2 wallet.
+3. **Claim Submission:** The user submits a claim transaction with SPV proof to the ZKM Node. Upon verification, the smart contract mints the wrapped BTC (zBTC) on the GOAT Network Testnet 3 and credits it to the user's L2 wallet.
 
 These deposit transactions become part of the GOAT Network once they are processed and verified by the ZKM infrastructure. This typically occurs a few minutes after the corresponding Bitcoin transaction is confirmed.
 
@@ -83,5 +81,16 @@ In the GOAT Network, validity proofs ensure the correctness and security of off-
    - The Optimistic Challenge Protocol (OCP) allows participants to challenge the validity of a proof if they believe it is incorrect.
    - If a challenge is raised, the challenger must provide a counter-proof.
    - Successful challenges invalidate the original proof, and the associated transactions are rolled back. Unsuccessful challenges confirm the proof's validity, and the transaction is finalized.
+
+## Network Performance
+Current Testnet3 statistics demonstrate the network's scalability:
+- Total Blocks: 8,940,150+
+- Total Transactions: 193,823,272+
+- Active Addresses: 28,634,064+
+- Average Block Time: 14.3s
+
+For detailed technical specifications of our scaling solution, refer to our [Technical Whitepaper](https://drive.google.com/file/d/1U-thxS4DRfSTOsLxC2ezQNk1KNrrLBd3/view).
+
+Monitor network performance in real-time on our [Block Explorer](https://explorer.testnet3.goat.network).
 
 

@@ -3,13 +3,8 @@
   "builders": "Builders Guide",
   "network": "Network",
   "founders": "Founders Club",
-  "about": {
-    "title": "About",
-    "type": "page"
-  },
   "contact": {
-    "title": "Contact ↗",
-    "type": "page",
+    "title": "Twitter ↗",
     "href": "https://x.com/GOATRollup",
     "newWindow": true
   }
