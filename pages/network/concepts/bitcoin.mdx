@@ -5,43 +5,51 @@ description: This guide explains the GOAT Network's Bitcoin Rollup, enhancing Bi
 ---
 
 # Introduction to Bitcoin Rollup
+
 Rollups are blockchain that run on top of another blockchain as a means of scaling the blockchain. For a detailed technical overview of GOAT Network's approach to Bitcoin scaling, see our [Technical Whitepaper](https://drive.google.com/file/d/1U-thxS4DRfSTOsLxC2ezQNk1KNrrLBd3/view).
 
 ## Type 1 zkEVM
-GOAT Network is designed for ”Type 1” zkEVM and features a prover set that generates validity proofs for the EVM. Type 1 ZK-EVMs aim to be fully and uncompromisingly equivalent to Ethereum. They do not alter any part of the Ethereum system to facilitate proof generation. This means they retain all original elements of the Ethereum protocol, including hashes, state trees, transaction trees, precompiles, and other in-consensus logic, regardless of how peripheral these components might be.
+
+GOAT Network is designed for "Type 1" zkEVM and features a prover set that generates validity proofs for the EVM. Type 1 ZK-EVMs aim to be fully and uncompromisingly equivalent to Ethereum. They do not alter any part of the Ethereum system to facilitate proof generation. This means they retain all original elements of the Ethereum protocol, including hashes, state trees, transaction trees, precompiles, and other in-consensus logic, regardless of how peripheral these components might be.
 
 <img src="/img/diagrams/zkm.png" />
 
 With the Continuations supported by ZKM, we introduce a Stake-based prover selection model. Like the Bitcoin-hardened PoS we introduced in the decentralized sequencer, the provers must stake assets to participate in the network. At each proving slot, a prover is selected at random, weighed by their value of staked tokens, and computes the output. The prover is rewarded for producing a proof when chosen.
 
-As shown in the image above, a proving task is split into multiple subtasks. Different programs, like Minigeth, zkML or REVM, are compiled into MIPS ELF, and submitted to the Request Pool of Stage Service. The Stage Service splits the ELF into segments and notifies the Provers to fetch the task. The Prover consists of the Root Prover, Aggregation Prover, and SNARK Prover. The Root Prover generates the proof for MIPS VM on zkMIPS; the Aggregation Prover aggregates two or more consecutive Root proofs; and the SNARK Proof generates the Groth16 proof for the Stark verifier of Aggregation Prover. Finally, all the SNARK Proofs will be aggregated by the GOAT Node and posted to the settlement layer.
+As shown in the image above, a proving task is split into multiple subtasks. Different programs, like Minigeth, zkML or REVM, are compiled into MIPS ELF, and submitted to the Request Pool of Stage Service. The Stage Service splits the ELF into segments and notifies the Provers to fetch the task. The Prover consists of the Root Prover, Aggregation Prover, and SNARK Prover. The Root Prover generates the proof for MIPS VM on zkMIPS; the Aggregation Prover aggregates two or more consecutive Root proofs; and the SNARK Prover generates the Groth16 proof for the Stark verifier of the Aggregation Prover. Finally, all the SNARK Proofs will be aggregated by the GOAT Node and posted to the settlement layer.
 
+## Block Storage
 
-## Block Storage 
-In GOAT, the content of blocks are stored on an external data availability service. Storing the content of blocks on Bitcoin would lead to excessive gas fees and scaling limitations. The data availability service that GOAT employs has to be trustless and decentralize to ensure the security of the network and prevent data censorship. It must be resilient against liveliness attack and data withholding attacks. 
+In GOAT, the content of blocks are stored on an external data availability service. Storing the content of blocks on Bitcoin would lead to excessive gas fees and scaling limitations. The data availability service that GOAT employs has to be trustless and decentralized to ensure the security of the network and prevent data censorship. It must be resilient against liveliness attacks and data withholding attacks.
 
 ## Block Production
+
 GOAT block production is managed by the sequencers. In many rollups, this is a single centralized party. For GOAT, the sequencer is rotated among a decentralized cluster of sequencers. Sequencers help the network by providing the following services:
+
 - Providing confirmations and state updates
 - Constructing, executing, and storing blocks
 - Submitting user transactions to the layer 1
 - Generating ZK-proofs for batches
 
-The GOAT sequencers do have mempools, but they are private and therefore can not be accessed for MEV. When a sequencer misbehaves, they can lose their funds and privilege to participate as a sequencer. This ensures a minority consensus security model.
+The GOAT sequencers do have mempools, but they are private and therefore cannot be accessed for MEV. When a sequencer misbehaves, they can lose their funds and privilege to participate as a sequencer. This ensures a minority consensus security model.
 
+## Block Execution
 
-## Block Execution 
-The execution engine on GOAT network is a slightly modified version of `op-GETH`, which is Optimism's fork of GETH. Therefore, it receives blocks in the same way optimism does:
+The execution engine on GOAT Network is a slightly modified version of `op-GETH`, which is Optimism's fork of GETH. Therefore, it receives blocks in the same way Optimism does:
+
 1. **Through peers**: A node can receive blocks through peers that are other execution engines.
-2. **Deriving from L1**: A node can also derive the state by indexing the Bitcoin blockchain and querying the block storage for the block contents. This method is slower, but censorship resistant.
+2. **Deriving from L1**: A node can also derive the state by indexing the Bitcoin blockchain and querying the block storage for the block contents. This method is slower but censorship-resistant.
 
 ## Bridging BTC
-GOAT is designed so that it can move tokens between Bitcoin and GOAT and vice versa with minimal trust and latency. It achieves this through a novel Trust-minimized bridge protocol that utilizes ZKM to ensure the security of the bridge. 
+
+GOAT is designed so that it can move tokens between Bitcoin and GOAT and vice versa with minimal trust and latency. It achieves this through a novel trust-minimized bridge protocol that utilizes ZKM to ensure the security of the bridge.
 
 <img src="/img/diagrams/BTC-GOAT-Flywheel.png" />
 
+**_Added a small gap here to provide more room._**
 
 ### Moving BTC to GOAT
+
 In GOAT Network terminology, transactions going from Bitcoin (L1) to the GOAT Network (L2) are called deposits.
 
 1. **Initiate Deposit:** The user initiates a transaction on the Bitcoin network, sending BTC to an n-of-n Multisig wallet managed by the GOAT Federation.
@@ -51,6 +59,7 @@ In GOAT Network terminology, transactions going from Bitcoin (L1) to the GOAT Ne
 These deposit transactions become part of the GOAT Network once they are processed and verified by the ZKM infrastructure. This typically occurs a few minutes after the corresponding Bitcoin transaction is confirmed.
 
 ### Moving from GOAT Network to Bitcoin
+
 Withdrawals (the term used for any GOAT Network to Bitcoin message) have several stages:
 
 1. **Initiate Withdrawal:** The user initiates a withdrawal request on the GOAT Network. The corresponding amount of zBTC is burned on the GOAT Network.
@@ -60,8 +69,6 @@ Withdrawals (the term used for any GOAT Network to Bitcoin message) have several
 5. **Asset Release:** After the fault challenge period ends, the Bitcoin is released from the n-of-n Multisig wallet back to the user's Bitcoin wallet.
 
 This structured withdrawal process ensures that all transactions are verified and secure before the final assets are released on the Bitcoin network.
-
-
 
 ## Validity Proofs on GOAT Network
 
@@ -86,7 +93,9 @@ In the GOAT Network, validity proofs ensure the correctness and security of off-
    - Successful challenges invalidate the original proof, and the associated transactions are rolled back. Unsuccessful challenges confirm the proof's validity, and the transaction is finalized.
 
 ## Network Performance [December 2024]
+
 Current Testnet3 statistics demonstrate the network's scalability:
+
 - Total Blocks: 725,242+
 - Total Transactions: 6,218,395+
 - Daily Transactions: 1.8k+
