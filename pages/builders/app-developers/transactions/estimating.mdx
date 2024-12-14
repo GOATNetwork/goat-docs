@@ -48,8 +48,13 @@ On the GOAT Network, transaction fees are calculated using **EIP-1559** standard
 
     ```javascript
     const getGasPrice = async () => {
-      const gasPrice = await web3.eth.getGasPrice(); // Returns the base fee
-      return gasPrice;
+      const baseFee = await web3.eth.getGasPrice(); // Returns the base fee in Gwei
+      const priorityFee = web3.utils.toWei('100000', 'gwei'); // Minimal priority fee: 100,000 Gwei
+      const maxFeePerGas = web3.utils.toBN(baseFee).add(web3.utils.toBN(priorityFee));
+      return {
+        maxFeePerGas,
+        maxPriorityFeePerGas: web3.utils.toBN(priorityFee),
+      };
     };
     ```
 
@@ -70,7 +75,11 @@ On the GOAT Network, transaction fees are calculated using **EIP-1559** standard
     const estimateTransactionFee = async (transaction) => {
       const gasEstimate = await estimateGasUsage(transaction);
       const baseFee = await getGasPrice();
-      const totalFee = web3.utils.toBN(gasEstimate).mul(web3.utils.toBN(baseFee));
+
+      const priorityFee = web3.utils.toWei('100000', 'gwei'); // Minimal priority fee: 100,000 Gwei
+      const maxFeePerGas = web3.utils.toBN(baseFee).add(web3.utils.toBN(priorityFee));
+
+      const totalFee = web3.utils.toBN(gasEstimate).mul(maxFeePerGas);
       return totalFee;
     };
     ```
@@ -89,10 +98,18 @@ On the GOAT Network, transaction fees are calculated using **EIP-1559** standard
 #### Single Token Transfer
 
 ```javascript
+const gasEstimate = await web3.eth.estimateGas({
+  from: senderAddress,
+  to: tokenContractAddress,
+  data: tokenContract.methods.transfer(recipientAddress, amount).encodeABI(),
+});
+
 const transaction = {
   from: senderAddress,
   to: tokenContractAddress,
   data: tokenContract.methods.transfer(recipientAddress, amount).encodeABI(),
+  gasLimit: gasEstimate,
+  maxPriorityFeePerGas: web3.utils.toWei('100000', 'gwei'), // Minimal priority fee
 };
 
 const totalFee = await estimateTransactionFee(transaction);
@@ -102,6 +119,18 @@ console.log(`Estimated Fee: ${web3.utils.fromWei(totalFee, 'ether')} ETH`);
 #### Batch Operation Example (EIP-1559 Optimized)
 
 ```javascript
+const gasEstimate = await web3.eth.estimateGas({
+  from: senderAddress,
+  to: tokenContractAddress,
+  data: tokenContract.methods.safeBatchTransferFrom(
+    senderAddress,
+    recipientAddress,
+    tokenIds,
+    amounts,
+    "0x"
+  ).encodeABI(),
+});
+
 const transaction = {
   from: senderAddress,
   to: tokenContractAddress,
@@ -112,6 +141,8 @@ const transaction = {
     amounts,
     "0x"
   ).encodeABI(),
+  gasLimit: gasEstimate,
+  maxPriorityFeePerGas: web3.utils.toWei('100000', 'gwei'), // Minimal priority fee
 };
 
 const totalFee = await estimateTransactionFee(transaction);

@@ -28,10 +28,13 @@ Transactions on GOAT Network involve fees for both Layer 1 (Bitcoin) and Layer 2
 
 ## Detailed Fee Structure
 
-### Gas Price and Gas Limit
+### Gas Price, Priority Fee, and Gas Limit
 
-- **Gas Price**: The amount you're willing to pay per unit of gas, expressed in Gwei.
+- **Gas Price**: The base fee per unit of gas, determined by the network, expressed in Gwei. Everything on the network is still denoted in Bitcoin, since the gas is BTC. 
+- **Priority Fee (Tip)**: The additional amount you pay to incentivize miners to include your transaction. The **minimal priority fee on GOAT Network is 100,000 Gwei**.
 - **Gas Limit**: The maximum amount of gas units you're willing to consume for the transaction.
+
+**Note**: For typical App Developer transactions, include a **priority fee of at least 100,000 Gwei** to ensure timely processing.
 
 ### Calculating Total Fee
 
