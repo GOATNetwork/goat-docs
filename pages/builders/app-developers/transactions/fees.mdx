@@ -18,16 +18,6 @@ GOAT Network implements a gas-efficient fee structure that leverages **EIP-1559*
 
 Transactions on GOAT Network involve fees for both Layer 1 (Bitcoin) and Layer 2 (GOAT Network) operations.
 
-## Fee Components
-
-### L1 Data Availability Fee (Bitcoin)
-
-- **Purpose**: Covers the cost of committing transaction data to the Bitcoin blockchain, ensuring data availability and security.
-- **Characteristics**:
-  - Variable based on Bitcoin network congestion and fees.
-  - Calculated per byte of transaction data posted.
-  - Optimized through GOAT's batch processing and data compression techniques.
-
 ### L2 Execution Fee (GOAT Network)
 
 - **Purpose**: Covers the computational and storage costs of executing transactions on GOAT Network.
@@ -52,21 +42,21 @@ Transactions on GOAT Network involve fees for both Layer 1 (Bitcoin) and Layer 2
 
 ## Common Pitfalls and How to Avoid Them
 
-1. **Not Accounting for Bitcoin Network Congestion**:
-   - *Impact*: Higher L1 fees can lead to unexpected total transaction costs.
-   - *Solution*: Monitor Bitcoin network fees and consider timing transactions during lower congestion periods.
+1. **Not Understanding EIP-1559 Fee Mechanics**:
+   - *Impact*: Transactions may be priced inefficiently or fail due to incorrect fee estimation.
+   - *Solution*: Familiarize yourself with EIP-1559's base fee and priority fee mechanics used by sequencer nodes.
 
-2. **Ignoring L1 Data Availability Costs**:
-   - *Impact*: Underestimating total fees by neglecting the Bitcoin L1 component.
-   - *Solution*: Always factor in both L1 and L2 fees when estimating costs.
-
-3. **Insufficient Fee Buffer**:
+2. **Insufficient Fee Buffer**:
    - *Impact*: Transactions may fail if gas estimates are too tight.
-   - *Solution*: Add a Percentage (5-20%) buffer to gas estimates to account for fluctuations.
+   - *Solution*: Add a percentage (5-20%) buffer to gas estimates to account for network fluctuations.
+
+3. **Not Monitoring Network Congestion**:
+   - *Impact*: Higher fees during periods of network congestion.
+   - *Solution*: Monitor Layer 2 network activity and consider timing non-urgent transactions during lower congestion periods.
 
 4. **Not Utilizing Batch Operations**:
    - *Impact*: Paying higher fees for multiple individual transactions.
-   - *Solution*: Use EIP-1559 batch operations to reduce overall fees.
+   - *Solution*: Use EIP-1559 batch operations to reduce overall gas costs when performing multiple similar operations.
 
 ## Fee Optimization Strategies
 

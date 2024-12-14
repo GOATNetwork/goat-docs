@@ -1,95 +1,84 @@
 ---
-title: 'GOAT Network Sequencer Guide'
-description: 'Comprehensive overview of GOAT Network sequencing operations'
+title: Sequencer Node Overview
+lang: en-US
+description: Overview of running a Sequencer Node on the GOAT Network.
 ---
 
-# GOAT Decentralized Sequencers Overview
-The GOAT Network is an Layer 2 Rollup and therefore employs sequencers to batch transactions and submit them to the main chain. What is unique about GOAT is that it uses decentralized sequencers. This section will take you through what that means and how you can participate in it.
+import { Callout } from 'nextra/components'
 
-## What is a Sequencer?
-A sequencer is responsible for verifying, ordering, and compressing transactions on a Layer 2 (L2) rollup network before submitting them to the Bitcoin blockchain (Layer 1 or L1). Unlike traditional centralized sequencers, GOAT Network introduces a decentralized sequencer model to enhance security, censorship resistance, and liveness from day one.
+# Sequencer Node Overview
 
-## High-Level Overview
+Welcome to the **GOAT Network Sequencer Node Overview**! This guide provides a comprehensive introduction to running a Sequencer Node on the GOAT Network, including prerequisites, system requirements, and the locking process.
+
 <img src="/img/diagrams/sequencer_overview.png"/>
-Above shows an oversimplified diagram of how the decentralized sequencer processes L2 transactions:
 
-1. A user submits a L2 transaction to an RPC node of GOAT Network.
-2. The RPC node forwards the transaction to the BridgeService to find the current sequencer in rotation. 
-3. The BridgeService reads the contract on Bitcoin to find the current sequencer in rotation. 
-4. The transaction gets added to the mempool of the current sequencer in rotation. 
-5. The sequencer processes the transaction using EVM and compresses it into a batch. 
-6. The Sequencer's Batch Submitter submits the taproot of the batch to the Bitcoin blockchain and waits for confirmation.
-7. The Sequencer also generates a Zero-Knowledge Proof (ZKP) for the batch and submits it to the ZKM.
+## Why Run a Sequencer Node?
 
-Verifiers can challenge the sequencer's batch submission by submitting a fraud proof. If the fraud proof is valid, the sequencer is penalized and the batch is reverted.
+Running a Sequencer Node on the GOAT Network offers several benefits:
 
-## How and why to become a Sequencer
-Anyone can become a sequencer on the GOAT Network and earn fees for processing transactions. Go to the next section to learn how to become a sequencer.
+- **Decentralized Infrastructure**: Participate in a decentralized network that enhances security and censorship resistance.
+- **Bitcoin Settlement**: Leverage Bitcoin's security for transaction settlement.
+- **Incentives**: Earn rewards for processing transactions and maintaining network integrity.
 
-Next: [Becoming a Sequencer](/builders/sequencers/running)
+## Prerequisites
 
-## Sequencer Responsibilities
+Before setting up a Sequencer Node, ensure you meet the following prerequisites:
 
-### 1. Transaction Processing
-- Receive and validate incoming transactions
-- Order transactions fairly and efficiently
-- Execute transactions in the EVM environment
-- Generate state updates
+1. **Locking Requirement**: 2 BTC is required as a security deposit.
+2. **Whitelisting**: Contact the GOAT Network team to get whitelisted.
+3. **Technical Expertise**: Experience in running high-availability infrastructure and blockchain nodes.
+4. **Secure Key Management**: Implement robust security for private key management.
 
-### 2. Batch Management
-- Aggregate transactions into optimized batches
-- Compress transaction data
-- Generate batch commitments
-- Submit batches to Bitcoin L1
+## System Requirements
 
-### 3. Proof Generation
-- Create ZK proofs for transaction batches
-- Verify state transitions
-- Submit proofs to ZKM network
-- Handle proof aggregation
+### Hardware Configuration
 
-### 4. Security Maintenance
-- Monitor network health
-- Detect and report malicious activity
-- Participate in consensus
-- Maintain required stake
+- **CPU**: Equivalent to c5.2xlarge or similar
+- **RAM**: 32GB
+- **Storage**: 
+  - Root directory with at least 40 GiB of space
+  - EBS gp3, 100 GiB, 3000 IOPS, mounted to `/data`
 
-## Sequencer Requirements
+### Network Configuration
 
-### Hardware Requirements
-- High-performance CPU (8+ cores)
-- 32GB+ RAM
-- 1TB+ SSD storage
-- Reliable network connection
+- **IPv4 Elastic IP (EIP)** required
+- **Security Group Rules**: Ensure your server's firewall allows inbound traffic on the following ports:
+  - **30303**: goat-geth P2P (UDP/TCP)
+  - **26656**: goat P2P Port (TCP)
 
-### Software Requirements
-- Latest GOAT node software
-- Bitcoin full node
-- ZKM proof generation tools
-- Monitoring tools
+### Software Environment
 
-### Economic Requirements
-- Minimum stake requirement
-- Operating costs consideration
-- Performance bond
-- Insurance requirements
+- **Operating System**: Ubuntu 20.04 or higher
+- **Docker and Docker Compose**: For containerized deployment
+- **Golang**: Latest stable version (currently 1.23)
 
-## Rewards and Penalties
+## Deployment Steps
 
-### Rewards
-- Transaction fee shares
-- Batch submission rewards
-- Proof generation incentives
-- Network participation bonuses
+1. **Generate Sequencer Key**: Use the GOAT Docker container to generate your sequencer key.
+2. **Start the Sequencer Node**: Set up and run your node using Docker Compose.
+3. **Sync Status Check**: Monitor blockchain sync to ensure full synchronization.
+4. **Locking Process**: Lock 2 BTC as a security deposit using the provided locking contract details.
 
-### Penalties
-- Stake slashing for malicious behavior
-- Performance penalties
-- Missed batch penalties
-- Challenge failure penalties
+## Locking Contract Details
 
+- **Testnet3 Address**: `0xbC10000000000000000000000000000000000004`
+- **Asset Manager Address**: `0x218ab55484482409aAfD035066eb1e0315BE0084`
 
-### Have Questions?Join the Community! 
-- [Developer Telegram](https://t.me/+5JwHzveSo4IxMGY5)
-- [Discord Community](https://discord.gg/goatnetwork)
-- [Sequencer Operator Community Updates](https://twitter.com/GOATRollup)
+## Locking Asset Manager Operations
+
+- **Safe Lock**: Securely lock your BTC.
+- **Safe Unlock**: Unlock your BTC when needed.
+- **Exit Sequencer Node**: Exit the network if necessary.
+
+## Support Resources
+
+- **RegTest Sequencer Node**: [GitHub Repository](https://github.com/GOATNetwork/goat-regtest)
+- **Community Support**: [Telegram](https://t.me/+5JwHzveSo4IxMGY5)
+
+<Callout type="warning">
+  The Locking Asset Manager features are under testing. Exercise caution and monitor announcements.
+</Callout>
+
+---
+
+This overview provides a high-level understanding of running a Sequencer Node on the GOAT Network. For detailed instructions, refer to the [Running a Sequencer Node](/builders/sequencers/validator) and [Running a Sequencer Operator](/builders/sequencers/running) guides.

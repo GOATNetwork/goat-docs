@@ -18,7 +18,6 @@ On the GOAT Network, transaction fees are calculated using **EIP-1559** standard
 
 1. **Base Fee**: Determined by network conditions and burned during the transaction.
 2. **Priority Fee (Tip)**: Optional, used to incentivize faster transaction processing.
-3. **L1 Data Availability Fee**: Reflects the cost of storing transaction data on Bitcoin's Layer 1.
 
 ---
 
@@ -58,7 +57,7 @@ On the GOAT Network, transaction fees are calculated using **EIP-1559** standard
   - Use an additional **priority fee** for faster confirmations:
 
     ```javascript
-    const priorityFee = web3.utils.toWei('2', 'gwei'); // Example: 2 gwei tip
+    const priorityFee = web3.utils.toWei('100000', 'wei'); // Example: 100000 wei tip
     ```
 
 ---
@@ -132,15 +131,12 @@ console.log(`Estimated Batch Fee: ${web3.utils.fromWei(totalFee, 'ether')} ETH`)
 3. **Optimize Batch Transactions**:
    - Leverage EIP-1559's efficiency for batch operations to lower costs.
 
-4. **Account for L1 Data Costs**:
-   - Bitcoin's Layer 1 fees impact the overall transaction cost. Plan for fluctuations.
-
-5. **Test on Testnet3**:
+4. **Test on Testnet3**:
    - Validate your fee estimation logic and transactions on Testnet3 before mainnet deployment.
 
 ---
 
 ## Additional Resources
 
-- **EIP-1559 Standard**: You can reference the official [EIP-1559 documention](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1559.md)
-- **GOAT Node**: Checkout the current status of the offial GOAT node on our Github  [GOAT Node](https://github.com/GOATNetwork/goat-geth).
+- **EIP-1559 Standard**: You can reference the official [EIP-1559 documentation](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1559.md)
+- **GOAT Node**: Checkout the current status of the official GOAT node on our Github  [GOAT Node](https://github.com/GOATNetwork/goat-geth).
