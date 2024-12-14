@@ -1,28 +1,24 @@
 ---
 title: 'Running a Sequencer Node on GOAT Testnet3'
-description: 'Complete guide for setting up and running a sequencer node (2 BTC stake) on GOAT Testnet3'
+description: 'Complete guide for setting up and running a Sequencer Node (2 BTC stake) on GOAT Testnet3'
 ---
 
 import { Callout } from 'nextra/components'
 
 # Running a Sequencer Node on GOAT Testnet3
 
-<Callout type="info">
-  This guide is for running a Sequencer Node, which requires a 2 BTC lock. This is similar to Bitcoin mining, where multiple nodes can participate. For running a Sequencer Node **Operator** position (2 BTC, like Goat.Network, Amber, Metis), see [Running a Sequencer Operator](/builders/sequencers/running).
-</Callout>
-
 This guide provides detailed instructions on how to join GOAT Testnet3 and run a Sequencer Node.
 
 ## Chain Information
 
-| Parameter        | Value                                      |
-|------------------|--------------------------------------------|
-| Network Name     | GOAT Testnet3                              |
-| RPC URL          | https://rpc.testnet3.goat.network           |
-| Chain ID         | 48816                                      |
-| Currency Symbol  | BTC                                        |
-| Currency Decimal | 18                                         |
-| Block Explorer   | https://explorer.testnet3.goat.network       |
+| Parameter         | Value                                       |
+| ----------------- | ------------------------------------------- |
+| **Network Name**  | GOAT Testnet3                               |
+| **RPC URL**       | https://rpc.testnet3.goat.network           |
+| **Chain ID**      | 48816                                       |
+| **Currency Symbol** | BTC                                        |
+| **Currency Decimal** | 18                                         |
+| **Block Explorer**  | https://explorer.testnet3.goat.network      |
 
 ## System Requirements
 
@@ -39,11 +35,11 @@ This guide provides detailed instructions on how to join GOAT Testnet3 and run a
 
 #### Security Group Rules
 
-| Port  | Description        | Protocol | Source     |
-|-------|--------------------|----------|------------|
-| 30303 | goat-geth P2P      | UDP      | 0.0.0.0/0  |
-| 30303 | goat-geth P2P      | TCP      | 0.0.0.0/0  |
-| 26656 | goat P2P Port      | TCP      | 0.0.0.0/0  |
+| Port  | Description        | Protocol | Source    |
+| ----- | ------------------ | -------- | --------- |
+| 30303 | goat-geth P2P      | UDP      | 0.0.0.0/0 |
+| 30303 | goat-geth P2P      | TCP      | 0.0.0.0/0 |
+| 26656 | goat P2P Port      | TCP      | 0.0.0.0/0 |
 
 <Callout type="info">
   Ensure your server's firewall and network security settings allow inbound traffic on these ports.

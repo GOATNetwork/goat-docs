@@ -7,53 +7,63 @@ description: Learn how to run a GOAT Sequencer on the GOAT Network.
 import { Steps } from 'nextra/components'
 import { Callout } from 'nextra/components'
 
-# Running a GOAT Sequencer Operator
-
-<Callout type="warning">
-  This guide is for running a Sequencer Node **Operator** position (like Goat.Network, Amber, Metis), which requires a 2 BTC security deposit and special permissions. For running a Sequencer Node (similar to Bitcoin mining) which requires 2 BTC, see [Running a Sequencer Node](/builders/sequencers/validator).
-</Callout>
+# Running a GOAT Sequencer Node
 
 ## Pre-requisites
-Before you can run as a Sequencer Node **Operator**, you need to meet the following pre-requisites:
+
+Before you can run as a Sequencer Node, you need to meet the following pre-requisites:
+
 1. Have 2 BTC available for the security deposit
 2. Be an established organization in the blockchain space
 3. Submit and pass the whitelisting process through GOAT DAO
-4. Have the technical expertise to run and maintain a Sequencer Operation
+4. Have the technical expertise to run and maintain a Sequencer Node
 5. Have a security system in place for MPC service nodes
 6. Follow the deployment documentation (provided after approval)
 
 ## System Requirements
+
 To run a GOAT Sequencer, you need to meet the following system requirements:
 
-| description| requirement|
-| -------| ----|
-| **CPU** | 16-core CPU |
-| **RAM** | 32GB RAM |
-| **Storage** | 1TB SSD |
+| Description | Requirement               |
+| ----------- | ------------------------- |
+| **CPU**     | 16-core CPU               |
+| **RAM**     | 32GB RAM                  |
+| **Storage** | 1TB SSD                   |
 | **Network** | High-availability connection |
 
-## Get qualified to run a sequencer
+## Get Qualified to Run a Sequencer
+
 <Steps>
+
 ### Technical Expertise
+
 Sequencers are critical to GOAT Network's security and performance. You must demonstrate expertise in running high-availability infrastructure and blockchain nodes.
 
 ### Docker Environment
+
 We use Docker for deployment. Ensure you're comfortable with Docker and container orchestration. Use the [GOAT Geth Docker container](https://github.com/goatnetwork/goat-geth/pkgs/container/goat-geth) for node setup.
 
 ### Secure Key Management
+
 Implement robust security for private key management, including:
+
 - Secure key generation
 - Backup procedures
 - MPC service node management
 - Hardware security modules (recommended)
 
 ### Follow Deployment Guide
+
 After approval, you'll receive access to the detailed deployment documentation.
+
 </Steps>
 
-## Register your sequencer
+## Register Your Sequencer
+
 <Steps>
-### Submit sequencer information
+
+### Submit Sequencer Information
+
 Once approved, submit your Sequencer information for the GOAT Dashboard:
 
 ```yaml
@@ -66,7 +76,8 @@ pubkey: Public key (provided after setup)
 desc: Brief description of your operation
 ```
 
-### Complete the lock-up process
+### Complete the Lock-Up Process
+
 1. Access the GOAT Sequencer Dashboard
 2. Connect your whitelisted wallet
 3. Lock up 2 BTC as security deposit
@@ -74,6 +85,7 @@ desc: Brief description of your operation
 5. Generate and submit required keys
 
 ### Maintain Your Sequencer
+
 Ensure continuous operation to avoid penalties.
 
 <Callout type="warning" emoji="⚠️">
