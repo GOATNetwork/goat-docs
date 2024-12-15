@@ -1,24 +1,24 @@
 ---
-title: 'Running a Validator on GOAT Testnet3'
-description: 'Complete guide for setting up and running a validator node on GOAT Testnet3'
+title: 'Running a Sequencer Node on GOAT Testnet3'
+description: 'Complete guide for setting up and running a Sequencer Node (2 BTC stake) on GOAT Testnet3'
 ---
 
 import { Callout } from 'nextra/components'
 
-# Running a Validator on GOAT Testnet3
+# Running a Sequencer Node on GOAT Testnet3
 
-This guide provides detailed instructions on how to join GOAT Testnet3 and run a validator node.
+This guide provides detailed instructions on how to join GOAT Testnet3 and run a Sequencer Node.
 
 ## Chain Information
 
-| Parameter | Value |
-|-----------|-------|
-| Network Name | GOAT Testnet3 |
-| RPC URL | https://rpc.testnet3.goat.network |
-| Chain ID | 48816 |
-| Currency Symbol | BTC |
-| Currency Decimal | 18 |
-| Block Explorer | https://explorer.testnet3.goat.network |
+| Parameter         | Value                                       |
+| ----------------- | ------------------------------------------- |
+| **Network Name**  | GOAT Testnet3                               |
+| **RPC URL**       | https://rpc.testnet3.goat.network           |
+| **Chain ID**      | 48816                                       |
+| **Currency Symbol** | BTC                                        |
+| **Currency Decimal** | 18                                         |
+| **Block Explorer**  | https://explorer.testnet3.goat.network      |
 
 ## System Requirements
 
@@ -35,11 +35,11 @@ This guide provides detailed instructions on how to join GOAT Testnet3 and run a
 
 #### Security Group Rules
 
-| Port | Description | Protocol | Source |
-|------|-------------|----------|---------|
-| 30303 | goat-geth P2P | UDP | 0.0.0.0/0 |
-| 30303 | goat-geth P2P | TCP | 0.0.0.0/0 |
-| 26656 | goat P2P Port | TCP | 0.0.0.0/0 |
+| Port  | Description        | Protocol | Source    |
+| ----- | ------------------ | -------- | --------- |
+| 30303 | goat-geth P2P      | UDP      | 0.0.0.0/0 |
+| 30303 | goat-geth P2P      | TCP      | 0.0.0.0/0 |
+| 26656 | goat P2P Port      | TCP      | 0.0.0.0/0 |
 
 <Callout type="info">
   Ensure your server's firewall and network security settings allow inbound traffic on these ports.
@@ -53,15 +53,15 @@ This guide provides detailed instructions on how to join GOAT Testnet3 and run a
 
 ## Deployment Steps
 
-### 1. Generate Validator Key
+### 1. Generate Sequencer Key
 
-Log into your machine and generate the validator key:
+Log into your machine and generate the sequencer key:
 
 ```bash
 docker run --rm -v /data/goat:/root/.goat ghcr.io/goatnetwork/goat:v0.1.1 modgen locking sign --owner 0x...abc --eth-chain-id 48816
 ```
 
-Replace `0x...abc` with your Ethereum private key. The owner is the node administrator's EVM address responsible for staking, redemption, and other operations.
+Replace `0x...abc` with your Bitcoin private key. The owner is the node administrator's BTC address responsible for locking, redemption, and other operations.
 
 Expected output format:
 ```json
@@ -76,7 +76,7 @@ Expected output format:
   Back up the generated key at `/data/goat/config/priv_validator_key.json`
 </Callout>
 
-### 2. Start the Validator Node
+### 2. Start the Sequencer Node
 
 Create a `docker-compose.yml`:
 
@@ -84,7 +84,7 @@ Create a `docker-compose.yml`:
 name: testnet3
 services:
   geth:
-    image: ghcr.io/goatnetwork/goat-geth:v0.1.0
+    image: ghcr.io/goatnetwork/goat-geth:v0.1.3
     network_mode: host
     restart: unless-stopped
     stop_grace_period: 30s
@@ -134,42 +134,30 @@ docker exec -i testnet3-goat-1 goatd status | jq .
 ```
 
 <Callout type="info">
-  Wait for "catching_up": false to confirm full sync
+  Wait for `"catching_up": false` to confirm full sync
 </Callout>
 
-### 4. Become a Validator
+### 4. Become a Sequencer Node
 
 #### Prerequisites
-- Validator Owner Address (from step 1)
+- Sequencer Node Owner Address (from step 1)
 - Signature (split into 32-32-1 bytes)
-- Sufficient funds for staking and gas
+- Sufficient funds for locking (2 BTC) and gas
 
 #### Locking Contract Details
 - Testnet3 Address: `0xbC10000000000000000000000000000000000004`
 - Asset Manager Address: `0x218ab55484482409aAfD035066eb1e0315BE0084`
 
-#### Contract Operations
+#### Locking Process
 
-You can use the `locking.ts` script (place in the tasks directory of [GOAT-contracts repository](https://github.com/GOATNetwork/goat-contracts)) for the following operations:
-
-- `locking:changeValidatorOwner` - Change validator owner
-- `locking:claim` - Claim reward
-- `locking:create` - Create a validator
-- `locking:info` - Get basic info
-- `locking:lock` - Lock on validator
-- `locking:reclaim` - Reclaim for validator
-- `locking:unlock` - Unlock amount for validator
-
-#### Staking Process
-
-1. Get whitelisted by contacting GOAT Network team
-2. Check minimum stake:
+1. Get whitelisted by contacting the GOAT Network team.
+2. Check minimum lock amount:
 ```solidity
 // Reference: https://github.com/GOATNetwork/goat-contracts/blob/main/contracts/locking/Locking.sol#L334
 function minimumLockAmount() external view returns (uint256)
 ```
 
-3. Create validator:
+3. Create a Sequencer Node:
 ```solidity
 // Reference: https://github.com/GOATNetwork/goat-contracts/blob/main/contracts/locking/Locking.sol#L118
 function createValidator(
@@ -199,7 +187,7 @@ function safeLock(uint256 amount) external
 function safeUnlock(uint256 amount) external
 ```
 
-#### Exit Validator
+#### Exit Sequencer Node
 ```solidity
 // Reference: https://github.com/liqingnz/goat-contracts-extension/blob/main/src/SafeLocking.sol#L69
 function exit() external
@@ -210,8 +198,7 @@ Example Implementation: `0xb1119639cB7bB92B8a3C6d666f159944e89472C1`
 
 ## Support Resources
 
-- [Documentation](https://docs.goat.network)
-- Email: support@goat.network
+- [RegTest Sequencer Node](https://github.com/GOATNetwork/goat-regtest)
 - [Telegram](https://t.me/+5JwHzveSo4IxMGY5)
 
 <Callout type="warning">

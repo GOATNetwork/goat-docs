@@ -1,6 +1,6 @@
 ---
 title: 'Quick Start Guide'
-description: 'Get started building on GOAT Network in minutes'
+description: 'Get started building on the GOAT Network in minutes.'
 ---
 
 import { Steps } from 'nextra/components'
@@ -9,43 +9,57 @@ import { Callout, Tabs, Tab } from 'nextra/components'
 
 # Quick Start Guide
 
-Welcome to GOAT Network! This guide will help you start building on Bitcoin's most cost efficient Layer 2 solution.
+Welcome to the **GOAT Network**! This guide will help you get started building on Bitcoin's most cost-efficient Layer 2 solution.
 
 <Callout type="info">
-  Currently on Testnet3. All examples use testnet configuration.
+  Currently operating on **Testnet3**. All examples provided use testnet3 configurations. 
 </Callout>
 
 ## Network Configuration
 
-| Parameter | Value |
-|-----------|-------|
-| Network Name | GOAT Testnet3 |
-| RPC URL | https://rpc.testnet3.goat.network |
-| Chain ID | 48816 |
-| Currency Symbol | BTC |
-| Block Explorer | https://explorer.testnet3.goat.network |
-| Bridge | https://bridge.testnet3.goat.network |
-| Faucet | https://bridge.testnet3.goat.network/faucet |
+Use the following parameters to connect your wallet or development environment to the GOAT Network:
+
+| Parameter           | Value                                        |
+|---------------------|----------------------------------------------|
+| **Network Name**    | `GOAT Testnet3`                              |
+| **RPC URL**         | `https://rpc.testnet3.goat.network`          |
+| **Chain ID**        | `0xBEB0` (48816)                             |
+| **Currency Symbol** | `BTC`                                        |
+| **Block Explorer**  | `https://explorer.testnet3.goat.network`     |
+| **Bridge**          | `https://bridge.testnet3.goat.network`       |
+| **Faucet**          | `https://bridge.testnet3.goat.network/faucet`|
+
+---
 
 ## Development Setup
 
 <Steps>
-### Prerequisites
-- Node.js (v16.0.0 or later)
-- Package manager (npm, yarn, or pnpm)
-- Git
-- Code editor (VS Code recommended)
-- MetaMask or other Web3 wallet
+### Step 1: Prerequisites
 
-### Choose Your Framework
+Ensure the following tools are installed and ready:
+
+- **Node.js** (v16.0.0 or later)
+- Package manager (**npm**, **yarn**, or **pnpm**)
+- **Git** for version control
+- Code editor (**VS Code** recommended)
+- Web3 wallet (**MetaMask** or equivalent)
+
+---
+
+### Step 2: Choose Your Framework
+
+Select your preferred framework to start building:
+
 <Tabs items={['Hardhat', 'Foundry', 'Remix']}>
-  <Tab>
+  <Tab title="Hardhat">
     ```bash
     npx hardhat init
     # Select "Create a JavaScript project"
     npm install --save-dev @nomicfoundation/hardhat-toolbox
     ```
-    Add network config to hardhat.config.js:
+
+    Add the GOAT Network configuration to your `hardhat.config.js`:
+
     ```javascript
     module.exports = {
       networks: {
@@ -57,28 +71,37 @@ Welcome to GOAT Network! This guide will help you start building on Bitcoin's mo
     };
     ```
   </Tab>
-  <Tab>
+  <Tab title="Foundry">
     ```bash
     curl -L https://foundry.paradigm.xyz | bash
     foundryup
     forge init my-goat-project
     ```
   </Tab>
-  <Tab>
-    1. Visit [Remix IDE](https://remix.ethereum.org)
-    2. Add GOAT Network to MetaMask
-    3. Connect wallet to Remix
+  <Tab title="Remix">
+    1. Open [Remix IDE](https://remix.ethereum.org).
+    2. Add the GOAT Network to your MetaMask wallet.
+    3. Connect your wallet to Remix for contract deployment.
   </Tab>
 </Tabs>
 
-### Get Test BTC
-1. Visit the [GOAT Faucet](https://bridge.testnet3.goat.network/faucet)
-2. Connect your wallet
-3. Request test BTC
-4. Bridge BTC using our [Bridge Interface](https://bridge.testnet3.goat.network)
+---
 
-### Deploy Your First Contract
-Test your setup with a simple deployment:
+### Step 3: Get Test BTC
+
+Follow these steps to obtain test BTC for your projects:
+
+1. Visit the [GOAT Faucet](https://bridge.testnet3.goat.network/faucet).
+2. Connect your Web3 wallet.
+3. Request test BTC.
+4. Use the [Bridge Interface](https://bridge.testnet3.goat.network) to bridge assets.
+
+---
+
+### Step 4: Deploy Your First Contract
+
+Test your setup by deploying a simple smart contract:
+
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -87,60 +110,91 @@ contract HelloGOAT {
     string public message = "Hello, GOAT!";
 }
 ```
+
+Deploy using your selected framework to ensure everything is configured correctly.
 </Steps>
 
-## Core Components
+---
+
+## Core Concepts
+
+Learn more about the GOAT Network's foundational components:
 
 <Cards>
   <Card 
     title="Bitcoin Layer 2" 
     href="/network/concepts/bitcoin"
+    description="Leverage Bitcoin's security with Layer 2 efficiency."
   />
   <Card 
     title="ZKM Infrastructure" 
-    href="/network/concepts/zkm"
+    href="/network/concepts/ZKM"
+    description="Dive into the zkVM-powered infrastructure that drives scalability."
   />
   <Card 
     title="Optimistic Challenge Protocol" 
     href="/network/concepts/ocp"
+    description="Ensure trust through optimistic validation."
   />
 </Cards>
 
+---
+
 ## Development Resources
+
+Access additional tools and guides to accelerate your development:
 
 <Cards>
   <Card 
+    title="Technical Whitepaper" 
+    href="https://drive.google.com/file/d/1U-thxS4DRfSTOsLxC2ezQNk1KNrrLBd3/view"
+    description="Dive deep into the GOAT Network's technical architecture."
+  />
+  <Card 
     title="Smart Contract Guide" 
     href="/builders/app-developers/contracts/solidity"
+    description="Learn to write and deploy smart contracts effectively."
   />
   <Card 
     title="Bridge Integration" 
     href="/network/bridged"
+    description="Integrate seamless asset transfers between layers."
   />
   <Card 
     title="Security Best Practices" 
     href="/network/security/model"
+    description="Follow essential guidelines to secure your contracts."
   />
 </Cards>
+
+---
 
 ## Next Steps
 
 <Steps>
 ### Explore Advanced Features
+Expand your knowledge with in-depth guides:
 - [Transaction Management](/builders/app-developers/transactions/fees)
 - [Bridge Integration](/network/bridged)
 - [Security Model](/network/security/model)
 
+---
+
 ### Join the Community
+Connect with other developers and receive updates:
 - [Developer Telegram](https://t.me/+5JwHzveSo4IxMGY5)
-- [Discord Community](https://discord.gg/99WEU3Y4)
-- [Technical Support](https://founders.goat.network/)
-- [Developer Updates](https://twitter.com/goatnetwork)
+- [Discord Community](https://discord.gg/goatnetwork)
+- [Join the Founders Club](https://founders.goat.network/)
+- [Follow Us on Twitter](https://twitter.com/GOATRollup)
+
+---
 
 ### Consider Running a Sequencer
-Learn about [becoming a sequencer](/builders/sequencers/overview) to earn rewards and support the network.
+
+Learn how to [become a Sequencer Node](/builders/sequencers/overview) to contribute to network efficiency and earn rewards.
 </Steps>
 
 <Callout type="warning">
-  Always test thoroughly on testnet before deploying to mainnet.
+  Always thoroughly test your dApps on Testnet3 before deploying to mainnet.
 </Callout>
+

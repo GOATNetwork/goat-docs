@@ -1,10 +1,10 @@
 {
   "fees": {
     "title": "Transaction Fees",
-    "display": "page"
+    "display": "normal"
   },
   "estimating": {
     "title": "Fee Estimation",
-    "display": "page"
+    "display": "normal"
   }
 }

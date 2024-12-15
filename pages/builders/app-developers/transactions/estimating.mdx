@@ -1,40 +1,173 @@
 ---
-title: Estimating Transaction Fees on GOAT Mainnet
+title: Estimating Transaction Fees
 lang: en-US
-description: Learn how to properly estimate the total cost of a transaction on GOAT Mainnet.
+description: Learn how to estimate transaction fees on the GOAT Network using EIP-1559 standards.
 ---
 
 import { Callout } from 'nextra/components'
 
-# Estimating Transaction Fees on GOAT Mainnet
-
-<Callout type="warning" emoji="⚠️">
-  This page is coming soon
-</Callout>
-
 # Estimating Transaction Fees
 
-## Overview
-Transaction fees on GOAT consist of two components:
-- L1 Data Availability Fee (Bitcoin)
-- L2 Execution Fee (GOAT Network)
+<Callout type="warning">
+  This guide focuses on Testnet3. Gas estimation methods may vary on mainnet based on updated network conditions.
+</Callout>
 
-## Fee Calculation Methods
+## Understanding Gas Estimation on GOAT Network
 
-### Using Web3.js
+On the GOAT Network, transaction fees are calculated using **EIP-1559** standards. This model dynamically adjusts gas prices based on network demand, ensuring fair and efficient fee estimation. The transaction fee consists of:
+
+1. **Base Fee**: Determined by network conditions and burned during the transaction.
+2. **Priority Fee (Tip)**: Optional, used to incentivize faster transaction processing.
+
+---
+
+## Steps for Estimating Fees
+
+### 1. Estimating Gas Usage
+
+- **Leverage Gas Estimation Libraries**:
+  - Use `web3.js` or `ethers.js` to estimate the gas required for transaction execution.
+  - Example with `web3.js`:
+
+    ```javascript
+    const estimateGasUsage = async (transaction) => {
+      const gasEstimate = await web3.eth.estimateGas(transaction);
+      return gasEstimate;
+    };
+    ```
+
+- **Batch Operations with EIP-1559**:
+  - Batch transactions reduce gas usage per operation. Use this for high-volume transfers or contract interactions.
+
+---
+
+### 2. Retrieving Gas Prices
+
+- **Dynamic Gas Price Retrieval**:
+  - Retrieve gas prices (base fee and priority fee) dynamically using the latest network data.
+
+    ```javascript
+    const getGasPrice = async () => {
+      const baseFee = await web3.eth.getGasPrice(); // Returns the base fee in Gwei
+      const priorityFee = web3.utils.toWei('100000', 'gwei'); // Minimal priority fee: 100,000 Gwei
+      const maxFeePerGas = web3.utils.toBN(baseFee).add(web3.utils.toBN(priorityFee));
+      return {
+        maxFeePerGas,
+        maxPriorityFeePerGas: web3.utils.toBN(priorityFee),
+      };
+    };
+    ```
+
+- **Include Priority Fee**:
+  - Use an additional **priority fee** for faster confirmations:
+
+    ```javascript
+    const priorityFee = web3.utils.toWei('100000', 'wei'); // Example: 100000 wei tip
+    ```
+
+---
+
+### 3. Calculating the Total Fee
+
+- **EIP-1559 Fee Formula**:
+
+    ```javascript
+    const estimateTransactionFee = async (transaction) => {
+      const gasEstimate = await estimateGasUsage(transaction);
+      const baseFee = await getGasPrice();
+
+      const priorityFee = web3.utils.toWei('100000', 'gwei'); // Minimal priority fee: 100,000 Gwei
+      const maxFeePerGas = web3.utils.toBN(baseFee).add(web3.utils.toBN(priorityFee));
+
+      const totalFee = web3.utils.toBN(gasEstimate).mul(maxFeePerGas);
+      return totalFee;
+    };
+    ```
+
+- **Add Priority Fee**:
+  - Include the tip in the total fee calculation for a more accurate estimate:
+
+    ```javascript
+    const totalFeeWithTip = totalFee.add(web3.utils.toBN(priorityFee));
+    ```
+
+---
+
+### 4. Example Fee Estimation
+
+#### Single Token Transfer
+
 ```javascript
-const estimateGasFee = async (transaction) => {
-const provider = new Web3.providers.HttpProvider('https://rpc.testnet.goat.network');
-const web3 = new Web3(provider);
-const gasPrice = await web3.eth.getGasPrice();
-const gasEstimate = await web3.eth.estimateGas(transaction);
-return web3.utils.toBN(gasPrice).mul(web3.utils.toBN(gasEstimate));
+const gasEstimate = await web3.eth.estimateGas({
+  from: senderAddress,
+  to: tokenContractAddress,
+  data: tokenContract.methods.transfer(recipientAddress, amount).encodeABI(),
+});
+
+const transaction = {
+  from: senderAddress,
+  to: tokenContractAddress,
+  data: tokenContract.methods.transfer(recipientAddress, amount).encodeABI(),
+  gasLimit: gasEstimate,
+  maxPriorityFeePerGas: web3.utils.toWei('100000', 'gwei'), // Minimal priority fee
 };
+
+const totalFee = await estimateTransactionFee(transaction);
+console.log(`Estimated Fee: ${web3.utils.fromWei(totalFee, 'ether')} ETH`);
 ```
 
+#### Batch Operation Example (EIP-1559 Optimized)
+
+```javascript
+const gasEstimate = await web3.eth.estimateGas({
+  from: senderAddress,
+  to: tokenContractAddress,
+  data: tokenContract.methods.safeBatchTransferFrom(
+    senderAddress,
+    recipientAddress,
+    tokenIds,
+    amounts,
+    "0x"
+  ).encodeABI(),
+});
+
+const transaction = {
+  from: senderAddress,
+  to: tokenContractAddress,
+  data: tokenContract.methods.safeBatchTransferFrom(
+    senderAddress,
+    recipientAddress,
+    tokenIds,
+    amounts,
+    "0x"
+  ).encodeABI(),
+  gasLimit: gasEstimate,
+  maxPriorityFeePerGas: web3.utils.toWei('100000', 'gwei'), // Minimal priority fee
+};
+
+const totalFee = await estimateTransactionFee(transaction);
+console.log(`Estimated Batch Fee: ${web3.utils.fromWei(totalFee, 'ether')} ETH`);
+```
+
+---
 
 ## Best Practices
-1. Always add 20% buffer to estimates
-2. Monitor L1 congestion
-3. Use batch transactions when possible
-4. Implement dynamic fee adjustment
+
+1. **Accurate Gas Estimation**:
+   - Use tools like `ethers.js` or `web3.js` for precise gas predictions.
+
+2. **Monitor Base Fee Trends**:
+   - Keep an eye on network conditions through tools like the [GOAT Network Explorer](https://explorer.testnet3.goat.network).
+
+3. **Optimize Batch Transactions**:
+   - Leverage EIP-1559's efficiency for batch operations to lower costs.
+
+4. **Test on Testnet3**:
+   - Validate your fee estimation logic and transactions on Testnet3 before mainnet deployment.
+
+---
+
+## Additional Resources
+
+- **EIP-1559 Standard**: You can reference the official [EIP-1559 documentation](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1559.md)
+- **GOAT Node**: Checkout the current status of the official GOAT node on our Github  [GOAT Node](https://github.com/GOATNetwork/goat-geth).

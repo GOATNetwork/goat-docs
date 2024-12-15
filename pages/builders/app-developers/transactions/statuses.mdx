@@ -1,44 +1,158 @@
 ---
-title: Transaction Statuses on GOAT Mainnet
+title: Transaction Statuses
 lang: en-US
-description: Learn about the statuses transactions can have on GOAT Mainnet.
+description: Learn about transaction statuses and their lifecycle on GOAT Network Testnet3.
 ---
 
+import { Callout } from 'nextra/components'
 
-# Transaction Statuses on GOAT Mainnet
+# Transaction Statuses on GOAT Network
 
-Transactions on the GOAT Protocol can have various statuses depending on their stage in the inclusion process on the blockchain. Understanding these statuses can help you troubleshoot issues, build safer applications, and display more accurate information to your users.
+<Callout type="warning">
+  This guide is based on Testnet3. Status definitions and behavior may be adjusted for mainnet deployment.
+</Callout>
 
-## Pending
+Understanding transaction statuses on the GOAT Network is essential for tracking progress and handling transactions effectively in your applications.
 
-**Instant after sending to Sequencer**
+---
 
-A transaction is considered "pending" when it has been sent to the Sequencer but has not yet been included in a block. This is the initial status a transaction will have after being sent to the Sequencer. At this stage, the transaction is not part of the blockchain, and there is no guarantee that it will be included.
+## Transaction Lifecycle
 
-- **How to Check**: The list of all pending transactions can be retrieved by calling the standard JSON-RPC method `eth_getBlockByNumber` with the parameter `pending` as the block number.
+Transactions on the GOAT Network pass through several distinct stages before achieving finality on the Bitcoin blockchain. Each stage provides different levels of security and feedback for users.
 
-## Sequencer Confirmed / Unsafe
+---
 
-**Typically within 2-4 seconds**
+### 1. Pending
 
-A transaction is considered "sequencer confirmed" or "unsafe" when it has been included in a block by the Sequencer but that block has **not** yet been published to the Bitcoin network. Although the transaction is included in a block, it is still possible for the transaction to be excluded from the final blockchain if the Sequencer fails to publish the block within the allotted time frame.
+- **Description**:
+  - The transaction has been submitted to the network but is not yet included in a block.
+- **Availability**:
+  - Query the pending transaction pool using `eth_getTransactionByHash`.
+- **Characteristics**:
+  - Transaction can still be replaced or canceled by resubmitting with the same nonce and higher gas fees.
+- **Developer Note**:
+  - Display as "Pending" in the UI, with an option for users to replace or cancel the transaction.
 
-- **How to Check**: The latest "sequencer confirmed" block can be retrieved by calling the standard JSON-RPC method `eth_getBlockByNumber` with the parameter `latest` as the block number.
+---
 
-## Published to Bitcoin / Safe
+### 2. Sequencer Confirmed (Unsafe - pending publication)
 
-**Typically within 5-10 minutes, up to 12 hours**
+- **Description**:
+  - The transaction has been included in a block by the Sequencer on the GOAT Network.
+  - This block has not yet been published to the Bitcoin blockchain.
+- **Timeframe**: Usually 2-4 seconds.
+- **Characteristics**:
+  - Provides rapid feedback to users.
+  - Not secured by Bitcoin’s proof-of-work.
+- **Developer Note**:
+  - Label this as "Sequencer Confirmed" or "Pending Confirmation" in your application.
+  - Advise users to wait for publication to Bitcoin for stronger security guarantees.
 
-A transaction is considered "safe" when it has been included in a block by the Sequencer and that block has been published to Bitcoin but is not yet finalized. Once a block has been published to Bitcoin, there is a high likelihood that the block will be included in the final blockchain. However, it is still possible for the block to be excluded from the final blockchain if the Bitcoin blockchain experiences a reorganization.
+---
 
-- **How to Check**: The latest "safe" block can be retrieved by calling the standard JSON-RPC method `eth_getBlockByNumber` with the parameter `safe` as the block number.
+### 3. Published to Bitcoin (Safe)
 
-## Finalized
+- **Description**:
+  - The Sequencer block containing the transaction has been published to the Bitcoin blockchain.
+- **Timeframe**: Typically 10-60 minutes, depending on Bitcoin block times.
+- **Characteristics**:
+  - Gains security from Bitcoin’s blockchain but may still be affected by reorgs.
+  - Finality is pending until sufficient confirmations are achieved.
+- **Developer Note**:
+  - Display as "Published" or "Confirmed (Pending Finality)."
+  - Inform users about the current confirmation count and expected finality timeframe.
 
-**Typically within 15-20 minutes, up to 12 hours**
+---
 
-A transaction is considered "finalized" when it has been included in a block by the Sequencer, that block has been published to Bitcoin, and that block has been finalized. Once a block has been finalized, it is guaranteed to be included in the GOAT Protocol blockchain. Applications that require the highest level of certainty that a transaction will be included in the blockchain should wait until the transaction is "finalized" before considering it successful.
+### 4. Finalized
 
-- **How to Check**: The latest "finalized" block can be retrieved by calling the standard JSON-RPC method `eth_getBlockByNumber` with the parameter `finalized` as the block number.
+- **Description**:
+  - The transaction has achieved finality on the Bitcoin blockchain after receiving the required number of confirmations.
+- **Timeframe**: Varies based on the number of confirmations (e.g., ~6 confirmations for ~1 hour).
+- **Characteristics**:
+  - Immutable and fully secured by Bitcoin’s proof-of-work.
+- **Developer Note**:
+  - Display as "Finalized" or "Completed."
+  - Indicate that the transaction is now permanent and irreversible.
 
-By understanding these transaction statuses, developers can better manage transaction lifecycles, provide accurate status updates to users, and ensure the reliability of their applications on the GOAT Protocol.
+---
+
+## Special Considerations
+
+### Reorgs and Forks
+
+- **Explanation**:
+  - Bitcoin blockchain reorganizations (reorgs) can affect transactions in the "Published to Bitcoin" state.
+- **Impact**:
+  - Transactions may be reversed if included in orphaned blocks.
+- **Mitigation**:
+  - Wait for sufficient confirmations (e.g., 6+) before treating a transaction as final.
+
+---
+
+### Transaction Failures
+
+- **Potential Causes**:
+  - **Insufficient Gas or Fees**: Transaction rejected due to low gas price or insufficient gas limit.
+  - **Smart Contract Errors**: Execution errors caused by invalid inputs or logic.
+- **Handling Failures**:
+  - Monitor the transaction receipt for `status: false`.
+  - Inform users of failure reasons and provide actionable steps to resolve issues (e.g., resubmitting with higher fees).
+
+---
+
+### Batch Transactions with EIP-1559
+
+- **Atomicity**:
+  - All operations within a batch are executed atomically. If one operation fails, the entire batch is reverted.
+- **Status Application**:
+  - The transaction status applies uniformly to the entire batch.
+- **Developer Note**:
+  - Ensure error handling accounts for full batch reverts when working with EIP-1559 batch operations.
+
+---
+
+## Monitoring Transaction Statuses
+
+### Event Listeners
+
+- Set up event listeners in your application to track transaction hashes and status updates in real-time.
+
+### RPC Methods
+
+- Utilize the following RPC methods to monitor transactions:
+  - `eth_getTransactionReceipt`: Retrieve the transaction status and related information.
+  - `eth_getBlockByNumber`: Check the inclusion of transactions in blocks.
+
+### Block Explorer
+
+- Use the [GOAT Network Explorer](https://explorer.testnet3.goat.network) for live transaction monitoring and detailed status information.
+
+---
+
+## Best Practices for Developers
+
+1. **Communicate Status Clearly**:
+   - Provide users with clear, descriptive statuses at each stage of the transaction lifecycle.
+   - Include contextual information, such as estimated timeframes and security implications.
+
+2. **Implement Timeouts and Retries**:
+   - Set timeouts for pending transactions and allow users to retry if necessary.
+   - Use retries cautiously to prevent nonce conflicts.
+
+3. **Handle Reorgs Gracefully**:
+   - Account for possible reorgs by monitoring confirmations and updating transaction states accordingly.
+
+4. **Test Extensively**:
+   - Simulate various transaction states and edge cases (e.g., failures, reorgs) on Testnet3 to validate application behavior.
+
+5. **Stay Synchronized**:
+   - Regularly poll the network for updates to keep your application state consistent with the blockchain.
+
+---
+
+## Additional Resources
+
+- **Block Explorer**: Track transactions on the [GOAT Network Explorer](https://explorer.testnet3.goat.network).
+- **Developer Community**: Join the [GOAT Developer Chat](https://t.me/+5JwHzveSo4IxMGY5) for support and discussions.
+- **Technical Documentation**: Refer to the [GOAT Network Docs](https://docs.goat.network) for more tools and guides.

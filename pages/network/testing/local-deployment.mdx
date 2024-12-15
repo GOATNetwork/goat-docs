@@ -88,10 +88,10 @@ Your local node will use these default development settings:
 
 ```javascript
 const localNetwork = {
-  name: 'GOAT Local',
-  chainId: 1337,
-  network: 'development',
-  rpc: 'http://localhost:8545'
+  name: 'GOAT Testnet 3',
+  chainId: 48816,
+  network: 'testnet3',
+  rpc: 'https://rpc.testnet3.goat.network'
 }
 ```
 
@@ -151,13 +151,13 @@ npx hardhat run scripts/deploy.js --network local
 
 ## Moving to Testnet
 
-Once you've tested your contracts locally, you can deploy to the GOAT Testnet:
+Once you've tested your contracts locally, you can deploy to the GOAT Testnet 3:
 
-| Parameter           | Value                                   |
-| ------------------ | --------------------------------------- |
-| Chain ID           | `48815`                                 |
-| RPC URL            | `https://rpc.testnet.goat.network`      |
-| Explorer           | `https://explorer.testnet.goat.network` |
+| Parameter           | Value                                    |
+| ------------------- | ---------------------------------------- |
+| Chain ID           | `48816`                                 |
+| RPC URL            | `https://rpc.testnet3.goat.network`     |
+| Explorer           | `https://explorer.testnet3.goat.network` |
 
 <Callout type="info">
   Remember to acquire testnet BTC from the faucet before deploying to the testnet network.

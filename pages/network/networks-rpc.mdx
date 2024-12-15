@@ -36,7 +36,7 @@ export function ConnectButton() {
         marginBottom: '24px'
       }}
     >
-      Connect to GOAT Testnet
+      Connect to GOAT Testnet3
     </button>
   );
 }
@@ -45,12 +45,9 @@ export function ConnectButton() {
 
 This reference guide provides configuration details for connecting to the GOAT network.
 
-
 <Callout type="info">
-  Need testnet BTC? Visit the [GOAT Testnet Faucet](https://bridge.testnet3.goat.network/faucet) to get started.
+  Need testnet BTC? Visit the [GOAT Testnet3 Faucet](https://bridge.testnet3.goat.network/faucet) to get started.
 </Callout>
-
-
 
 ## Get Connected
 
@@ -59,27 +56,33 @@ This reference guide provides configuration details for connecting to the GOAT n
 ## GOAT Testnet Configurations
 
 <Callout type="warning">
-  **Important**: The Alpha Testnet (Chain ID: 48815) has been deprecated. Please use Testnet 3 for all new deployments and testing.
+  **Important**: The previous Testnet (Chain ID: 48818) has been deprecated. Please use **Testnet3** for all new deployments and testing.
 </Callout>
 
-### Current Testnet (Testnet 3)
-| Parameter           | Value                                         |
-| ------------------ | --------------------------------------------- |
-| Network Name       | `GOAT Testnet`                                |
-| Chain ID           | `48816`                                       |
-| Currency Symbol    | `BTC`                                         |
-| Currency Decimals  | `18`                                          |
-| RPC URL            | `https://rpc.testnet3.goat.network`          |
-| Block Explorer URL | `https://explorer.testnet3.goat.network`      |
-| Bridge Interface   | `https://bridge.testnet3.goat.network`        |
+### Current Testnet (**Testnet3**)
 
-### Deprecated Alpha Testnet
-| Parameter           | Value                                    |
-| ------------------ | ---------------------------------------- |
-| Network Name       | `GOAT Testnet`                           |
-| Chain ID           | `48818`                                  |
-| RPC URL            | `https://rpc.testnet.goat.network`       |
-| Block Explorer URL | `https://explorer.testnet.goat.network`  |
+| Parameter             | Value                                         |
+|-----------------------|-----------------------------------------------|
+| **Network Name**      | `GOAT Testnet3`                               |
+| **Chain ID**          | `0xBEB0` (48816)                              |
+| **Currency Symbol**   | `BTC`                                         |
+| **Currency Decimals** | `18`                                          |
+| **RPC URL**           | `https://rpc.testnet3.goat.network`           |
+| **Block Explorer URL**| `https://explorer.testnet3.goat.network`      |
+| **Bridge Interface**  | `https://bridge.testnet3.goat.network`        |
+
+### Deprecated Testnet
+
+| Parameter             | Value                                         |
+|-----------------------|-----------------------------------------------|
+| **Network Name**      | `GOAT Testnet`                                |
+| **Chain ID**          | `48818`                                       |
+| **RPC URL**           | _(Deprecated)_                                |
+| **Block Explorer URL**| _(Deprecated)_                                |
+
+<Callout type="warning">
+  The previous Testnet (Chain ID: 48818) is deprecated and no longer supported. Please migrate to **Testnet3** for the latest features and support.
+</Callout>
 
 <Callout type="">
   The public RPC endpoints are rate-limited. For production applications, consider using a dedicated node or professional RPC provider.
@@ -88,20 +91,22 @@ This reference guide provides configuration details for connecting to the GOAT n
 ### Network Configurations
 
 #### JavaScript (ethers.js v6)
+
 ```javascript
 const network = {
-  name: 'GOAT Testnet',
+  name: 'GOAT Testnet3',
   chainId: 48816,
-  network: 'testnet',
+  network: 'goat-testnet3',
   rpc: 'https://rpc.testnet3.goat.network',
   explorer: 'https://explorer.testnet3.goat.network'
-}
-
+};
+```
 
 #### Python (web3.py)
+
 ```python
 network_config = {
-    "name": "GOAT Testnet",
+    "name": "GOAT Testnet3",
     "chain_id": 48816,
     "rpc_url": "https://rpc.testnet3.goat.network",
     "explorer_url": "https://explorer.testnet3.goat.network"
@@ -109,10 +114,11 @@ network_config = {
 ```
 
 #### Wallet Connection (MetaMask)
+
 ```json
 {
   "chainId": "0xBEB0", // 48816 in hexadecimal
-  "chainName": "GOAT Testnet",
+  "chainName": "GOAT Testnet3",
   "nativeCurrency": {
     "name": "Bitcoin",
     "symbol": "BTC",
@@ -123,18 +129,18 @@ network_config = {
 }
 ```
 
-### Adding Network to MetaMask
+### Adding GOAT Testnet3 to MetaMask
 
-You can add the GOAT Testnet to MetaMask programmatically using the following code:
+You can add the GOAT Testnet3 to MetaMask programmatically using the following code:
 
 ```javascript
-async function addGoatTestnet() {
+async function addGoatTestnet3() {
   try {
     await window.ethereum.request({
       method: 'wallet_addEthereumChain',
       params: [{
-        chainId: '0xBEB0',
-        chainName: 'GOAT Testnet',
+        chainId: '0xBEB0', // 48816 in hexadecimal
+        chainName: 'GOAT Testnet3',
         nativeCurrency: {
           name: 'Bitcoin',
           symbol: 'BTC',
@@ -161,20 +167,21 @@ async function getBlockNumber() {
   const blockNumber = await provider.getBlockNumber();
   console.log('Current block number:', blockNumber);
 }
+
+getBlockNumber();
 ```
 
 ## GOAT Mainnet
 
 <Callout type="warning">
-  **Coming Soon!** 
-  GOAT Mainnet is currently under development and will be launched after successful testing phase.
+  **Coming Soon!**  
+  GOAT Mainnet is currently under development and will be launched after a successful testing phase.
   Stay tuned for updates and mainnet configuration details.
 </Callout>
 
 <Callout type="info">
-  Deploy your Smart Contracts in preparation for Mainnet. Go Visit the [GOAT Testnet Faucet](https://bridge.testnet3.goat.network/faucet) to get started.
+  Deploy your Smart Contracts in preparation for Mainnet. Visit the [GOAT Testnet3 Faucet](https://bridge.testnet3.goat.network/faucet) to get started.
 </Callout>
-
 
 ---
 
