@@ -61,7 +61,7 @@ Log into your machine and generate the sequencer key:
 docker run --rm -v /data/goat:/root/.goat ghcr.io/goatnetwork/goat:v0.1.3 modgen locking sign --owner 0x...abc --eth-chain-id 48816
 ```
 
-Replace `0x...abc` with your owner EVM address. The owner is the node administrator's EVM address responsible for locking, redemption, and other operations.
+Replace `0x...abc` with the owner EVM address. The owner is the node administrator's EVM address responsible for locking, redemption, and other operations.
 
 Expected output format:
 ```json
