@@ -22,7 +22,7 @@ A list of precompiled smart contracts have been provided for developers as below
 
 More detail can be found at [Genesis Contract](https://github.com/GOATNetwork/goat-contracts/blob/main/task/genesis.md#genesis-contract)
 
-## SPV Helper Contract
+## Bitcoin State Oracle
 
-The developers are able to use [SPV](https://bitcoinwiki.org/wiki/simplified-payment-verification) directly by the method [newBlockHash](https://github.com/GOATNetwork/goat-contracts/blob/main/contracts/bitcoin/Bitcoin.sol#L23-L30) in smart contract [BitcoinBlocks.sol](http://localhost:3000/network/contracts#pre-deployed-contracts).
+GOAT Network provides a built-in Bitcoin state Oracle for the on-chain applications. This allows the developers to implement the [SPV](https://bitcoinwiki.org/wiki/simplified-payment-verification) directly via the method [blockHash](https://github.com/GOATNetwork/goat-contracts/blob/main/contracts/bitcoin/Bitcoin.sol#L36) in smart contract [BitcoinBlocks.sol](http://localhost:3000/network/contracts#pre-deployed-contracts) on GOAT Network.
 
