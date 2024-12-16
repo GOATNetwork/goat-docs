@@ -16,7 +16,7 @@ import { Callout } from 'nextra/components'
 
 On the GOAT Network, transaction fees are calculated using **EIP-1559** standards. This model dynamically adjusts gas prices based on network demand, ensuring fair and efficient fee estimation. The transaction fee consists of:
 
-1. **Base Fee**: Determined by network conditions and burned during the transaction.
+1. **Base Fee**: Determined by EIP-1559 dynamically.
 2. **Priority Fee (Tip)**: Optional, used to incentivize faster transaction processing.
 
 ---
@@ -47,14 +47,13 @@ On the GOAT Network, transaction fees are calculated using **EIP-1559** standard
   - Retrieve gas prices (base fee and priority fee) dynamically using the latest network data.
 
     ```javascript
-    const getGasPrice = async () => {
-      const baseFee = await web3.eth.getGasPrice(); // Returns the base fee in Gwei
-      const priorityFee = web3.utils.toWei('100000', 'gwei'); // Minimal priority fee: 100,000 Gwei
-      const maxFeePerGas = web3.utils.toBN(baseFee).add(web3.utils.toBN(priorityFee));
-      return {
-        maxFeePerGas,
-        maxPriorityFeePerGas: web3.utils.toBN(priorityFee),
-      };
+    const getBaseFee = async () => {
+      // Get the latest block
+      const latestBlock = await web3.eth.getBlock('latest');
+
+      // Get the base fee (for EIP-1559 transactions)
+      const baseFeePerGas = web3.utils.fromWei(latestBlock.baseFeePerGas.toString(), 'wei')
+      return baseFeePerGas;
     };
     ```
 
@@ -62,9 +61,12 @@ On the GOAT Network, transaction fees are calculated using **EIP-1559** standard
   - Use an additional **priority fee** for faster confirmations:
 
     ```javascript
-    const priorityFee = web3.utils.toWei('100000', 'wei'); // Example: 100000 wei tip
+    async function getMaxPriorityFee() {
+      // Call the eth_maxPriorityFeePerGas method
+      const maxPriorityFeeWei = await web3.eth.getMaxPriorityFeePerGas();
+      return maxPriorityFeeWei
+    }
     ```
-
 ---
 
 ### 3. Calculating the Total Fee
@@ -74,23 +76,17 @@ On the GOAT Network, transaction fees are calculated using **EIP-1559** standard
     ```javascript
     const estimateTransactionFee = async (transaction) => {
       const gasEstimate = await estimateGasUsage(transaction);
-      const baseFee = await getGasPrice();
+      const baseFeePerGas = await getBaseFee();
 
-      const priorityFee = web3.utils.toWei('100000', 'gwei'); // Minimal priority fee: 100,000 Gwei
-      const maxFeePerGas = web3.utils.toBN(baseFee).add(web3.utils.toBN(priorityFee));
+      const priorityFee = await getMaxPriorityFee();
+
+      // the best practice is to use baseFeePerGas * 2 + priorityFeePerGas
+      const maxFeePerGas = web3.utils.toBN(baseFeePerGas * 2).add(web3.utils.toBN(priorityFee));
 
       const totalFee = web3.utils.toBN(gasEstimate).mul(maxFeePerGas);
       return totalFee;
     };
     ```
-
-- **Add Priority Fee**:
-  - Include the tip in the total fee calculation for a more accurate estimate:
-
-    ```javascript
-    const totalFeeWithTip = totalFee.add(web3.utils.toBN(priorityFee));
-    ```
-
 ---
 
 ### 4. Example Fee Estimation
@@ -109,7 +105,7 @@ const transaction = {
   to: tokenContractAddress,
   data: tokenContract.methods.transfer(recipientAddress, amount).encodeABI(),
   gasLimit: gasEstimate,
-  maxPriorityFeePerGas: web3.utils.toWei('100000', 'gwei'), // Minimal priority fee
+  maxPriorityFeePerGas: web3.utils.toWei('100000', 'wei'), // Minimal priority fee
 };
 
 const totalFee = await estimateTransactionFee(transaction);
@@ -142,7 +138,7 @@ const transaction = {
     "0x"
   ).encodeABI(),
   gasLimit: gasEstimate,
-  maxPriorityFeePerGas: web3.utils.toWei('100000', 'gwei'), // Minimal priority fee
+  maxPriorityFeePerGas: web3.utils.toWei('100000', 'wei'), // Minimal priority fee
 };
 
 const totalFee = await estimateTransactionFee(transaction);
