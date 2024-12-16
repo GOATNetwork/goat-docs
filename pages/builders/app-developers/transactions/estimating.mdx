@@ -81,7 +81,8 @@ On the GOAT Network, transaction fees are calculated using **EIP-1559** standard
       const priorityFee = await getMaxPriorityFee();
 
       // the best practice is to use baseFeePerGas * 2 + priorityFeePerGas
-      const maxFeePerGas = web3.utils.toBN(baseFeePerGas * 2).add(web3.utils.toBN(priorityFee));
+      const baseFee = web3.utils.toBN(baseFeePerGas).mul(web3.utils.toBN(2));
+      const maxFeePerGas = web3.utils.toBN(baseFee).add(web3.utils.toBN(priorityFee));
 
       const totalFee = web3.utils.toBN(gasEstimate).mul(maxFeePerGas);
       return totalFee;
