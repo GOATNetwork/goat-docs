@@ -31,7 +31,7 @@ export const connectGoatNetwork = async (): Promise<boolean> => {
           decimals: 18
         },
         rpcUrls: ['https://rpc.testnet3.goat.network'],
-        blockExplorerUrls: ['https://explorer3.testnet.goat.network']
+        blockExplorerUrls: ['https://explorer.testnet3.goat.network']
       }]
     });
 
