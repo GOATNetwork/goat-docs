@@ -23,15 +23,15 @@ export const connectGoatNetwork = async (): Promise<boolean> => {
     await window.ethereum.request({
       method: 'wallet_addEthereumChain',
       params: [{
-        chainId: '0xBEAF',
-        chainName: 'GOAT Testnet',
+        chainId: '0xBEB0',
+        chainName: 'GOAT Testnet3',
         nativeCurrency: {
           name: 'Bitcoin',
           symbol: 'BTC',
           decimals: 18
         },
-        rpcUrls: ['https://rpc.testnet.goat.network'],
-        blockExplorerUrls: ['https://explorer.testnet.goat.network']
+        rpcUrls: ['https://rpc.testnet3.goat.network'],
+        blockExplorerUrls: ['https://explorer3.testnet.goat.network']
       }]
     });
 
