@@ -7,7 +7,7 @@ description: Learn how to run a GOAT Sequencer on the GOAT Network.
 import { Steps } from 'nextra/components'
 import { Callout } from 'nextra/components'
 
-# Running a GOAT Sequencer Node
+# Running a GOAT Testnet3 Sequencer Node
 
 ## Pre-requisites
 
@@ -24,12 +24,16 @@ Before you can run as a Sequencer Node, you need to meet the following pre-requi
 
 To run a GOAT Sequencer, you need to meet the following system requirements:
 
-| Description | Requirement               |
-| ----------- | ------------------------- |
-| **CPU**     | 16-core CPU               |
-| **RAM**     | 32GB RAM                  |
-| **Storage** | 1TB SSD                   |
-| **Network** | High-availability connection |
+      | Description                        | Requirement                  |
+      | -----------                        | -------------------------    |
+      | **CPU**                            | 8-core CPU                   |
+      | **RAM**                            | 16GB RAM                     |
+      | **Storage**                        | Root 40G, EBS 100GB          |
+      | **Network**                        | High-availability connection |
+      | **Disk Speed**                     | 3000 IOPS                    |
+      | **Persistent Disk Mount Location** | `/data`                      | 
+
+The software requirements refer to [Software Environment](/../builders/sequencers/validator#software-environment).
 
 ## Get Qualified to Run a Sequencer
 
