@@ -58,6 +58,11 @@ contract HelloWorld {
          chainId: 48816,
          accounts: ['YOUR_PRIVATE_KEY'],
        },
+       alpha: {
+         url: 'https://rpc.goat.network',
+         chainId: 2345,
+         accounts: ['YOUR_PRIVATE_KEY'],
+       },
      },
      solidity: {
        version: '0.8.0',
@@ -88,7 +93,7 @@ main()
 Deploy the contract:
 
 ```bash
-npx hardhat run scripts/deploy.js --network goat
+npx hardhat run scripts/deploy.js --network goat-mainnet
 ```
 
 ## Interacting with the Contract

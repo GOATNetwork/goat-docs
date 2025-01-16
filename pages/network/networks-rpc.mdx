@@ -66,9 +66,10 @@ This reference guide provides configuration details for connecting to the GOAT n
 | **RPC URL**           | `https://rpc.goat.network`                    |
 | **RPC Backup**        | `https://explorer.goat.network`               |
 | **Block Explorer URL**| `https://explorer.goat.network`               |
-| **Layer**            | `L2`                                          |
-| **Stack**            | `Ethereum | GETH`         |
-| **Gist**             | [`v0.2.0`](https://github.com/GOATNetwork/goat/releases/tag/v0.2.0) |
+| **Bridge Interface**  | `https://bridge.goat.network`                 |
+| **Layer**             | `L2`                                          |
+| **Stack**             | `Ethereum (Arbitrum/Optimism/zksync)`         |
+| **Gist**              | [`v0.2.0`](https://github.com/GOATNetwork/goat/releases/tag/v0.2.0) |
 
 ### Current Testnet (**Testnet3**)
 
@@ -81,7 +82,7 @@ This reference guide provides configuration details for connecting to the GOAT n
 | **RPC URL**           | `https://rpc.testnet3.goat.network`           |
 | **Block Explorer URL**| `https://explorer.testnet3.goat.network`      |
 | **Bridge Interface**  | `https://bridge.testnet3.goat.network`        |
-| **Gist**             | [`v0.1.3`](https://github.com/GOATNetwork/goat/releases/tag/v0.1.3) |
+| **Gist**              | [`v0.1.3`](https://github.com/GOATNetwork/goat/releases/tag/v0.1.3) |
 
 ### Deprecated Testnet
 
@@ -182,18 +183,29 @@ async function getBlockNumber() {
 
 getBlockNumber();
 ```
-
 ## GOAT Mainnet
 
-<Callout type="warning">
-  **Coming Soon!**  
-  GOAT Mainnet is currently under development and will be launched after a successful testing phase.
-  Stay tuned for updates and mainnet configuration details.
+<Callout type="info">
+  **Alpha Mainnet is Live!**  
+  GOAT Network Alpha Mainnet is now available. See the configuration details above and visit our [Bridge Interface](https://bridge.goat.network) to get started.
 </Callout>
 
 <Callout type="info">
-  Deploy your Smart Contracts in preparation for Mainnet. Visit the [GOAT Testnet3 Faucet](https://bridge.testnet3.goat.network/faucet) to get started.
+  For mainnet contract addresses and integrations, visit our [Contracts Reference](/network/contracts).
 </Callout>
+
+## Alpha Mainnet Core Protocol Contracts
+
+### Pre-Deployed Contracts
+
+| Contract Name | Address | Description |
+|--------------|---------|-------------|
+| WGBTC (Wrapped GOAT Bitcoin) | [`0xbC10000000000000000000000000000000000000`](https://explorer.goat.network/address/0xbC10000000000000000000000000000000000000?tab=contract) | Native wrapped Bitcoin token |
+| Multicall3 | [`0xcA11bde05977b3631167028862bE2a173976CA11`](https://explorer.goat.network/address/0xcA11bde05977b3631167028862bE2a173976CA11?tab=contract) | Multicall aggregator |
+| Permit2 | [`0x000000000022D473030F116dDEE9F6B43aC78BA3`](https://explorer.goat.network/address/0x000000000022D473030F116dDEE9F6B43aC78BA3?tab=contract) | Gasless approvals |
+| Bridge | [`0xBC10000000000000000000000000000000000003`](https://explorer.goat.network/address/0xBC10000000000000000000000000000000000003?tab=contract) | Cross-chain bridge |
+| Locking | [`0xbC10000000000000000000000000000000000004`](https://explorer.goat.network/address/0xbC10000000000000000000000000000000000004?tab=contract) | Token locking mechanism |
+| GOAT Token | [`0xbC10000000000000000000000000000000000001`](https://explorer.goat.network/address/0xbC10000000000000000000000000000000000001?tab=txs) | Native utility token |
 
 ---
 
