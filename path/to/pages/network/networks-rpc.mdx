@@ -1,1 +1,91 @@
- 
+---
+title: GOAT Networks and Public RPC Endpoints
+lang: en-US
+description: An overview of the GOAT network configurations and public RPC endpoints.
+---
+
+import { Callout } from 'nextra/components';
+import React from 'react';
+import { connectGoatNetwork } from '@/utils/connect-goat';
+
+export function ConnectButton() {
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return (
+    <button
+      onClick={async () => {
+        if (mounted) {
+          await connectGoatNetwork();
+        }
+      }}
+      className="connect-button"
+      style={{
+        backgroundColor: '#4F46E5',
+        color: 'white',
+        padding: '12px 24px',
+        borderRadius: '8px',
+        border: 'none',
+        cursor: 'pointer',
+        fontSize: '16px',
+        fontWeight: 'bold',
+        marginTop: '16px',
+        marginBottom: '24px'
+      }}
+    >
+      Connect to GOAT Networks
+    </button>
+  );
+}
+
+# GOAT Networks and Public RPC Endpoints
+
+This reference guide provides configuration details for connecting to the GOAT network.
+
+<Callout type="info">
+  Need testnet BTC? Visit the [GOAT Testnet3 Faucet](https://bridge.testnet3.goat.network/faucet) to get started.
+</Callout>
+
+## Get Connected
+
+<ConnectButton />
+
+## GOAT Network Configurations
+
+### Alpha Mainnet
+
+| Parameter              | Value                                         |
+|------------------------|-----------------------------------------------|
+| **Network Name**       | `GOAT Network`                                |
+| **Chain ID**           | `0x929` (2345)                                |
+| **Currency Symbol**    | `BTC`                                         |
+| **Currency Decimals**  | `18`                                          |
+| **RPC URL**            | `https://rpc.goat.network`                    |
+| **RPC Backup**         | `https://rpc.ankr.com/goat_mainnet`           |
+| **Block Explorer URL** | `https://explorer.goat.network`               |
+| **Bridge Interface**   | `https://bridge.goat.network`                 |
+| **Layer**              | `L2`                                          |
+| **Stack**              | `Ethereum (Arbitrum/Optimism/zksync)`         |
+| **Gist**               | [`v0.2.0`](https://github.com/GOATNetwork/goat/releases/tag/v0.2.0) |
+
+### Testnet3
+
+| Parameter              | Value                                         |
+|------------------------|-----------------------------------------------|
+| **Network Name**       | `GOAT Testnet3`                               |
+| **Chain ID**           | `0xBEB0` (48816)                              |
+| **Currency Symbol**    | `BTC`                                         |
+| **Currency Decimals**  | `18`                                          |
+| **RPC URL**            | `https://rpc.testnet3.goat.network`           |
+| **Block Explorer URL** | `https://explorer.testnet3.goat.network`      |
+| **Bridge Interface**   | `https://bridge.testnet3.goat.network`        |
+| **Gist**               | [`v0.1.3`](https://github.com/GOATNetwork/goat/releases/tag/v0.1.3) |
+
+## Adding GOAT Testnet3 and Alpha Mainnet to MetaMask
+
+You can add both the GOAT Testnet3 and Alpha Mainnet to MetaMask programmatically using the following code snippets.
+
+### Adding to MetaMask Programmatically 
