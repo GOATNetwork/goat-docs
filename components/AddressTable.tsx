@@ -19,11 +19,12 @@ export function AddressTable({
   // Filter out legacy (or non-legacy) contracts.
   const filtered: TableAddresses = Object.keys(addresses)
     .filter((key) => LEGACY_CONTRACT_NAMES.includes(key) === legacy)
-    .reduce((acc, key) => {
+    .reduce((acc: any, key) => {
       acc[key] = addresses[key];
       return acc;
     }, {});
-
+  // @ts-ignore
+  const explorerUrl = CHAIN_CONSTANTS[parseInt(explorer)].explorer
   return (
     <table className="nx-table nx-overflow-x-scroll nextra-scrollbar nx-mt-6 nx-p-0 first:nx-mt-0 nx-w-full">
       <thead>
@@ -51,7 +52,7 @@ export function AddressTable({
               <td className="nx-m-0 nx-border nx-border-gray-300 nx-px-4 nx-py-2 dark:nx-border-gray-600 nx-text-center">
                 <a
                   href={`${
-                    CHAIN_CONSTANTS[parseInt(explorer)].explorer
+                      explorerUrl
                   }/address/${address}`}
                   target="_blank"
                   rel="noreferrer"

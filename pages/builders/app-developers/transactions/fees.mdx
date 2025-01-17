@@ -14,34 +14,33 @@ import { Callout } from 'nextra/components'
 
 ## Overview
 
-GOAT Network implements a gas-efficient fee structure that leverages **EIP-1559** for optimized token operations while ensuring secure settlement on Bitcoin. This dual-layer approach allows for cost-effective batch transactions while maintaining Bitcoin's security guarantees.
-
-Transactions on GOAT Network involve fees for both Layer 1 (Bitcoin) and Layer 2 (GOAT Network) operations.
-
-### L2 Execution Fee (GOAT Network)
-
-- **Purpose**: Covers the computational and storage costs of executing transactions on GOAT Network.
-- **Characteristics**:
-  - Benefits from EIP-1559's gas optimizations.
-  - Includes costs for smart contract execution, storage operations, and state changes.
-  - Gas price is determined by GOAT Network's fee market.
+GOAT Network implements a gas-efficient fee structure that leverages [**EIP-1559**](https://ethereum.org/en/developers/docs/gas/) for optimized token operations while ensuring secure settlement on Bitcoin.
 
 ## Detailed Fee Structure
 
-### Gas Price, Priority Fee, and Gas Limit
+### Key Differences of the Fee Structure on GOAT Network
 
-- **Gas Price**: The base fee per unit of gas, determined by the network, expressed in Gwei. Everything on the network is still denoted in Bitcoin, since the gas is BTC. 
-- **Priority Fee (Tip)**: The additional amount you pay to incentivize miners to include your transaction. The **minimal priority fee on GOAT Network is 100,000 Gwei**.
-- **Gas Limit**: The maximum amount of gas units you're willing to consume for the transaction.
-
-**Note**: For typical App Developer transactions, include a **priority fee of at least 100,000 Gwei** to ensure timely processing.
+- **Gas Price**: The base fee per unit of gas, determined by the network, expressed in Wei. Everything on the network is still denoted in Bitcoin, since the gas is BTC.
+- **Priority Fee (Tip)**: The additional amount you pay to incentivize miners to include your transaction. The **minimal priority fee on GOAT Network is 100,000 Wei**.
+- **No blob fee**: GOAT Network doesn't support EIP-4844, so the blob fee would be zero.
+- **No burned Fees**: Since GOAT uses BTC as the gas token and all the BTC is bridged from Bitcoin, the `Burned Fees` are included in the total transaction fee to incentivize miners for block generation.
 
 ### Calculating Total Fee
 
-**Total Transaction Fee** = `Gas Price` * `Gas Used`
+**Total Transaction Fee** = `Gas Used` * min(`Max Fee`, `Base Fee` + `ProrityFee`)
 
 - **Gas Used**: The actual amount of gas consumed during transaction execution.
-- **Note**: For transactions involving batch operations, gas usage is significantly reduced per operation.
+- **Priority Fee**: The minimal priority fee on GOAT Network is 100,000 Wei.
+- **Max Fee**: Maximum fee the user is willing to pay (must be ≥ Base Fee + Priority Fee).
+
+**Note**: For transactions involving batch operations, gas usage is significantly reduced per operation.
+
+### Fee Distribution
+
+The total transaction fee is distributed to miners and GOAT Foundation.
+
+* Miner: The 98% of the total transaction fee is distributed to the miners as a reward. A miner shares the rewards by the ratio of its voting powder to total voting powder of all miners.
+* GOAT Foundation: The 2% of the fee is distributed to GOAT Foundation for network development and maintainance.
 
 ## Common Pitfalls and How to Avoid Them
 
