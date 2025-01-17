@@ -1,18 +1,18 @@
 ---
 title: Developing Smart Contracts with Solidity on GOAT Network
 lang: en-US
-description: Learn how to develop and deploy Solidity smart contracts on GOAT Network Testnet3.
+description: Learn how to develop and deploy Solidity smart contracts on GOAT Network Testnet3 and Alpha Mainnet.
 ---
 
 # Developing Smart Contracts with Solidity
 
-Solidity is the primary language for developing smart contracts on the GOAT Network. This guide will walk you through the process of writing, testing, and deploying Solidity contracts on Testnet3.
+Solidity is the primary language for developing smart contracts on the GOAT Network. This guide will walk you through the process of writing, testing, and deploying Solidity contracts on **Testnet3** and **Alpha Mainnet**.
 
 ## Prerequisites
 
 - **Solidity Compiler**: Install `solc` or use an IDE like Remix or Visual Studio Code with Solidity extensions.
 - **Node.js and NPM**: For using development frameworks like Truffle or Hardhat.
-- **Wallet Setup**: Configure MetaMask or another wallet with Testnet3 settings.
+- **Wallet Setup**: Configure MetaMask or another wallet with **Testnet3** and **Alpha Mainnet** settings.
 
 ## Writing Your First Contract
 
@@ -35,40 +35,40 @@ contract HelloWorld {
 
 1. **Initialize Hardhat Project**:
 
-   ```bash
-   npx hardhat init
-   ```
+    ```bash
+    npx hardhat init
+    ```
 
 2. **Install Dependencies**:
 
-   ```bash
-   npm install --save-dev @nomiclabs/hardhat-ethers ethers
-   ```
+    ```bash
+    npm install --save-dev @nomiclabs/hardhat-ethers ethers
+    ```
 
 3. **Update `hardhat.config.js`**:
 
-   ```javascript:hardhat.config.js
-   require('@nomiclabs/hardhat-ethers');
+    ```javascript:hardhat.config.js
+    require('@nomiclabs/hardhat-ethers');
 
-   module.exports = {
-     defaultNetwork: 'goat',
-     networks: {
-       goat: {
-         url: 'https://rpc.testnet3.goat.network',
-         chainId: 48816,
-         accounts: ['YOUR_PRIVATE_KEY'],
-       },
-       alpha: {
-         url: 'https://rpc.goat.network',
-         chainId: 2345,
-         accounts: ['YOUR_PRIVATE_KEY'],
-       },
-     },
-     solidity: {
-       version: '0.8.0',
-     },
-   };
-   ```
+    module.exports = {
+      defaultNetwork: 'goat',
+      networks: {
+        goat: {
+          url: 'https://rpc.testnet3.goat.network',
+          chainId: 48816,
+          accounts: ['YOUR_PRIVATE_KEY'],
+        },
+        alpha: {
+          url: 'https://rpc.goat.network',
+          chainId: 2345,
+          accounts: ['YOUR_PRIVATE_KEY'],
+        },
+      },
+      solidity: {
+        version: '0.8.0',
+      },
+    };
+    ```
 
 ## Deploying Your Contract
 
@@ -93,7 +93,7 @@ main()
 Deploy the contract:
 
 ```bash
-npx hardhat run scripts/deploy.js --network goat-mainnet
+npx hardhat run scripts/deploy.js --network goat-testnet3
 ```
 
 ## Interacting with the Contract
@@ -161,13 +161,32 @@ npx hardhat test
 
 ## Contract Addresses
 
-### Alpha Mainnet Core Contracts
-| Contract Name | Address | Description |
-|--------------|---------|-------------|
-| WGBTC | [`0xbC10000000000000000000000000000000000000`](https://explorer.goat.network/address/0xbC10000000000000000000000000000000000000) | Native wrapped Bitcoin token |
-| Bridge | [`0xBC10000000000000000000000000000000000003`](https://explorer.goat.network/address/0xBC10000000000000000000000000000000000003) | Cross-chain bridge |
-| Locking | [`0xbC10000000000000000000000000000000000004`](https://explorer.goat.network/address/0xbC10000000000000000000000000000000000004) | Token locking mechanism |
+### Testnet3 Core Protocol Contracts
+
+| Contract Name              | Testnet3 Address                                                                     | Description                                         |
+|----------------------------|--------------------------------------------------------------------------------------|-----------------------------------------------------|
+| WrappedGoatBitcoin.sol     | [`0xbC10000000000000000000000000000000000000`](https://explorer.testnet3.goat.network/address/0xbC10000000000000000000000000000000000000) | Native wrapped Bitcoin token on GOAT Network         |
+| GoatDAO.sol                | [`0xBC10000000000000000000000000000000000Da0`](https://explorer.testnet3.goat.network/address/0xBC10000000000000000000000000000000000Da0) | Governance contract for the GOAT Network             |
+| GoatToken.sol              | [`0xbC10000000000000000000000000000000000001`](https://explorer.testnet3.goat.network/address/0xbC10000000000000000000000000000000000001) | Native utility token of the GOAT Network             |
+| GoatFoundation.sol         | [`0xBc10000000000000000000000000000000000002`](https://explorer.testnet3.goat.network/address/0xBc10000000000000000000000000000000000002) | Treasury and foundation management                  |
+| Bridge.sol                 | [`0xBC10000000000000000000000000000000000003`](https://explorer.testnet3.goat.network/address/0xBC10000000000000000000000000000000000003) | Cross-chain bridge implementation                   |
+| Locking.sol                | [`0xbC10000000000000000000000000000000000004`](https://explorer.testnet3.goat.network/address/0xbC10000000000000000000000000000000000004) | Token locking and staking mechanism                 |
+| BitcoinBlocks.sol          | [`0xbc10000000000000000000000000000000000005`](https://explorer.testnet3.goat.network/address/0xbc10000000000000000000000000000000000005) | Bitcoin block header verification                   |
+| Relayer.sol                | [`0xBC10000000000000000000000000000000000006`](https://explorer.testnet3.goat.network/address/0xBC10000000000000000000000000000000000006) | Network message relayer                              |
+| LockingTokenFactory.sol    | [`0xBc10000000000000000000000000000000000007`](https://explorer.testnet3.goat.network/address/0xBc10000000000000000000000000000000000007) | Factory for creating new locking tokens             |
+| WrappedBtc.sol             | [`0xEE4bC42157cf65291Ba2FE839AE127e3Cc76f741`](https://explorer.testnet3.goat.network/address/0xEE4bC42157cf65291Ba2FE839AE127e3Cc76f741) | Wrapped BTC implementation                           |
+
+### Alpha Mainnet Core Protocol Contracts
+
+| Contract Name              | Mainnet Address                                                                     | Description                                         |
+|----------------------------|--------------------------------------------------------------------------------------|-----------------------------------------------------|
+| WGBTC                      | [`0xbC10000000000000000000000000000000000000`](https://explorer.goat.network/address/0xbC10000000000000000000000000000000000000?tab=contract) | Native wrapped Bitcoin token                       |
+| Multicall3                 | [`0xcA11bde05977b3631167028862bE2a173976CA11`](https://explorer.goat.network/address/0xcA11bde05977b3631167028862bE2a173976CA11?tab=contract) | Multicall aggregator                                |
+| Permit2                    | [`0x000000000022D473030F116dDEE9F6B43aC78BA3`](https://explorer.goat.network/address/0x000000000022D473030F116dDEE9F6B43aC78BA3?tab=contract) | Gasless approvals                                   |
+| Bridge                     | [`0xBC10000000000000000000000000000000000003`](https://explorer.goat.network/address/0xBC10000000000000000000000000000000000003?tab=contract) | Cross-chain bridge                                   |
+| Locking                    | [`0xbC10000000000000000000000000000000000004`](https://explorer.goat.network/address/0xbC10000000000000000000000000000000000004?tab=contract) | Token locking mechanism                              |
+| GOAT Token                 | [`0xbC10000000000000000000000000000000000001`](https://explorer.goat.network/address/0xbC10000000000000000000000000000000000001?tab=txs) | Native utility token                                 |
 
 <Callout type="info">
-  Alpha Mainnet is now live! For complete contract addresses and integrations, visit our [Contracts Reference](/network/contracts).
+  **Alpha Mainnet is now live!** For complete contract addresses and integrations, visit our [Contracts Reference](/network/contracts).
 </Callout>
