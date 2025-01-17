@@ -11,15 +11,17 @@ export function L1ContractTable({
   explorer: string;
   legacy: boolean;
 }): ReactElement {
-  return (
+    // @ts-ignore
+    const data = Object.entries(addresses).find(([chainid]) => {
+        return chainid === chain;
+    })[1];
+    return (
     <AddressTable
       chain={chain}
       explorer={explorer}
       legacy={legacy}
       addresses={
-        Object.entries(addresses).find(([chainid]) => {
-          return chainid === chain;
-        })[1]
+          data
       }
     />
   );
