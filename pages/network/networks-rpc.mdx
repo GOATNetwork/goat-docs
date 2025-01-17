@@ -43,7 +43,7 @@ export function ConnectButton() {
 
 # GOAT Networks and Public RPC Endpoints
 
-This reference guide provides configuration details for connecting to the GOAT network.
+This reference guide provides configuration details for connecting to both **GOAT Testnet3** and **Alpha Mainnet**. Ensure you have the correct settings for your development environment or wallet to interact seamlessly with the GOAT Network.
 
 <Callout type="info">
   Need testnet BTC? Visit the [GOAT Testnet3 Faucet](https://bridge.testnet3.goat.network/faucet) to get started.
@@ -52,6 +52,225 @@ This reference guide provides configuration details for connecting to the GOAT n
 ## Get Connected
 
 <ConnectButton />
+
+### MetaMask Configuration
+
+You can add both **Testnet3** and **Alpha Mainnet** to MetaMask programmatically using the following code snippets.
+
+#### Add GOAT Testnet3 to MetaMask
+
+```javascript:pages/network/networks-rpc.mdx
+async function addGoatTestnet3() {
+  try {
+    await window.ethereum.request({
+      method: 'wallet_addEthereumChain',
+      params: [{
+        chainId: '0xBEB0', // 48816 in hexadecimal
+        chainName: 'GOAT Testnet3',
+        nativeCurrency: {
+          name: 'Bitcoin',
+          symbol: 'BTC',
+          decimals: 18
+        },
+        rpcUrls: ['https://rpc.testnet3.goat.network'],
+        blockExplorerUrls: ['https://explorer.testnet3.goat.network']
+      }]
+    });
+    console.log('GOAT Testnet3 successfully added to MetaMask!');
+  } catch (error) {
+    console.error('Failed to add GOAT Testnet3:', error);
+  }
+}
+```
+
+#### Add GOAT Alpha Mainnet to MetaMask
+
+```javascript:pages/network/networks-rpc.mdx
+async function addGoatAlphaMainnet() {
+  try {
+    await window.ethereum.request({
+      method: 'wallet_addEthereumChain',
+      params: [{
+        chainId: '0x929', // 2345 in hexadecimal
+        chainName: 'GOAT Network Alpha Mainnet',
+        nativeCurrency: {
+          name: 'Bitcoin',
+          symbol: 'BTC',
+          decimals: 18
+        },
+        rpcUrls: ['https://rpc.goat.network'],
+        blockExplorerUrls: ['https://explorer.goat.network']
+      }]
+    });
+    console.log('GOAT Alpha Mainnet successfully added to MetaMask!');
+  } catch (error) {
+    console.error('Failed to add GOAT Alpha Mainnet:', error);
+  }
+}
+```
+
+### JavaScript (ethers.js v6)
+
+Below are the configurations for both **Testnet3** and **Alpha Mainnet** using ethers.js v6.
+
+#### Testnet3 Configuration
+
+```javascript:pages/network/networks-rpc.mdx
+const testnet3Network = {
+  name: 'GOAT Testnet3',
+  chainId: 48816,
+  network: 'goat-testnet3',
+  rpc: 'https://rpc.testnet3.goat.network',
+  explorer: 'https://explorer.testnet3.goat.network'
+};
+
+// Initialize provider for Testnet3
+const providerTestnet3 = new ethers.JsonRpcProvider(testnet3Network.rpc);
+```
+
+#### Alpha Mainnet Configuration
+
+```javascript:pages/network/networks-rpc.mdx
+const alphaMainnet = {
+  name: 'GOAT Network Alpha Mainnet',
+  chainId: 2345,
+  network: 'goat-alpha-mainnet',
+  rpc: 'https://rpc.goat.network',
+  explorer: 'https://explorer.goat.network'
+};
+
+// Initialize provider for Alpha Mainnet
+const providerAlpha = new ethers.JsonRpcProvider(alphaMainnet.rpc);
+```
+
+### Python (web3.py)
+
+Configure web3.py for both **Testnet3** and **Alpha Mainnet**.
+
+#### Testnet3 Configuration
+
+```python:pages/network/networks-rpc.mdx
+from web3 import Web3
+
+testnet3_rpc = 'https://rpc.testnet3.goat.network'
+web3_testnet3 = Web3(Web3.HTTPProvider(testnet3_rpc))
+
+if web3_testnet3.isConnected():
+    print("Connected to GOAT Testnet3")
+else:
+    print("Failed to connect to GOAT Testnet3")
+```
+
+#### Alpha Mainnet Configuration
+
+```python:pages/network/networks-rpc.mdx
+from web3 import Web3
+
+alpha_rpc = 'https://rpc.goat.network'
+web3_alpha = Web3(Web3.HTTPProvider(alpha_rpc))
+
+if web3_alpha.isConnected():
+    print("Connected to GOAT Alpha Mainnet")
+else:
+    print("Failed to connect to GOAT Alpha Mainnet")
+```
+
+### Wallet Connection (MetaMask)
+
+Provide the JSON configuration for both networks when adding them to MetaMask manually.
+
+#### Testnet3 Configuration
+
+```json:pages/network/networks-rpc.mdx
+{
+  "chainId": "0xBEB0", // 48816 in hexadecimal
+  "chainName": "GOAT Testnet3",
+  "nativeCurrency": {
+    "name": "Bitcoin",
+    "symbol": "BTC",
+    "decimals": 18
+  },
+  "rpcUrls": ["https://rpc.testnet3.goat.network"],
+  "blockExplorerUrls": ["https://explorer.testnet3.goat.network"]
+}
+```
+
+#### Alpha Mainnet Configuration
+
+```json:pages/network/networks-rpc.mdx
+{
+  "chainId": "0x929", // 2345 in hexadecimal
+  "chainName": "GOAT Network Alpha Mainnet",
+  "nativeCurrency": {
+    "name": "Bitcoin",
+    "symbol": "BTC",
+    "decimals": 18
+  },
+  "rpcUrls": ["https://rpc.goat.network"],
+  "blockExplorerUrls": ["https://explorer.goat.network"]
+}
+```
+
+### Hardhat Configuration (Solidity Development)
+
+Update your Hardhat configuration to support both **Testnet3** and **Alpha Mainnet**.
+
+```javascript:hardhat.config.js
+require('@nomiclabs/hardhat-ethers');
+
+module.exports = {
+  defaultNetwork: 'testnet3',
+  networks: {
+    testnet3: {
+      url: 'https://rpc.testnet3.goat.network',
+      chainId: 48816,
+      accounts: ['YOUR_PRIVATE_KEY'],
+    },
+    alphaMainnet: {
+      url: 'https://rpc.goat.network',
+      chainId: 2345,
+      accounts: ['YOUR_PRIVATE_KEY'],
+    },
+  },
+  solidity: {
+    version: '0.8.0',
+  },
+};
+```
+
+### Usage Example with ethers.js
+
+Demonstrate how to interact with both **Testnet3** and **Alpha Mainnet** using ethers.js.
+
+#### Testnet3 Example
+
+```javascript:pages/network/networks-rpc.mdx
+import { ethers } from 'ethers';
+
+const providerTestnet3 = new ethers.JsonRpcProvider('https://rpc.testnet3.goat.network');
+
+async function getBlockNumberTestnet3() {
+  const blockNumber = await providerTestnet3.getBlockNumber();
+  console.log('Current block number on Testnet3:', blockNumber);
+}
+
+getBlockNumberTestnet3();
+```
+
+#### Alpha Mainnet Example
+
+```javascript:pages/network/networks-rpc.mdx
+import { ethers } from 'ethers';
+
+const providerAlpha = new ethers.JsonRpcProvider('https://rpc.goat.network');
+
+async function getBlockNumberAlpha() {
+  const blockNumber = await providerAlpha.getBlockNumber();
+  console.log('Current block number on Alpha Mainnet:', blockNumber);
+}
+
+getBlockNumberAlpha();
+```
 
 ## GOAT Network Configurations
 
@@ -71,7 +290,7 @@ This reference guide provides configuration details for connecting to the GOAT n
 | **Stack**             | `Ethereum (Arbitrum/Optimism/zksync)`         |
 | **Gist**              | [`v0.2.0`](https://github.com/GOATNetwork/goat/releases/tag/v0.2.0) |
 
-### Current Testnet (**Testnet3**)
+### Testnet3
 
 | Parameter             | Value                                         |
 |-----------------------|-----------------------------------------------|
@@ -101,88 +320,6 @@ This reference guide provides configuration details for connecting to the GOAT n
   The public RPC endpoints are rate-limited. For production applications, consider using a dedicated node or professional RPC provider.
 </Callout>
 
-### Network Configurations
-
-#### JavaScript (ethers.js v6)
-
-```javascript
-const network = {
-  name: 'GOAT Testnet3',
-  chainId: 48816,
-  network: 'goat-testnet3',
-  rpc: 'https://rpc.testnet3.goat.network',
-  explorer: 'https://explorer.testnet3.goat.network'
-};
-```
-
-#### Python (web3.py)
-
-```python
-network_config = {
-    "name": "GOAT Testnet3",
-    "chain_id": 48816,
-    "rpc_url": "https://rpc.testnet3.goat.network",
-    "explorer_url": "https://explorer.testnet3.goat.network"
-}
-```
-
-#### Wallet Connection (MetaMask)
-
-```json
-{
-  "chainId": "0xBEB0", // 48816 in hexadecimal
-  "chainName": "GOAT Testnet3",
-  "nativeCurrency": {
-    "name": "Bitcoin",
-    "symbol": "BTC",
-    "decimals": 18
-  },
-  "rpcUrls": ["https://rpc.testnet3.goat.network"],
-  "blockExplorerUrls": ["https://explorer.testnet3.goat.network"]
-}
-```
-
-### Adding GOAT Testnet3 to MetaMask
-
-You can add the GOAT Testnet3 to MetaMask programmatically using the following code:
-
-```javascript
-async function addGoatTestnet3() {
-  try {
-    await window.ethereum.request({
-      method: 'wallet_addEthereumChain',
-      params: [{
-        chainId: '0xBEB0', // 48816 in hexadecimal
-        chainName: 'GOAT Testnet3',
-        nativeCurrency: {
-          name: 'Bitcoin',
-          symbol: 'BTC',
-          decimals: 18
-        },
-        rpcUrls: ['https://rpc.testnet3.goat.network'],
-        blockExplorerUrls: ['https://explorer.testnet3.goat.network']
-      }]
-    });
-  } catch (error) {
-    console.error('Failed to add network:', error);
-  }
-}
-```
-
-### Usage Example with ethers.js
-
-```javascript
-import { ethers } from 'ethers';
-
-const provider = new ethers.JsonRpcProvider('https://rpc.testnet3.goat.network');
-
-async function getBlockNumber() {
-  const blockNumber = await provider.getBlockNumber();
-  console.log('Current block number:', blockNumber);
-}
-
-getBlockNumber();
-```
 ## GOAT Mainnet
 
 <Callout type="info">
@@ -210,3 +347,7 @@ getBlockNumber();
 ---
 
 For the latest updates and detailed documentation, visit our [official documentation](https://docs.goat.network).
+
+<Callout type="info">
+  Make sure your wallet is connected to the correct network when interacting with the GOAT Network Bridge to avoid any loss of funds.
+</Callout>
