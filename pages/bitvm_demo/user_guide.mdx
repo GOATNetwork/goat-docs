@@ -1,0 +1,147 @@
+---
+title: BitVM2 Playground Guide
+lang: en-US
+---
+
+# Introduction
+
+Welcome to the BitVM2 Playground! Here, you can experience acting as an ordinary user or a GOAT operator to run the BitVM2 protocol with zkMIPS to verify the GOAT Network's valid zero-knowledge proof. Our goal is to leverage zkMIPS and BitVM2 to implement a Bitcoin L2 without compromising security or creating Bitcoin forks, while enhancing programmability and scalability. Whether you're an experienced developer or an everyday user, try out our BitVM2 Playground to experience the future of Bitcoin!
+
+# User Instructions
+
+## Preparation
+
+1. Connect Wallet
+
+Please connect your BTC wallet. We support Unisat wallet and OKX wallet.
+ 
+<img src="/img/bitvm_demo/0-1.png"/>
+
+2. Request Test Coin
+
+Claim your BTC Test Tokens. Then, start your BitVM2 Playground journey.
+
+<img src="/img/bitvm_demo/0-2.png"/>
+
+## Step 1: Bridge-In
+
+First, a regular user initiates a Bridge-in transaction, which will be broadcast to the network.
+
+1. Click the【Send】button to open your wallet for signing.
+
+<img src="/img/bitvm_demo/1-1.png"/>
+
+2. When the transaction is successful, the 【Check On-Chain】 button will become clickable. Click it to view the on-chain data.
+
+<img src="/img/bitvm_demo/1-2.png"/>
+
+## Step 2: Bridge-Out & Prepare Proof
+
+When a user, such as Bob, wants to bridge out some BTC, the operator will use their own balance to pay Bob (referred to as a Bridge-Out transaction).
+
+The operator will generate a zkMIPS proof using the Bridge-Out transaction and broadcast it to Bitcoin by Decentralized Sequencer.
+
+If you are the operator, what decision would you make?
+
+1. If you choose to fake the zkMIPS proof, you need to enter an integer between 0 and 614, then click the 【I'm a bad guy】 button.
+
+<img src="/img/bitvm_demo/2-1.png"/>
+
+2. If you don't fake any transactions, please click the 【I'm honest】 button directly.
+
+<img src="/img/bitvm_demo/2-2.png"/>
+
+## Step 3: KickOff
+
+The operator pays Bob and broadcasts the KickOff transaction, and waits for the challenge with a period of 14 days.
+
+1. Click the【Send】button to open your wallet for signing.
+
+<img src="/img/bitvm_demo/3-1.png"/>
+
+2. When the transaction is successful, the 【Check On-Chain】 button will become clickable. Click it to view the on-chain data.
+
+<img src="/img/bitvm_demo/3-2.png"/>
+
+## Step 4-1: Take-1
+
+If no challenge occurs until the end of the 2 weeks period, which indicates the operator behaves honestly.  The operator can broadcast the timelocked Take-1 transaction and get the reimbursement successfully.
+
+1. Click the【Send】button to continue.
+
+<img src="/img/bitvm_demo/4-1-1.png"/>
+
+2. Because you chose to trust the operator, the operator will broadcast the timelocked Take-1 transaction and get reimbursed successfully. Your experience journey has now come to an end.
+
+<img src="/img/bitvm_demo/4-1-2.png"/>
+
+## Step 4-2: Challenge
+
+A challenge transaction is pushed and this will spend the output of KickOff transaction by script path (which indicates the operator can not go to Take-1).
+
+1. Click the【Send】button to continue.
+
+<img src="/img/bitvm_demo/4-2-1.png"/>
+
+2. When the transaction is successful, the 【Check On-Chain】 button will become clickable. Click it to view the on-chain data.
+
+<img src="/img/bitvm_demo/4-2-2.png"/>
+
+## Step 5: Assert
+
+The operator must disclose the zkMIPS verifier Tapscripts via an Assert transaction, or they cannot proceed to the Take-2 path.
+
+1. Click the【Send】button to continue.
+
+<img src="/img/bitvm_demo/5-1.png"/>
+
+2. When the transaction is successful, the 【Check On-Chain】 button will become clickable. Click it to view the on-chain data.
+
+<img src="/img/bitvm_demo/5-2.png"/>
+
+## Step 6-1: Disprove
+
+If you, the challenger, revealed an error in one of the operator's committed Tapscripts, you issue the Disprove transaction and it executes the corresponding verification subscripts to check if this is a valid challenge. If the proof is disproved, the operator will lose the locked BTC and you can win the rewards.
+
+1. Click the【Send】button to disprove.
+
+<img src="/img/bitvm_demo/6-1-1.png"/>
+
+2. In the second step, the operator did not falsify the zkMIPS proof, and the challenge failed. You can now proceed with Take-2.
+
+<img src="/img/bitvm_demo/6-1-2.png"/>
+
+3. In the second step, the operator generated a fake zkMIPS proof, and the challenge succeeded. Your experience journey has now come to an end.
+
+<img src="/img/bitvm_demo/6-1-3.png"/>
+
+## Step 6-2: Take-2
+
+If no valid disprove occurs until the end of the 2 weeks disprove period, the operator gets reimbursement from GOAT Federation in the Take-2 path and wins some extra rewards.
+
+1. Click the【Send】button to continue.
+
+<img src="/img/bitvm_demo/6-2-1.png"/>
+
+2. When the transaction is successful, the 【Check On-Chain】 button will become clickable. Click it to view the on-chain data. Congratulations on completing this journey!
+
+<img src="/img/bitvm_demo/6-2-2.png"/>
+
+# Additional Features
+
+1. Check On-Chain
+
+At any step, users can click the "Check On-Chain" button to view the current transaction status in the blockchain explorer.
+
+2. Reset the Game
+
+At any step, users can click the "Reset" button to return the page to its initial state and start a new transaction process.
+
+3. Logs
+After each step, users can view the corresponding transaction information in the log window. By clicking on the TXID, you can check the on-chain transaction details.
+
+# Notes
+
+1. If transactions remain "Processing" for a long time, it may be due to network congestion. Please wait patiently or reset the game.
+
+2. The BitVM2 Playground is just a demo for the experience process and does not create real transactions. Please feel free to use it.
