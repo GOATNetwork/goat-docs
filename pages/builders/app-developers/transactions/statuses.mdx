@@ -14,13 +14,9 @@ import { Callout } from 'nextra/components'
 
 Understanding transaction statuses on the GOAT Network is essential for tracking progress and handling transactions effectively in your applications.
 
----
-
 ## Transaction Lifecycle
 
 Transactions on the GOAT Network pass through several distinct stages before achieving finality on the Bitcoin blockchain. Each stage provides different levels of security and feedback for users.
-
----
 
 ### 1. Pending
 
@@ -33,8 +29,6 @@ Transactions on the GOAT Network pass through several distinct stages before ach
 - **Developer Note**:
   - Display as "Pending" in the UI, with an option for users to replace or cancel the transaction.
 
----
-
 ### 2. Sequencer Confirmed (Unsafe - pending publication)
 
 - **Description**:
@@ -43,12 +37,10 @@ Transactions on the GOAT Network pass through several distinct stages before ach
 - **Timeframe**: Usually 2-4 seconds.
 - **Characteristics**:
   - Provides rapid feedback to users.
-  - Not secured by Bitcoin’s proof-of-work.
+  - Not secured by Bitcoin's proof-of-work.
 - **Developer Note**:
   - Label this as "Sequencer Confirmed" or "Pending Confirmation" in your application.
   - Advise users to wait for publication to Bitcoin for stronger security guarantees.
-
----
 
 ### 3. Published to Bitcoin (Safe)
 
@@ -56,13 +48,11 @@ Transactions on the GOAT Network pass through several distinct stages before ach
   - The Sequencer block containing the transaction has been published to the Bitcoin blockchain.
 - **Timeframe**: Typically 10-60 minutes, depending on Bitcoin block times.
 - **Characteristics**:
-  - Gains security from Bitcoin’s blockchain but may still be affected by reorgs.
+  - Gains security from Bitcoin's blockchain but may still be affected by reorgs.
   - Finality is pending until sufficient confirmations are achieved.
 - **Developer Note**:
   - Display as "Published" or "Confirmed (Pending Finality)."
   - Inform users about the current confirmation count and expected finality timeframe.
-
----
 
 ### 4. Finalized
 
@@ -70,12 +60,10 @@ Transactions on the GOAT Network pass through several distinct stages before ach
   - The transaction has achieved finality on the Bitcoin blockchain after receiving the required number of confirmations.
 - **Timeframe**: Varies based on the number of confirmations (e.g., ~6 confirmations for ~1 hour).
 - **Characteristics**:
-  - Immutable and fully secured by Bitcoin’s proof-of-work.
+  - Immutable and fully secured by Bitcoin's proof-of-work.
 - **Developer Note**:
   - Display as "Finalized" or "Completed."
   - Indicate that the transaction is now permanent and irreversible.
-
----
 
 ## Special Considerations
 
@@ -88,8 +76,6 @@ Transactions on the GOAT Network pass through several distinct stages before ach
 - **Mitigation**:
   - Wait for sufficient confirmations (e.g., 6+) before treating a transaction as final.
 
----
-
 ### Transaction Failures
 
 - **Potential Causes**:
@@ -99,8 +85,6 @@ Transactions on the GOAT Network pass through several distinct stages before ach
   - Monitor the transaction receipt for `status: false`.
   - Inform users of failure reasons and provide actionable steps to resolve issues (e.g., resubmitting with higher fees).
 
----
-
 ### Batch Transactions with EIP-1559
 
 - **Atomicity**:
@@ -109,8 +93,6 @@ Transactions on the GOAT Network pass through several distinct stages before ach
   - The transaction status applies uniformly to the entire batch.
 - **Developer Note**:
   - Ensure error handling accounts for full batch reverts when working with EIP-1559 batch operations.
-
----
 
 ## Monitoring Transaction Statuses
 
@@ -127,8 +109,6 @@ Transactions on the GOAT Network pass through several distinct stages before ach
 ### Block Explorer
 
 - Use the [GOAT Network Explorer](https://explorer.testnet3.goat.network) for live transaction monitoring and detailed status information.
-
----
 
 ## Best Practices for Developers
 
@@ -148,8 +128,6 @@ Transactions on the GOAT Network pass through several distinct stages before ach
 
 5. **Stay Synchronized**:
    - Regularly poll the network for updates to keep your application state consistent with the blockchain.
-
----
 
 ## Additional Resources
 
