@@ -1,29 +1,47 @@
 ---
-title: Sequencing Rewards
+title: Sequencer Rewards
 lang: en-US
 description: A guide to the rewards for becoming a sequencer on the GOAT Network.
 ---
 
 import { Callout } from 'nextra/components'
 
-# Sequencing Rewards
+# Sequencer Rewards
 
-<Callout type="warning">
-  **Notice:** The rewards for sequencers are currently being updated. The GOAT Network Dashboard is under active development and has not yet been deployed.
-</Callout>
-
-This guide provides information on the rewards for being a sequencer on the GOAT Network and how to claim them.
+This guide provides detailed information about the rewards available for sequencers on the GOAT Network and how to claim them.
 
 ## Rewards
 
-Sequencers play a crucial role in processing and validating transactions on the GOAT Network. In recognition of their contributions, sequencers are rewarded with GOAT tokens. The rewards are distributed on each block mined by the sequencer.
+Sequencers play a pivotal role in processing and validating transactions on the GOAT Network. To acknowledge their contributions, sequencers are rewarded with mining rewards in GOAT tokens and gas rewards in BTC. These rewards are distributed with every block mined by the sequencers.
 
-The reward distribution mechanisms are designed to align with the network's economic principles, promoting fairness and sustainability. For a comprehensive understanding of the reward structure and economic model, please refer to the [GOAT Network Economics Paper](https://drive.google.com/file/d/17TDEZBe9q8eUsK68dnY4z4fbr0jQA5qG/view).
-
-## How to Claim Rewards
-
-Once your sequencer starts earning rewards, you will be able to claim them through the GOAT Network Dashboard. However, the dashboard is currently under development. Please stay tuned for updates on its deployment.
+The reward distribution mechanisms are carefully designed to align with the network's economic principles, ensuring fairness and sustainability. For a detailed understanding of the reward structure and economic model, please refer to the [GOAT Network Beige Paper](https://drive.google.com/file/d/17TDEZBe9q8eUsK68dnY4z4fbr0jQA5qG/view).
 
 ---
 
-*Note:* The reward structures and mechanisms are subject to change based on network governance and updates. Always refer to the latest documentation and announcements from the GOAT Network team.
+## How to Claim Rewards
+
+Once your sequencer begins earning rewards, you can claim them using the GOAT Network Locking contract.
+
+### Claiming Process
+
+1. **Claim Reward**: Use the `claim` method of the **Locking** contract. Provide your validator address and the recipient address where you want the rewards to be sent.
+
+   ```solidity:contracts/Locking.sol
+   function claim(address validator, address recipient) external
+   ```
+
+2. **Receive Rewards**: The gas rewards (BTC) will be transferred to the specified recipient address.
+
+<Callout type="info">
+  **Important:** Currently, sequencers can only claim BTC gas rewards. Mining rewards in GOAT tokens are recorded with each mined block but will only be distributed after the Token Generation Event (TGE). To claim any historical mining rewards in GOAT tokens after the TGE, you must use the recipient address previously specified during the claim process to call the `reclaim` method on the Locking contract.
+</Callout>
+
+---
+
+<Callout type="info">
+  Ensure that your recipient address is correctly configured for the appropriate network (Alpha Mainnet or Testnet3) to avoid issues during the claiming process.
+</Callout>
+
+---
+
+*Note:* The reward structures and mechanisms may change based on network governance decisions and updates. Always refer to the latest documentation and official announcements from the GOAT Network team.
