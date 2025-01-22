@@ -4,7 +4,7 @@ name: build npm sent S3
 on:
   push:
     branches:
-      - "release_test3"
+      - "release_testnet3"
     paths:
       - "k8s/updated-version_test.yml"
 
