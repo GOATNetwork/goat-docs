@@ -11,7 +11,7 @@ on:
 env:
   CLUSTER_NAME: goat-mainnet
   BUILD_ENV: mainnet
-  S3_BUCKET: sstatic-goat-docs-prod
+  S3_BUCKET: static-goat-docs-prod
   CLOUDFRONT_ID: E3QEUVXOL39T5M
 
 jobs:
