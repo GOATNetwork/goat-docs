@@ -141,10 +141,15 @@
     "@types/mdx" "^2.0.0"
     "@types/react" ">=16"
 
-"@napi-rs/simple-git-darwin-arm64@0.1.16":
+"@napi-rs/simple-git-linux-x64-gnu@0.1.16":
   version "0.1.16"
-  resolved "https://registry.npmjs.org/@napi-rs/simple-git-darwin-arm64/-/simple-git-darwin-arm64-0.1.16.tgz"
-  integrity sha512-XfgsYqxhUE022MJobeiX563TJqyQyX4FmYCnqrtJwAfivESVeAJiH6bQIum8dDEYMHXCsG7nL8Ok0Dp8k2m42g==
+  resolved "https://registry.npmjs.org/@napi-rs/simple-git-linux-x64-gnu/-/simple-git-linux-x64-gnu-0.1.16.tgz"
+  integrity sha512-AZYYFY2V7hlcQASPEOWyOa3e1skzTct9QPzz0LiDM3f/hCFY/wBaU2M6NC5iG3d2Kr38heuyFS/+JqxLm5WaKA==
+
+"@napi-rs/simple-git-linux-x64-musl@0.1.16":
+  version "0.1.16"
+  resolved "https://registry.npmjs.org/@napi-rs/simple-git-linux-x64-musl/-/simple-git-linux-x64-musl-0.1.16.tgz"
+  integrity sha512-9TyMcYSBJwjT8jwjY9m24BZbu7ozyWTjsmYBYNtK3B0Um1Ov6jthSNneLVvouQ6x+k3Ow+00TiFh6bvmT00r8g==
 
 "@napi-rs/simple-git@^0.1.9":
   version "0.1.16"
@@ -182,10 +187,15 @@
   dependencies:
     source-map "^0.7.0"
 
-"@next/swc-darwin-arm64@13.5.7":
+"@next/swc-linux-x64-gnu@13.5.7":
   version "13.5.7"
-  resolved "https://registry.npmjs.org/@next/swc-darwin-arm64/-/swc-darwin-arm64-13.5.7.tgz"
-  integrity sha512-7SxmxMex45FvKtRoP18eftrDCMyL6WQVYJSEE/s7A1AW/fCkznxjEShKet2iVVzf89gWp8HbXGaL4hCaseux6g==
+  resolved "https://registry.npmjs.org/@next/swc-linux-x64-gnu/-/swc-linux-x64-gnu-13.5.7.tgz"
+  integrity sha512-UdHm7AlxIbdRdMsK32cH0EOX4OmzAZ4Xm+UVlS0YdvwLkI3pb7AoBEoVMG5H0Wj6Wpz6GNkrFguHTRLymTy6kw==
+
+"@next/swc-linux-x64-musl@13.5.7":
+  version "13.5.7"
+  resolved "https://registry.npmjs.org/@next/swc-linux-x64-musl/-/swc-linux-x64-musl-13.5.7.tgz"
+  integrity sha512-c50Y8xBKU16ZGj038H6C13iedRglxvdQHD/1BOtes56gwUrIRDX2Nkzn3mYtpz3Wzax0gfAF9C0Nqljt93IxvA==
 
 "@noble/curves@1.2.0":
   version "1.2.0"
@@ -3541,7 +3551,7 @@ next@*, next@^13.5.0, "next@^8.1.1-canary.54 || >=9.0.0", next@>=9.5.3:
     "@next/swc-win32-ia32-msvc" "13.5.7"
     "@next/swc-win32-x64-msvc" "13.5.7"
 
-nextra-theme-docs@^2.0.0:
+nextra-theme-docs@^2.13.4:
   version "2.13.4"
   resolved "https://registry.npmjs.org/nextra-theme-docs/-/nextra-theme-docs-2.13.4.tgz"
   integrity sha512-2XOoMfwBCTYBt8ds4ZHftt9Wyf2XsykiNo02eir/XEYB+sGeUoE77kzqfidjEOKCSzOHYbK9BDMcg2+B/2vYRw==
@@ -3560,7 +3570,7 @@ nextra-theme-docs@^2.0.0:
     scroll-into-view-if-needed "^3.1.0"
     zod "^3.22.3"
 
-nextra@^2.0.0, nextra@2.13.4:
+nextra@^2.13.4, nextra@2.13.4:
   version "2.13.4"
   resolved "https://registry.npmjs.org/nextra/-/nextra-2.13.4.tgz"
   integrity sha512-7of2rSBxuUa3+lbMmZwG9cqgftcoNOVQLTT6Rxf3EhBR9t1EI7b43dted8YoqSNaigdE3j1CoyNkX8N/ZzlEpw==
