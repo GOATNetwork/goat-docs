@@ -1,6 +1,7 @@
 {
   "getting-started": "Getting Started",
   "networks-rpc": "Networks & RPC",
+  "oracle": "Oracle",
   "bridged": "Bridge",
   "contracts": "Contract Addresses",
   "concepts": "Core Concepts",
