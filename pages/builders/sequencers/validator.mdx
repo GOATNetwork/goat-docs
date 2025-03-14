@@ -79,12 +79,6 @@ docker-compose exec goat goatd status | jq
   Before you do below operations, you need to have enough Solidity and Linux operation experience.
 </Callout>
 
-#### The Locking Contract
-
-The [Locking](https://github.com/GOATNetwork/goat-contracts/blob/main/contracts/locking/Locking.sol) contract is the entrypoint for your validator.
-
-The address of the Locking contract is always `0xbC10000000000000000000000000000000000004`.
-
 #### Locking Process
 
 1. Get approval by contacting the GOAT Network team
@@ -140,7 +134,7 @@ cast send --rpc-url https://rpc.goat.network 0xbC1000000000000000000000000000000
 
 Refer to step 2 for the `VALIDATOR_PUBKEY` and `VALIDATOR_SIGNATURE`.
 
-There is also a [code example](https://github.com/GOATNetwork/goat-contracts/blob/main/task/lock.ts) for the above operations.
+The code snippet provided in [code example](https://github.com/GOATNetwork/goat-contracts/blob/main/task/lock.ts) is also included to execute the aforementioned operations, assuming familiarity with the [Hardhat](https://hardhat.org/).
 
 ## Support Resources
 
