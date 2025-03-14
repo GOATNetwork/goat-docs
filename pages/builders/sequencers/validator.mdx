@@ -22,7 +22,7 @@ This guide provides detailed instructions on how to join **GOAT Testnet3** and *
 | **Currency Symbol**     | BTC                                                                     |
 | **Currency Decimal**    | 18                                                                      |
 | **Block Explorer**      | [https://explorer.goat.network](https://explorer.goat.network)         |
-| **Gist**                | [Releases](https://github.com/GOATNetwork/goat/releases/)      |
+| **Gist**                | [Releases](https://github.com/GOATNetwork/goat/blob/main/docker/mainnet.yaml)      |
 
 ### Testnet3
 
@@ -34,7 +34,7 @@ This guide provides detailed instructions on how to join **GOAT Testnet3** and *
 | **Currency Symbol**     | BTC                                                                     |
 | **Currency Decimal**    | 18                                                                      |
 | **Block Explorer**      | [https://explorer.testnet3.goat.network](https://explorer.testnet3.goat.network) |
-| **Gist**                | [Releases](https://github.com/GOATNetwork/goat/releases/)      |
+| **Gist**                | [Releases](https://github.com/GOATNetwork/goat/blob/main/docker/testnet3.yaml)      |
 
 ## System Requirements
 
@@ -95,7 +95,7 @@ Replace `0x...abc` with the owner EVM address. The owner is the node administrat
 
 ### 2. Start the Sequencer Node
 
-Fetch the `docker-compose.yml` from [Gist](/builders/sequencers/validator#chain-information) according to your network type(Testnet3 or Mainnet);
+Fetch the `docker-compose.yml` of latest version from the Gist, [Testnet3](https://github.com/GOATNetwork/goat/blob/main/docker/testnet3.yaml) or [Alpha Mainnet](https://github.com/GOATNetwork/goat/blob/main/docker/mainnet.yaml);
 
 Start the services:
 
@@ -127,7 +127,6 @@ docker exec -i goat-alpha-1 goatd status | jq .
 
 - **Alpha Mainnet Address**: `0xbC10000000000000000000000000000000000004`
 - **Testnet3 Address**: `0xbC10000000000000000000000000000000000004`
-- **Asset Manager Address**: `0x218ab55484482409aAfD035066eb1e0315BE0084`
 
 #### Locking Process
 
@@ -186,7 +185,7 @@ Example Implementation: `0xb1119639cB7bB92B8a3C6d666f159944e89472C1`
 ## Support Resources
 
 - [RegTest Sequencer Node](https://github.com/GOATNetwork/goat-regtest)
-- [Telegram](https://t.me/+5JwHzveSo4IxMGY5)
+- [Telegram](https://t.me/+He2b1t9Bh2ZiMzZh)
 
 <Callout type="warning">
   The Locking Asset Manager features are under testing. Exercise caution and monitor announcements.

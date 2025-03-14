@@ -6,7 +6,7 @@ declare global {
   }
 }
 
-export const connectGoatNetwork = async (): Promise<boolean> => {
+export const connectGoatNetwork = async (network_type: any): Promise<boolean> => {
   try {
     if (typeof window === 'undefined' || !window.ethereum) {
       alert('Please install MetaMask to connect to GOAT Testnet');
@@ -19,26 +19,38 @@ export const connectGoatNetwork = async (): Promise<boolean> => {
         params: []
     });
 
+    let rpcUrls = ['https://rpc.testnet3.goat.network'];
+    let blockExplorerUrls = ['https://explorer.testnet3.goat.network'];
+    let chainId = "0xBEB0";
+    let chainName = "GOAT Testnet3"
+
+    if (network_type == "mainnet") {
+        rpcUrls = ['https://rpc.goat.network'];
+        blockExplorerUrls = ['https://explorer.goat.network'];
+        chainId = "0x929";
+        chainName = "GOAT Network"
+    }
+
     // Add the network
     await window.ethereum.request({
       method: 'wallet_addEthereumChain',
       params: [{
-        chainId: '0xBEB0',
-        chainName: 'GOAT Testnet3',
+        chainId: chainId,
+        chainName: chainName,
         nativeCurrency: {
           name: 'Bitcoin',
           symbol: 'BTC',
           decimals: 18
         },
-        rpcUrls: ['https://rpc.testnet3.goat.network'],
-        blockExplorerUrls: ['https://explorer.testnet3.goat.network']
+        rpcUrls: rpcUrls,
+        blockExplorerUrls: blockExplorerUrls 
       }]
     });
 
     // Switch to the network
     await window.ethereum.request({
       method: 'wallet_switchEthereumChain',
-      params: [{ chainId: '0xBEAF' }],
+      params: [{ chainId: chainId }],
     });
 
     return true;
