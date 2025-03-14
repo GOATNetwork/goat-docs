@@ -89,7 +89,7 @@ It uses an 18-decimal precision, unlike Bitcoin's 8-decimal precision.
 **Obtaining gas**:
 
 * You can obtain gas by bridging BTC from Bitcoin Layer 1 into GOAT Network using the [GOAT Bridge](https://bridge.goat.network).  
-* Airdrop of BTC gas from Faucet will be granted for bridging in more than $50 worth of either BTC (from Bitcoin Layer 1), BTCB (from BNB Chain), or DOGE via the official bridge, or for bridging in WETH, USDT, or USDC.e, via the Stargate bridge.
+* Airdrop of BTC gas from Faucet will be granted for bridging in more than $50 worth of either BTC (from Bitcoin Layer 1), BTCB (from BNB Chain), or DOGE via the official bridge, or for bridging in WETH, USDT, or USDC.e, via the [Stargate bridge](https://stargate.finance/bridge?srcChain=ethereum&dstChain=goat).
 * Please note that <font color="red">BTCB cannot be used as gas </font> within the GOAT Network – only BTC from Bitcoin Layer 1 can.
 
 
@@ -110,6 +110,7 @@ On the transaction confirmation page, locate the `Network fee` field and click t
 <p align="center"> <img src="/img/user-guides/1.png" width="300"/> </p>
 
 2. Modify gas settings
+
 In the `Edit gas fee` window, choose the `Advanced` tab.
 
 <p align="center"> <img src="/img/user-guides/2.png" width="300"/> </p>
@@ -117,16 +118,19 @@ In the `Edit gas fee` window, choose the `Advanced` tab.
 3. Enter custom values
 
 **Max Base Fee (GWEI)**: 0.000200007
+
 **Priority Fee (GWEI)**: 0.0001
 
 <p align="center"> <img src="/img/user-guides/3.png" width="300"/> </p>
 
 4. Save defaults
+
 Check `Save these values as my default for GOAT Network` so that your future transactions follow these optimized settings.
 
 <p align="center"> <img src="/img/user-guides/4.png" width="300"/> </p>
 
 5. Save
+
 Click `Save` to apply the settings.
 
 <p align="center"> <img src="/img/user-guides/5.png" width="300"/> </p>
@@ -138,6 +142,7 @@ See MetaMask's [`Customize Gas Settings`](https://support.metamask.io/configure/
 ## Understanding Fee Calculation
 
 GOAT Network uses [EIP-1559](https://ethereum.org/en/developers/docs/gas/) for gas-efficient transactions, the formula for total transaction fees is as follows:
+
 Total Fee = Gas Used × (Base Fee + Priority Fee)
 
 **Example Calculation (ERC-20 Transfer)**
@@ -147,7 +152,8 @@ Let's say you're sending an ERC-20 token, and the transaction uses 21,000 gas un
 **Estimated Maximum Gas Costs** = Gas Limit * (Max Base Fee + Priority Fee) = 21,000 * (0.000200007 + 0.0001) = 0.000006300147 BTC
 
 In times of low network congestion, the actual base fee consumed may be as low as 0.000000007, you’ll pay is as follows:
-Typical Gas Costs = Gas Limit * (Base Fee + Priority Fee) = 21,000 * (0.000200007 + 0.0001) = 0.000000002100147 BTC
+
+**Typical Gas Costs** = Gas Limit * (Base Fee + Priority Fee) = 21,000 * (0.000200007 + 0.0001) = 0.000000002100147 BTC
 
 **Important Considerations**
 
