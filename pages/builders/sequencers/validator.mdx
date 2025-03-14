@@ -1,40 +1,17 @@
 ---
 title: Running a Sequencer Node on GOAT Testnet3 and Alpha Mainnet
-description: Complete guide for setting up and running a Sequencer Node (2 BTC lock) on GOAT Testnet3 and Alpha Mainnet
+description: Complete guide for setting up and running a Sequencer Node on GOAT Network
 ---
 
 import { Callout } from 'nextra/components'
 
-# Running a Sequencer Node on GOAT Testnet3 and Alpha Mainnet
+# Running a Sequencer Node
 
-This guide provides detailed instructions on how to join **GOAT Testnet3** and **Alpha Mainnet** and run a Sequencer Node.
+This guide provides detailed instructions on how to join **GOAT Network** and run a sequencer node(validator). 
 
-## Chain Information
-
-### Alpha Mainnet
-
-| Parameter               | Value                                                                   |
-|-------------------------|-------------------------------------------------------------------------|
-| **Network Name**        | GOAT Network                                                            |
-| **RPC URL**             | [https://rpc.goat.network](https://rpc.goat.network)                   |
-| **Archive Node**        | [https://archive.goat.network](https://archive.goat.network)          |
-| **Chain ID**            | 2345                                                                    |
-| **Currency Symbol**     | BTC                                                                     |
-| **Currency Decimal**    | 18                                                                      |
-| **Block Explorer**      | [https://explorer.goat.network](https://explorer.goat.network)         |
-| **Gist**                | [Releases](https://github.com/GOATNetwork/goat/blob/main/docker/mainnet.yaml)      |
-
-### Testnet3
-
-| Parameter               | Value                                                                   |
-|-------------------------|-------------------------------------------------------------------------|
-| **Network Name**        | GOAT Testnet3                                                           |
-| **RPC URL**             | [https://rpc.testnet3.goat.network](https://rpc.testnet3.goat.network) |
-| **Chain ID**            | 48816                                                                   |
-| **Currency Symbol**     | BTC                                                                     |
-| **Currency Decimal**    | 18                                                                      |
-| **Block Explorer**      | [https://explorer.testnet3.goat.network](https://explorer.testnet3.goat.network) |
-| **Gist**                | [Releases](https://github.com/GOATNetwork/goat/blob/main/docker/testnet3.yaml)      |
+<Callout type="info">
+For the sake of clarity and to prevent any confusion, a sequencer node serves as the validator in this tutorial. The term "validator" is employed from the perspective of the decentralized network, whereas "sequencer node" is utilized from the perspective of the Bitcoin Layer 2 (L2) framework.
+</Callout>
 
 ## System Requirements
 
@@ -43,59 +20,37 @@ This guide provides detailed instructions on how to join **GOAT Testnet3** and *
 - **CPU**: Equivalent to c5.2xlarge or similar
 - **Storage**:
   - Root directory with at least 40 GiB of space
-  - EBS gp3, 100 GiB, 3000 IOPS, mounted to `/data`
+  - EBS gp3, 100 GiB, 3000 IOPS, mount it to `/data`, and ensure that you can extend the size.
 
 ### Network Configuration
 
 - **IPv4 Elastic IP (EIP)** required
 
+
 #### Security Group Rules
 
-| Port  | Description        | Protocol | Source    |
-| ----- | ------------------ | -------- | --------- |
-| 30303 | goat-geth P2P      | UDP      | 0.0.0.0/0 |
-| 30303 | goat-geth P2P      | TCP      | 0.0.0.0/0 |
-| 26656 | goat P2P Port      | TCP      | 0.0.0.0/0 |
+| Port  | Description   | Protocol | Source    |
+| ----- | ------------- | -------- | --------- |
+| 30303 | goat-geth p2p | UDP      | 0.0.0.0/0 |
+| 30303 | goat-geth p2p | TCP      | 0.0.0.0/0 |
+| 26656 | goat p2p      | TCP      | 0.0.0.0/0 |
 
 <Callout type="info">
   Ensure your server's firewall and network security settings allow inbound traffic on these ports.
 </Callout>
 
+
 ### Software Environment
 
-- **Operating System**: Ubuntu 20.04 or higher
+- **Operating System**: Linux(e.g. Ubuntu LTS)
 - **Docker and Docker Compose**
-- **Golang**: Latest stable version (currently 1.23)
+
 
 ## Deployment Steps
 
-### 1. Generate Sequencer Key
+### Run the node
 
-Log into your machine and generate the sequencer key:
-
-```bash:pages/builders/sequencers/validator.mdx
-docker run --rm -v /data/goat:/root/.goat ghcr.io/goatnetwork/goat:v0.2.0 modgen locking sign --owner 0x...abc --eth-chain-id 2345
-```
-
-Replace `0x...abc` with the owner EVM address. The owner is the node administrator's EVM address responsible for locking, redemption, and other operations.
-
-**Expected output format:**
-
-```json
-{
-  "owner": "0x...abc",
-  "pubkey": "0xf93bd3bad63419f0bc201043b433a03e53867b7b01c7f7a08fb5c2a4e14ce89bd6303df7e5bca824c5c6526aa748f4eef20d9879de26bfda0b00414cb6b76ff8",
-  "signature": "0x41b65d5255a7e0006df9c80dc0537c5945e0c7a6f5af2f258ca5969f665f16654449d79355ec2f00d847c4949024216d979057808ccd3dfaf3d8b5d6aa51b1d100"
-}
-```
-
-<Callout type="warning">
-  Back up the generated key at `/data/goat/config/priv_validator_key.json`
-</Callout>
-
-### 2. Start the Sequencer Node
-
-Fetch the `docker-compose.yml` of latest version from the Gist, [Testnet3](https://github.com/GOATNetwork/goat/blob/main/docker/testnet3.yaml) or [Alpha Mainnet](https://github.com/GOATNetwork/goat/blob/main/docker/mainnet.yaml);
+Fetch the `docker-compose.yml` from [Gist](https://github.com/GOATNetwork/goat/tree/main/docker) according to your network type,
 
 Start the services:
 
@@ -103,50 +58,90 @@ Start the services:
 docker-compose up -d
 ```
 
-### 3. Sync Status Check
+<Callout type="info">
+ You must back up your validator key at path `/data/goat/config/priv_validator_key.json`
+</Callout>
 
-Monitor blockchain sync:
+Check your node status by the following command,
 
 ```bash:pages/builders/sequencers/validator.mdx
-docker exec -i goat-alpha-1 goatd status | jq .
+docker-compose exec goat goatd status | jq
 ```
 
 <Callout type="info">
   Wait for `"catching_up": false` to confirm full sync
 </Callout>
 
-### 4. Become a Sequencer Node
+## Becoming a validator
 
-#### Prerequisites
+<Callout type="warning">
+  Please note, we don't have a website to participate right now.
+  Before you do below operations, you need to have enough Solidity and Linux operation experience.
+</Callout>
 
-- Sequencer Node Owner Address (from step 1)
-- Signature (split into 32-32-1 bytes)
-- Sufficient funds for locking (2 BTC) and gas
+#### The Locking Contract
 
-#### Locking Contract Details
+The [Locking](https://github.com/GOATNetwork/goat-contracts/blob/main/contracts/locking/Locking.sol) contract is the entrypoint for your validator.
 
-- **Alpha Mainnet Address**: `0xbC10000000000000000000000000000000000004`
-- **Testnet3 Address**: `0xbC10000000000000000000000000000000000004`
+The address of the Locking contract is always `0xbC10000000000000000000000000000000000004`.
 
 #### Locking Process
 
-1. Get whitelisted by contacting the GOAT Network team.
-2. Check minimum lock amount:
+1. Get approval by contacting the GOAT Network team
+2. Get creation proof on your instance
 
-    ```solidity:contracts/Locking.sol
-    // Reference: https://github.com/GOATNetwork/goat-contracts/blob/main/contracts/locking/Locking.sol#L334
-    function minimumLockAmount() external view returns (uint256)
-    ```
+```bash:pages/builders/sequencers/validator.mdx
+GOAT_VALIATOR_OWNER=0x # use your own address instead
+GOAT_GETH_CHAIN_ID=`docker-compose exec geth geth attach --exec 'Number(eth.chainId())'`
+docker-compose exec goat goatd modgen locking sign --owner $GOAT_VALIATOR_OWNER --eth-chain-id $GOAT_GETH_CHA
+IN_ID
+```
 
-3. Create a Sequencer Node:
+the `GOAT_VALIATOR_OWNER` variable is the node administrator's EVM address which is responsible for locking, redemption, and other operations.
 
-    ```solidity:contracts/Locking.sol
-    // Reference: https://github.com/GOATNetwork/goat-contracts/blob/main/contracts/locking/Locking.sol#L118
-    function createValidator(
-        address owner,
-        bytes memory pubkey,
-        bytes32 r,
-        bytes32 s,
-        uint8 v
-    ) external
-    ```
+After the last command, you'll get below result:
+
+```json:pages/builders/sequencers/validator.mdx
+{
+ "owner": "0x",
+ "pubkey": "0x2b4a44d655b6d5882f58997417320f98b9fcb9b9fb563ce089d462928a1bd0569359880e97221e5a8a1a5c1b4f012e61f4f75fc0937189600671532bcdb7cf0e",
+ "signature": "0xe8d37ae31e755021b8dd63d1723730057998204d29a9f36b9464d82d3e47830051bca27cae8dd0ecd23e724ed74b031d0e14d1be3b9995f5a984dba947b2c3ee00",
+ "validator": "0x3d2cc0ff49145113a46d576a269d291898c5138a"
+}
+```
+
+3. Check if you have sufficient assets
+
+You'll need to call `creationThreshold()` method of the Locking contract, for example:
+
+```bash:pages/builders/sequencers/validator.mdx
+cast call --json --rpc-url https://rpc.goat.network 0xbC10000000000000000000000000000000000004 'creationThreshold()((address,uint256)[])'
+[
+  "[(0x0000000000000000000000000000000000000000, 500000000000000000)]"
+]
+```
+
+This is for mainnet, for another network, use corresponding `--rpc-url` instead.
+
+the `0x0000000000000000000000000000000000000000` represents native token(Bitcoin), and the `500000000000000000` represents the minimum amount to create a validator.
+
+if the token address is not the zero address, you'll need to approve the locking contract to spend them.
+
+4. Register your validator
+
+You'll need to call `create()` method of the Locking contract, so that the command for mainnet is
+
+```bash:pages/builders/sequencers/validator.mdx
+VALIDATOR_PUBKEY=0x2b4a44d655b6d5882f58997417320f98b9fcb9b9fb563ce089d462928a1bd0569359880e97221e5a8a1a5c1b4f012e61f4f75fc0937189600671532bcdb7cf0e
+VALIDATOR_SIGNATURE=0xe8d37ae31e755021b8dd63d1723730057998204d29a9f36b9464d82d3e47830051bca27cae8dd0ecd23e724ed74b031d0e14d1be3b9995f5a984dba947b2c3ee00
+cast send --rpc-url https://rpc.goat.network 0xbC10000000000000000000000000000000000004 'create(bytes32[2],bytes32,bytes32,uint8)' \
+  $VALIDATOR_PUBKEY "0x${VALIDATOR_SIGNATURE:2:66}" "0x${VALIDATOR_SIGNATURE:66:130}" "0x${VALIDATOR_SIGNATURE:130:132}"
+```
+
+Refer to step 2 for the `VALIDATOR_PUBKEY` and `VALIDATOR_SIGNATURE`.
+
+There is also a [code example](https://github.com/GOATNetwork/goat-contracts/blob/main/task/lock.ts) for the above operations.
+
+## Support Resources
+
+- [Developer Telegram](https://t.me/+He2b1t9Bh2ZiMzZh)
