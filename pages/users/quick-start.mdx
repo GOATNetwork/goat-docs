@@ -141,14 +141,18 @@ GOAT Network uses [EIP-1559](https://ethereum.org/en/developers/docs/gas/) for g
 Total Fee = Gas Used × (Base Fee + Priority Fee)
 
 **Example Calculation (ERC-20 Transfer)**
+
 Let's say you're sending an ERC-20 token, and the transaction uses 21,000 gas units (a typical value for a simple transfer). Using the recommended Priority Fee of 0.0001 Gwei and the provided Max Base Fee of 0.000200007 Gwei.
 
 **Estimated Maximum Gas Costs** = Gas Limit * (Max Base Fee + Priority Fee) = 21,000 * (0.000200007 + 0.0001) = 0.000006300147 BTC
+
 In times of low network congestion, the actual base fee consumed may be as low as 0.000000007, you’ll pay is as follows:
 Typical Gas Costs = Gas Limit * (Base Fee + Priority Fee) = 21,000 * (0.000200007 + 0.0001) = 0.000000002100147 BTC
 
 **Important Considerations**
+
 Network congestion: When the network is busy, gas prices may increase. Check your gas settings before confirming any transaction.
 
 **Further information**
+
 For more details, please refer to our docs, under [Transaction Fees on GOAT Network](/builders/app-developers/transactions/fees).
