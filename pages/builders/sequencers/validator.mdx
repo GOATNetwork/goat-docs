@@ -44,6 +44,7 @@ For the sake of clarity and to prevent any confusion, a sequencer node serves as
 
 - **Operating System**: Linux(e.g. Ubuntu LTS)
 - **Docker and Docker Compose**
+- [**Cast**](https://book.getfoundry.sh/cast/)
 
 
 ## Deployment Steps
@@ -81,8 +82,7 @@ docker-compose exec goat goatd status | jq
 
 #### Locking Process
 
-1. Get approval by contacting the GOAT Network team
-2. Get creation proof on your instance
+1. Get creation proof on your instance
 
 ```bash:pages/builders/sequencers/validator.mdx
 GOAT_VALIATOR_OWNER=0x # use your own address instead
@@ -104,9 +104,11 @@ After the last command, you'll get below result:
 }
 ```
 
+2. Establish the contact with GOAT Network team to approve the new validator. This step is necessary in GOAT Alpha Mainnet. 
+
 3. Check if you have sufficient assets
 
-You'll need to call `creationThreshold()` method of the Locking contract, for example:
+Call `creationThreshold()` method of the Locking contract get the minimal locking amounts and ensure your wallet holds sufficient assets. Take `creationThreshold()` invocation on mainnet for example:
 
 ```bash:pages/builders/sequencers/validator.mdx
 cast call --json --rpc-url https://rpc.goat.network 0xbC10000000000000000000000000000000000004 'creationThreshold()((address,uint256)[])'
@@ -114,22 +116,30 @@ cast call --json --rpc-url https://rpc.goat.network 0xbC100000000000000000000000
   "[(0x0000000000000000000000000000000000000000, 500000000000000000)]"
 ]
 ```
+where `0xbC10000000000000000000000000000000000004` is the offical [Locking](https://github.com/GOATNetwork/goat-contracts/blob/main/contracts/locking/Locking.sol) contract address.
+For other networks, use corresponding `--rpc-url` instead.
 
-This is for mainnet, for another network, use corresponding `--rpc-url` instead.
-
-the `0x0000000000000000000000000000000000000000` represents native token(Bitcoin), and the `500000000000000000` represents the minimum amount to create a validator.
-
-if the token address is not the zero address, you'll need to approve the locking contract to spend them.
+On the response, the `0x0000000000000000000000000000000000000000` represents native token(Bitcoin), and the `500000000000000000` represents the minimum amount to create a validator.
+if the token address is not the zero address, you should approve the locking contract to allow the `Locking` contract can spend it.
 
 4. Register your validator
 
-You'll need to call `create()` method of the Locking contract, so that the command for mainnet is
+Call `create()` method of the Locking contract to register your validator with the command below on mainnet, change the `--rpc-url` if necessary. 
 
 ```bash:pages/builders/sequencers/validator.mdx
+ETH_RPC_URL=https://rpc.goat.network
+
 VALIDATOR_PUBKEY=0x2b4a44d655b6d5882f58997417320f98b9fcb9b9fb563ce089d462928a1bd0569359880e97221e5a8a1a5c1b4f012e61f4f75fc0937189600671532bcdb7cf0e
 VALIDATOR_SIGNATURE=0xe8d37ae31e755021b8dd63d1723730057998204d29a9f36b9464d82d3e47830051bca27cae8dd0ecd23e724ed74b031d0e14d1be3b9995f5a984dba947b2c3ee00
-cast send --rpc-url https://rpc.goat.network 0xbC10000000000000000000000000000000000004 'create(bytes32[2],bytes32,bytes32,uint8)' \
-  $VALIDATOR_PUBKEY "0x${VALIDATOR_SIGNATURE:2:66}" "0x${VALIDATOR_SIGNATURE:66:130}" "0x${VALIDATOR_SIGNATURE:130:132}"
+GOAT_LOCKING_CONTRACT=0xbC10000000000000000000000000000000000004
+SIG_V=${VALIDATOR_SIGNATURE: -2}
+SIG_V=$((16#$SIG_V + 27))
+SIG_V=$(printf "0x%02X" "$SIG_V")
+
+BITCOIN_LOCKING_VALUE=`cast call --json $GOAT_LOCKING_CONTRACT 'tokens(address)(bool,uint64,uint256,uint256)' '0x0000000000000000000000000000000000000000' | jq -r '.[3]'`
+
+cast send -v --interactive --value $BITCOIN_LOCKING_VALUE $GOAT_LOCKING_CONTRACT 'create(bytes32[2],bytes32,bytes32,uint8)' \
+  "[0x${VALIDATOR_PUBKEY:2:64},0x${VALIDATOR_PUBKEY:66:64}]" "0x${VALIDATOR_SIGNATURE:2:64}" "0x${VALIDATOR_SIGNATURE:66:64}" "${SIG_V}"
 ```
 
 Refer to step 2 for the `VALIDATOR_PUBKEY` and `VALIDATOR_SIGNATURE`.
