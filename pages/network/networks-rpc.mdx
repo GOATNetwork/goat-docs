@@ -19,7 +19,7 @@ export function ConnectButton() {
     <button
       onClick={async () => {
         if (mounted) {
-          await connectGoatNetwork();
+          await connectGoatNetwork("testnet3");
         }
       }}
       className="connect-button"
@@ -343,7 +343,7 @@ getBlockNumberAlpha();
 | Permit2 | [`0x000000000022D473030F116dDEE9F6B43aC78BA3`](https://explorer.goat.network/address/0x000000000022D473030F116dDEE9F6B43aC78BA3?tab=contract) | Gasless approvals |
 | Bridge | [`0xBC10000000000000000000000000000000000003`](https://explorer.goat.network/address/0xBC10000000000000000000000000000000000003?tab=contract) | Cross-chain bridge |
 | Locking | [`0xbC10000000000000000000000000000000000004`](https://explorer.goat.network/address/0xbC10000000000000000000000000000000000004?tab=contract) | Token locking mechanism |
-| GOAT Token | [`0xbC10000000000000000000000000000000000001`](https://explorer.goat.network/address/0xbC10000000000000000000000000000000000001?tab=txs) | Native utility token |
+| GOATED Token | [`0xbC10000000000000000000000000000000000001`](https://explorer.goat.network/address/0xbC10000000000000000000000000000000000001?tab=txs) | Native utility token |
 
 ---
 

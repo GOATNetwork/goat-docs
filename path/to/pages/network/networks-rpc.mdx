@@ -19,7 +19,7 @@ export function ConnectButton() {
     <button
       onClick={async () => {
         if (mounted) {
-          await connectGoatNetwork();
+          await connectGoatNetwork("testnet3");
         }
       }}
       className="connect-button"
