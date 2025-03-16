@@ -3,3 +3,4 @@ node_modules
 .Ds_Store
 .vscode
 .vscode/**
+out/
