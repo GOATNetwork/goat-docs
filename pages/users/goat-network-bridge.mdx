@@ -1,0 +1,216 @@
+---
+title: 'GOAT Network Bridge User Guide'
+description: 'GOAT Network Bridge User Guide'
+---
+
+import { Steps } from 'nextra/components'
+import { Card, Cards } from 'nextra/components'
+import { Callout, Tabs, Tab } from 'nextra/components'
+import React from 'react';
+
+## 1. Introduction
+
+As the official bridge of GOAT Network, [GOAT Bridge](https://bridge.goat.network/) seamlessly connects GOAT Network with other networks, enabling smooth and effortless cross-network asset transfers. Serving as the key gateway to the [GOAT ecosystem](http://GOAT.network/ecosystem) of top-notch dApps, GOAT Bridge is designed to lead users into the vast realm of GOAT Network, where they can explore its diverse and vibrant array of on-chain projects. 
+
+Now, let’s dig into how to use GOAT Bridge\!
+
+| Component | Options | 
+| :---- | :---- |
+| Networks | Bitcoin, BNB Chain |
+| Assets | BTC (Bitcoin), BTCB (Binance-Pegged BTCB Token), DOGE (Binance-Pegged Dogecoin Token) |
+| BTC wallets | Unisat, OKX, OneKey, Phantom, Bitget |
+| EVM wallets | MetaMask, OKX, Bitget, OneKey, Coinbase, imToken, WalletConnect |
+
+
+**Quick Start Bridge**
+
+1. Select the network and asset you want to bridge.  
+2. Connect both your sending wallet and receiving wallet.  
+3. Enter the amount you want to bridge, ensuring it meets the minimum requirement.  
+4. Double-check the cross-chain details, including the source chain, destination chain, amount, gas fee, and bridge fee (if applicable).  
+5. Click \[Transfer\], and a transaction confirmation window will pop up in your wallet. Confirm the transaction in your wallet and pay the gas fee.  
+6. Once the signature is successful, wait patiently for the transaction to be processed. You can track its progress in "Transaction History."  
+7. Link your Telegram account to receive transaction updates. Once linked, all related transactions for this wallet will be notified via Telegram.  
+8. After a successful transaction, the transferred amount will appear in your receiving wallet.
+
+## 2. BTC Bridge(Bitcoin↔GOAT Network)
+
+### 2.1 Asset Statement
+
+The BTC assets bridged from Bitcoin mainnet to GOAT Network can be used as gas fees on GOAT network.
+
+### 2.2 Connect Wallet
+
+You need to connect two wallets: one BTC wallet and one EVM wallet. One will serve as the sending address, and the other as the receiving address. For security reasons, we recommend users set up the receiving address by connecting their wallet, preventing potential errors in asset transfers. However, we also support custom receiving addresses, allowing users to configure them based on their needs.
+
+1. **Connect BTC Wallet:** We support **Unisat**, **OKX**, **Phantom**, **Bitget**, and **OneKey**.  
+   <p align="center"> <img src="/img/user-guides/goat-network-bridge/pic1.png"/> </p>
+2. **Connect EVM Wallet:** We support **MetaMask**, **OKX**, **Bitget**, **imToken**, **Coinbase**, **OneKey**, and **WalletConnect**.  
+   <p align="center"> <img src="/img/user-guides/goat-network-bridge/pic2.png"/> </p>
+3. [**Particle Wallet**](https://developers.particle.network/landing/wallet-abstraction/btc-connect)**:** If your connected BTC wallet is **Unisat**, **OKX**, or **Bitget**, Particle will create an AA wallet (EVM address) for you to use as your GOAT Network wallet. You can choose whether or not to use it. The Particle wallet entry is located at the bottom right of the page, and you can send tokens and receipt tokens within the wallet.  
+   <p align="center"> <img src="/img/user-guides/goat-network-bridge/pic3.png"/> </p>
+   <p align="center"> <img src="/img/user-guides/goat-network-bridge/pic4.png"/> </p>
+   <p align="center"> <img src="/img/user-guides/goat-network-bridge/pic5.png" width="400"/> </p>
+   BTC Connect enables AA on Bitcoin by unifying users’ Bitcoin accounts and EVM-based smart accounts. It assigns a Bitcoin wallet as a Signer for a smart account on a Bitcoin L2 or EVM network, making users’ Bitcoin wallets the sole point of interaction with L2s, without additional interactions or interfaces.
+
+### 2.3 Bridge In
+
+1. Ensure your BTC wallet is connected and your EVM address is set.  
+2. Enter the amount you wish to bridge in, or click **“Max”** to use the maximum available balance. The minimum bridging amount is **0.0005 BTC**.  
+3. Select the fee rate for the Bitcoin network, which determines the processing speed of your transaction.  
+4. Verify the cross-chain details (source chain, target chain, amount, and base fee). Ensure the total (bridging amount \+ base fee) does not exceed your BTC wallet’s **BTC** balance.  
+5. Click **\[Transfer\]**, and a transaction confirmation window will pop up in your wallet. Confirm the transaction and pay the gas fee in your wallet.  
+6. After a successful signature, wait for the transaction to be processed. You can track the progress in **“Transaction History”**.  
+7. Link your Telegram account to receive transaction updates via Telegram. Once linked, all future BTC wallet bridging-in transactions will be notified through Telegram.  
+8. After the transaction is successful, the bridged amount will appear in the receiving wallet's address.
+
+### 2.4 Bridge Out
+
+1. Ensure your EVM wallet is connected and your BTC address is set.  
+2. Enter the amount you wish to bridge out, or click **“Max”** to use the maximum available balance. The minimum bridging-out amount is **0.0005 BTC**.  
+3. Select the fee rate for the Bitcoin network, which determines the processing speed of your transaction.  
+4. Verify the cross-chain details (source chain, target chain, amount, and bridge fee). Ensure the total (bridging amount \+ bridge fee) does not exceed your EVM wallet **BTC** balance. The **bridge fee** includes the **service fee** and **base fee**, with the service fee being **0.1%** of the bridged-out amount.  
+5. Click **\[Transfer\]**, and a transaction confirmation window will pop up in your wallet. Confirm the transaction and pay the gas fee in your wallet.  
+6. After a successful signature, wait for the transaction to be processed. You can track the progress in **“Transaction History”**.  
+7. Link your Telegram account to receive transaction updates via Telegram. Once linked, all future EVM wallet bridging-out transactions will be notified through Telegram.  
+8. After the transaction is successful, the bridged amount will appear in the receiving wallet's address.
+
+## 3. DOGE Bridge(BNB Chain↔GOAT Network)
+
+### 3.1 Connect Wallet
+
+Please connect your EVM wallet as the sending address. By default, the sending address will also serve as the receiving address, but you can customize the receiving address based on your needs.
+
+**EVM Wallets Supported: MetaMask**, **OKX**, **Bitget**, **imToken**, **Coinbase**, **OneKey**, and **WalletConnect**.
+
+### 3.2 Bridge In
+
+1. Ensure the sending wallet is connected and the receiving address is set.  
+2. Enter the amount you wish to bridge in, or click **“Max”** to use the maximum available balance. Note that the minimum bridging-in amount is **0.01 DOGE**.  
+3. Verify the cross-chain details (source chain, target chain, amount, bridge fee, and gas fee). Ensure your wallet has enough **BNB** to pay the bridge fee and gas fee.  
+4. Click **\[Approve\]**, and an approval window will pop up in your wallet. Approve the maximum amount you want to transfer.  
+5. After the approval is successful, return to the interface and click **\[Transfer\]**. A transaction confirmation window will pop up in your wallet. Confirm the transaction and pay the gas fee.  
+6. Once the transaction is signed successfully, wait for it to process. You can track the progress in **“Transaction History”**.  
+7. Link your Telegram account to receive transaction updates via Telegram. Once linked, all future transactions from this EVM wallet will also be notified through Telegram.  
+8. After the transaction is successful, the bridged amount will appear in the receiving wallet's address.
+
+### 3.3 Bridge Out
+
+1. Ensure the sending wallet is connected and the receiving address is set.  
+2. Enter the amount you wish to bridge out, or click **“Max”** to use the maximum available balance. Note that the minimum bridging-out amount is **0.01 DOGEB**.  
+3. Verify the cross-chain details (source chain, target chain, amount, bridge fee, and gas fee). Ensure your wallet has enough **BTC** to pay the bridge fee and gas fee.  
+4. Click **\[Transfer\]**, and a transaction confirmation window will pop up in your wallet. Confirm the transaction and pay the gas fee.  
+5. Once the transaction is signed successfully, wait for it to process. You can track the progress in **“Transaction History”**.  
+6. Link your Telegram account to receive transaction updates via Telegram. Once linked, all future transactions from this EVM wallet will also be notified through Telegram.  
+7. After the transaction is successful, the bridged amount will appear in the receiving wallet's address.
+
+## 4. BTCB Bridge(BNB Chain↔GOAT Network)
+
+### 4.1 Asset Statement
+
+BTCB (Bitcoin BEP-20) is the tokenized version of Bitcoin (BTC) on the Binance Smart Chain. It is issued by Binance and adheres to the BEP-20 token standard, with assets supported on a 1:1 basis with BTC. NOTE: BTCB bridged in ***cannot be used as gas fees*** on GOAT network.
+
+### 4.2 Connect Wallet
+
+Please connect your EVM wallet as the sending address. By default, the sending address will also serve as the receiving address, but you can customize the receiving address based on your needs.
+
+**EVM Wallets Supported:** **MetaMask**, **OKX,** **Bitget,** **imToken,** **Coinbase**, **OneKey**, and **WalletConnect.**
+
+### 4.2 Bridge In
+
+1. Ensure the sending wallet is connected and the receiving address is set.  
+2. Enter the amount you wish to bridge in, or click **“Max”** to use the maximum available balance. Note that the minimum bridging-in amount is **0.000001 BTCB**.  
+3. Verify the cross-chain details (source chain, target chain, amount, bridge fee, and gas fee). Ensure your wallet has enough **BNB** to pay the bridge fee and gas fee.  
+4. Click **\[Approve\]**, and an approval window will pop up in your wallet. Approve the maximum amount you want to transfer.  
+5. After the approval is successful, return to the interface and click **\[Transfer\]**. A transaction confirmation window will pop up in your wallet. Confirm the transaction and pay the gas fee.  
+6. Once the transaction is signed successfully, wait for it to process. You can track the progress in **“Transaction History”**.  
+7. Link your Telegram account to receive transaction updates via Telegram. Once linked, all future transactions from this EVM wallet will also be notified through Telegram.  
+8. After the transaction is successful, the bridged amount will appear in the receiving wallet's address.
+
+### 4.3 Bridge Out
+
+1. Ensure the sending wallet is connected and the receiving address is set.  
+2. Enter the amount you wish to bridge out, or click **“Max”** to use the maximum available balance. Note that the minimum bridging-out amount is **0.000001 BTCB**.  
+3. Verify the cross-chain details (source chain, target chain, amount, bridge fee, and gas fee). Ensure your wallet has enough **BTC** to pay the bridge fee and gas fee.  
+4. Click **\[Transfer\]**, and a transaction confirmation window will pop up in your wallet. Confirm the transaction and pay the gas fee.  
+5. Once the transaction is signed successfully, wait for it to process. You can track the progress in **“Transaction History”**.  
+6. Link your Telegram account to receive transaction updates via Telegram. Once linked, all future transactions from this EVM wallet will also be notified through Telegram.  
+7. After the transaction is successful, the bridged amount will appear in the receiving wallet's address.
+
+## 5. Transaction History
+
+In this module, detailed records of transactions associated with your currently connected wallet will be maintained, making it easier for you to track the transaction activities of this wallet address. You can pay special attention to the following features within this module:
+
+1. **Transaction Status**: Each transaction's current status will be updated in real-time.  
+2. **Transaction ID**: Use the transaction ID to directly connect to the blockchain explorer, allowing you to view on-chain data.  
+3. **Cancel Transaction**: For BTC bridge-out transactions from GOAT Network to the Bitcoin chain, you can cancel the transaction before it is broadcasted to the blockchain.  
+4. **Increase Base Rate**: For BTC bridge-in transactions from the Bitcoin chain to GOAT Network, you can increase the base fee to accelerate the transaction speed.
+
+## 6. Important Notes
+
+1. **How to obtain gas fees on GOAT Network?**  
+   The native gas token of GOAT Network is BTC. Please bridge a small amount of BTC from the BTC mainnet to GOAT Network, such as 0.0005 BTC. Please note that **BTCB bridged from the BNB Chain cannot be used to pay gas fees** on GOAT Network.  
+   \[pic6\]  
+2. **The gas fee on GOAT Network is too high. How can I fix this issue?**  
+   Please manually set the network fee in your wallet. It is recommended to set the **Max Base Fee** to \[0.000200007\], the **Priority Fee** to \[0.0001\], and check the option \[Save these values as the default for GOAT Network\] before saving the data. Please refer to the following example:  
+   * **MetaMask**  
+     * Edit the network fee in your wallet.  
+     * Select \[Advanced\] mode.  
+     * Set the Max base fee to \[0.000200007\] and the Priority fee to \[0.0001\], and read and check \[Save these values as default for GOAT Network.\]  
+     * Finally, click \[Save\], and you won't need to set the gas fee again in the future.
+
+   <p align="center"> <img src="/img/user-guides/goat-network-bridge/pic7.png"/> </p>
+
+     
+
+   * **OKX**  
+     * Edit the network fee in your wallet.  
+     * Set the Max base fee to \[0.000200007\] and the Priority fee to \[0.0001\], and read and check \[Save these values as default for GOAT Network.\]  
+     * Finally, click \[Confirm\], and you won't need to set the gas fee again in the future.
+
+   <p align="center"> <img src="/img/user-guides/goat-network-bridge/pic8.png"/> </p>
+
+3. **Wallet Usage:**
+
+   * **OneKey**
+
+      You can use both OneKey software and hardware wallets for transactions. Please note the BTC address types supported by OneKey wallets:
+
+     * Software Wallet: **p2wpkh (Native Segwit)**, **p2tr (Taproot)**  
+     * Hardware Wallet: **Pro**, **Classic1S**, **p2tr (Taproot)**  
+     * For more details about OneKey wallets, please refer to the [official documentation](https://developer.onekey.so/connect-to-software/webapp-connect-onekey/btc/api-reference/signpsbt).
+
+   * **Ledger**
+
+     If you want to use this wallet, it is recommended to connect the BTC wallet to OKX and the EVM wallet to MetaMask.
+
+   * **Keystone**
+
+     If you want to use this wallet, it is recommended to connect the BTC wallet to Unisat and the EVM wallet to MetaMask.
+
+4. **Fees:**
+
+   * Cross-chain transfers may require the following fees:  
+     * **Gas Fee**: Transaction fee on the source chain.  
+     * **Bridge Fee**: For BTC, you only need to pay a service fee of 0.1% of the amount being bridged out and the gas fee for the first layer network. For DOGE and BTCB, every cross-chain operation requires a cross-chain service fee paid to **LayerZero**.  
+   * Fees are dynamically adjusted based on the blockchain network status.  
+5. **Transfer Amount Limit:**
+
+   * Each asset has a minimum transfer amount limit. Ensure your transaction amount exceeds the minimum required.  
+   * The BTC transfer amount cannot include more than 200 UTXOs and must be below the indicated value. Other assets have no maximum amount limit.  
+6. **Supported Assets and Networks:**
+
+   * The cross-chain bridge supports only the listed assets and blockchains. More networks and assets will be supported in the future.  
+7. **Double-Check Addresses:**
+
+   * Carefully check the target chain address when entering it. An incorrect address will result in **permanent loss of assets**.  
+8. **Network Delays:**
+
+   * If the transaction takes longer to process, please be patient. Do not resubmit the transaction to avoid the risk of asset loss.
+
+## 7. Security Tips
+
+1. Always access the cross-chain bridge through official channels. Avoid clicking on unknown links or phishing websites.  
+2. Never disclose your seed phrase, private key, or wallet password.  
+3. Ensure your wallet and devices are protected from malware.
+
