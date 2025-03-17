@@ -1,7 +1,8 @@
 {
-  "name": "nextra-docs-template",
+  "name": "goat-docs",
   "version": "0.0.1",
-  "description": "Nextra docs template",
+  "private": true,
+  "description": "GOAT Network documentation site",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,22 +10,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shuding/nextra-docs-template.git"
+    "url": "git+https://github.com/GOATNetwork/goat-docs.git"
   },
-  "author": "Shu Ding <g@shud.in>",
+  "author": "GOAT Network",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/shuding/nextra-docs-template/issues"
+    "url": "https://github.com/GOATNetwork/goat-docs/issues"
   },
-  "homepage": "https://github.com/shuding/nextra-docs-template#readme",
+  "homepage": "https://github.com/GOATNetwork/goat-docs#readme",
   "dependencies": {
     "@mdx-js/react": "^2.3.0",
     "@next/mdx": "^13.4.19",
-    "@web3-react/core": "^6.1.9",
-    "@web3-react/injected-connector": "^6.0.7",
-    "dotenv": "^16.4.5",
-    "eslint-config-next": "^14.2.3",
-    "ethers": "^6.13.4",
     "mermaid": "^10.6.0",
     "next": "^13.5.0",
     "nextra": "^2.13.4",
