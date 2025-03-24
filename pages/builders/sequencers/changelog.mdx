@@ -1,0 +1,68 @@
+---
+title: Sequencer Node Changelogs
+lang: en-US
+description: List of Sequencer Node changelogs.
+---
+
+import { Callout } from 'nextra/components'
+
+# Change Logs
+
+<Callout type="info">
+    This page lists all the history upgrade logs. If you have any questions, please contact us: [Join the Community](/builders/quick-start#join-the-community) 
+</Callout>
+
+## v0.3.0
+
+Priority: **Medium** 
+
+The purpose of this upgrade is to adjust the strategy of the gas price oracle, and change the the minimal priority fee to 0.005 gwei. 
+* For wallets, Dapps, and other service providers, always use `eth_maxPriorityFeePerGas` to get the pritority fee.
+* For RPC node and Validator maintainers, this upgrade introduces breaking changes to the database. Once upgraded, downgrading to a lower version is not possible. You may encounter higher cpu and disk I/O during the database migration.
+
+This upgrade applies only to GOAT Geth, with version to `v0.3.0 for mainnet` and `v0.1.7 for testnet`. Download the docker compose file from [Gist](https://github.com/GOATNetwork/goat/tree/main/docker).
+
+Upgrade Steps:
+1. Upgrade all the RPC nodes.
+2. Wait for confirmation from the GOAT Team.
+3. Upgrade all the validators.
+
+**Latest Snapshots**
+
+**Mainnet**
+- geth: https://mainnet-backup-tools.s3.us-west-2.amazonaws.com/mainnet/geth-latest.tgz
+- goat: https://mainnet-backup-tools.s3.us-west-2.amazonaws.com/mainnet/goat-latest.tgz
+
+
+## v0.2.3
+
+This update includes critical security fixes, and all nodes should upgrade immediately:
+
+* ASA-2025-001: https://github.com/cometbft/cometbft/security/advisories/GHSA-22qq-3xwm-r5x4‍
+
+* ASA-2025-002: https://github.com/cometbft/cometbft/security/advisories/GHSA-r3r4-g7hq-pq4f
+
+‍**Upgrade Guide**
+
+Update your docker-compose.yml in accordance with from [Gist](https://github.com/GOATNetwork/goat/tree/main/docker).
+
+
+Run:
+
+```
+docker compose up -d
+```
+
+**Latest Snapshots**
+
+Mainnet:
+- geth: https://mainnet-backup-tools.s3.us-west-2.amazonaws.com/mainnet/geth-20250129.tgz
+
+- goat: https://mainnet-backup-tools.s3.us-west-2.amazonaws.com/mainnet/goat-20250129.tgz‍
+
+Testnet3:
+- geth: https://mainnet-backup-tools.s3.us-west-2.amazonaws.com/testnet3/geth-20250128.tgz
+
+- goat: https://mainnet-backup-tools.s3.us-west-2.amazonaws.com/testnet3/goat-20250128.tgz
+
+‍Ensure your nodes are up to date!
