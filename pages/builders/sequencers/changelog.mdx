@@ -17,10 +17,10 @@ import { Callout } from 'nextra/components'
 Priority: **Medium** 
 
 The purpose of this upgrade is to adjust the strategy of the gas price oracle, and change the the minimal priority fee to 0.005 gwei. 
-* For Wallets, Dapps, and service providers, please always use `eth_maxPriorityFeePerGas` to get the pritority fee.
-* For RPC node and Validator maintainers, this upgrade contains some breaking changes to the database, you <font color="red">**mustn't**</font> downgrade to a lower version once you upgrade. You might encounter higher cpu and disk I/O during the database migration.
+* For wallets, Dapps, and other service providers, always use `eth_maxPriorityFeePerGas` to get the pritority fee.
+* For RPC node and Validator maintainers, this upgrade introduces breaking changes to the database. Once upgraded, downgrading to a lower version is not possible. You may encounter higher cpu and disk I/O during the database migration.
 
-The scope of this upgrade includes GOAT Geth only, and the version should be upgraded to `v0.3.0 for mainnet` and `v0.1.7 for testnet`. Download the docker compose file from [Gist](https://github.com/GOATNetwork/goat/tree/main/docker).
+This upgrade applies only to GOAT Geth, with version to `v0.3.0 for mainnet` and `v0.1.7 for testnet`. Download the docker compose file from [Gist](https://github.com/GOATNetwork/goat/tree/main/docker).
 
 The upgrade should follow up: 
 1. Upgrade all the RPC nodes
