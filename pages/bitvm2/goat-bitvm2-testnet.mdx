@@ -7,7 +7,7 @@ import { Callout, Tabs, Tab } from 'nextra/components'
 
 # **GOAT BitVM2 Testnet**
 
-# Introduction
+## Introduction
 
 <Callout type="info">
 **GOAT BitVM2 Testnet was born to enable efficient interoperability between the Bitcoin and the GOAT Network.**
@@ -19,9 +19,9 @@ GOAT BitVM2 extends BitVM2 into a standard Bitcoin zkRollup by solving key limit
 
 Combined with GOAT Network’s decentralized sequencer and zkMIPS, GOAT BitVM2 enables GOAT Network to be the first native Bitcoin zkRollup with real yield. See more at [GOAT BitVM2 while paper](https://www.goat.network/bitvm2-whitepaper).
 
-# GOAT BitVM2 Bridge Guide
+## GOAT BitVM2 Bridge Guide
 
-## Bridge In
+### Bridge In
 
 1. The bridge-in function is available to everyone.
 
@@ -55,9 +55,9 @@ Combined with GOAT Network’s decentralized sequencer and zkMIPS, GOAT BitVM2 e
 
 9. Once the transaction is successful, the funds will appear in your receiving wallet.
 
-## Bridge Out
+### Bridge Out
 
-### Path 1
+#### Path 1
 Only Operators participating in Peg-in can use this path to bridge out a specific amount of BTC.
 Simply connect your EVM wallet.
 
@@ -81,7 +81,7 @@ In Step 2, this indicates you have successfully kicked off the process. You can 
 
 Once the bridge-out is successful, the funds will appear in your receiving wallet.
 
-## Path 2
+### Path 2
 1. Other users and Operators not participating in Peg-in transactions can use this path to bridge out PegBTC to the Bitcoin mainnet.
 
 
@@ -113,16 +113,16 @@ In GOAT Bridge, select the Bitcoin chain and use the bridge out function.
 
 Detailed steps for bridging out can be found in the [GOAT Bridge User Guide](/users/bridge).
 
-## History
+### History
 
-### Bridge In
+#### Bridge In
 
 After your bridge-in transaction is successfully submitted, you can check  this data in the transaction records.
 
    <p align="center"> <img src="/img/BitVM2/pic19.png" width="90%"/> </p>
    <p align="center"> <img src="/img/BitVM2/pic20.png" width="90%"/> </p>
 
-### Bridge Out
+#### Bridge Out
 
 After your kick-off transaction is successfully submitted, you can check  this data in   the transaction records.
 
@@ -130,7 +130,7 @@ After your kick-off transaction is successfully submitted, you can check  this d
    <p align="center"> <img src="/img/BitVM2/pic21.png" width="90%"/> </p>
 
 
-## BitVM2 Graph
+### BitVM2 Graph
 
 There are 4 cases for each BitVM2 graph.
 
@@ -143,9 +143,9 @@ There are 4 cases for each BitVM2 graph.
 **Case 4.** The Operator initiated a peg-out, and a challenger raised a dispute. The challenge failed, indicating a malicious or invalid challenge. The Operator was successfully reimbursed. The Graph has progressed to the Take 2 stage.
 
 
-# Join GOAT BitVM2 Testnet
+## Join GOAT BitVM2 Testnet
 
-## Roles Overview 
+### Roles Overview 
 
 GOAT BitVM2 allows any user to become an operator or challenger. From the perspective of Optimistic Challenge, an operator acts as a prover while a challenger acts as a verifier. The functionality of those two roles is outlined below in Table 1. 
 
@@ -161,9 +161,9 @@ More details see our [GOAT BitVM2 White Paper](https://www.goat.network/bitvm2-w
 
 To become an operator or challenger, you need to run a BitVM2 Node.
 
-## BitVM2 Node
+### BitVM2 Node
 
-### Installation
+#### Installation
 
 * Build from sourcecode
 
@@ -181,7 +181,7 @@ $ bitvm2-noded --version
 bitvm2-noded 0.1.0
 ```
 
-## Run a Node
+### Run a Node
 
 You generate a file .env in your workspace, you can also download a .env template from [here](https://github.com/GOATNetwork/bitvm2-node/blob/main/.env.template). 
 
