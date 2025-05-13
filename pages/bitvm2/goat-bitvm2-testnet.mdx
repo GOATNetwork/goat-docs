@@ -1,0 +1,249 @@
+---
+title: GOAT BitVM2 Testnet 
+lang: en-US
+---
+
+import { Callout, Tabs, Tab } from 'nextra/components'
+
+# **GOAT BitVM2 Testnet**
+
+# Introduction
+
+<Callout type="info">
+**GOAT BitVM2 Testnet was born to enable efficient interoperability between the Bitcoin and the GOAT Network.**
+</Callout>
+
+BitVM2 is a permissionless bridge protocol that enables Bitcoin to verify arbitrary off-chain computations without a hard fork, using presigned transactions, one-time signatures, and SNARK proofs. It improves capital efficiency over BitVM by allowing anyone to challenge and penalize a faulty operator within three on-chain transactions and a delay of no more than 2–3 weeks, though it remains impractical for real-world deployment.
+
+GOAT BitVM2 extends BitVM2 into a standard Bitcoin zkRollup by solving key limitations such as operator double-spending, inefficient reimbursement, and lack of incentives mechanism. GOAT BitVM2 can allow any operator to finish the reimbursement in 1 day with the powder of zkMIPS and multi-round randomized challenge mechanism, and prevent the operator’s double spend issues by verifying the Rollup chain’s consensus lightclient. 
+
+Combined with GOAT Network’s decentralized sequencer and zkMIPS, GOAT BitVM2 enables GOAT Network to be the first native Bitcoin zkRollup with real yield. See more at [GOAT BitVM2 while paper](https://www.goat.network/bitvm2-whitepaper).
+
+# GOAT BitVM2 Bridge Guide
+
+## Bridge In
+
+1. The bridge-in function is available to everyone.
+
+2. Connect your BTC wallet and EVM wallet.
+
+   <p align="center"> <img src="/img/BitVM2/pic1.png" width="90%"/> </p>
+
+3. Choose the amount you want to bridge in. Click [Max] to select 0.1 BTC.
+
+   <p align="center"> <img src="/img/BitVM2/pic3.png" width="90%"/> </p>
+
+4. Select the fee rate for the Bitcoin network — this affects the processing speed of your transaction.
+
+   <p align="center"> <img src="/img/BitVM2/pic4.png" width="90%"/> </p>
+
+5. Click [Next] to proceed to Step 2.
+
+   <p align="center"> <img src="/img/BitVM2/pic5.png" width="90%"/> </p>
+
+6. In Step 2, wait for the Operator to generate the BitVM2 Graph. Click [Refresh] to update the progress.
+
+   <p align="center"> <img src="/img/BitVM2/pic6.png" width="90%"/> </p>
+
+7. In Step 3, carefully review the transaction details and click [Submit] to submit the transaction.
+
+   <p align="center"> <img src="/img/BitVM2/pic7.png" width="90%"/> </p>
+
+8. In Step 4, your transaction has been successfully submitted. You can click [Peg-in Txid] to open the block explorer and track the transaction status.
+
+   <p align="center"> <img src="/img/BitVM2/pic8.png" width="90%"/> </p>
+
+9. Once the transaction is successful, the funds will appear in your receiving wallet.
+
+## Bridge Out
+
+### Path 1
+Only Operators participating in Peg-in can use this path to bridge out a specific amount of BTC.
+Simply connect your EVM wallet.
+
+   <p align="center"> <img src="/img/BitVM2/pic9.png" width="90%"/> </p>
+
+Select the amount you wish to bridge out.
+
+   <p align="center"> <img src="/img/BitVM2/pic11.png" width="90%"/> </p>
+
+Click [Approve] — your wallet will prompt an approval window. Please approve the maximum amount you intend to transact.
+
+   <p align="center"> <img src="/img/BitVM2/pic12.png" width="90%"/> </p>
+
+After the approval is successful, return to the interface and click [Submit]. Your wallet will prompt a transaction confirmation window. Confirm the transaction and pay the gas fee.
+
+   <p align="center"> <img src="/img/BitVM2/pic13.png" width="90%"/> </p>
+
+In Step 2, this indicates you have successfully kicked off the process. You can click [BitVM2 Graph] to track the bridge-out progress.
+
+   <p align="center"> <img src="/img/BitVM2/pic14.png" width="90%"/> </p>
+
+Once the bridge-out is successful, the funds will appear in your receiving wallet.
+
+## Path 2
+1. Other users and Operators not participating in Peg-in transactions can use this path to bridge out PegBTC to the Bitcoin mainnet.
+
+
+2. Exchange PegBTC for BTC on the GOAT network through GoatSwap；
+
+> a. Switch to testnet in GoatSwap.
+
+   <p align="center"> <img src="/img/BitVM2/pic15.png" width="90%"/> </p>
+
+
+> b. Select PegBTC as the payment token in the Swap.
+
+   <p align="center"> <img src="/img/BitVM2/pic16.png" width="90%"/> </p>
+
+
+> c. Use the token address "0x626eDC7aF114Fa6EA80e260400A926C301Cc92d9" to locate PegBTC.
+
+
+> d. Select BTC as the receiving token in the Swap;
+
+> e. Confirm the transaction amount and click [Swap Anywhere]  to proceed with the exchange.
+   <p align="center"> <img src="/img/BitVM2/pic17.png" width="60%"/> </p>
+
+
+Bridge out BTC from GOAT network to Bitcoin mainnet through GOAT Bridge；
+In GOAT Bridge, select the Bitcoin chain and use the bridge out function.
+
+   <p align="center"> <img src="/img/BitVM2/pic18.png" width="90%"/> </p>
+
+Detailed steps for bridging out can be found in the [GOAT Bridge User Guide](/users/bridge).
+
+## History
+
+### Bridge In
+
+After your bridge-in transaction is successfully submitted, you can check  this data in the transaction records.
+
+   <p align="center"> <img src="/img/BitVM2/pic19.png" width="90%"/> </p>
+   <p align="center"> <img src="/img/BitVM2/pic20.png" width="90%"/> </p>
+
+### Bridge Out
+
+After your kick-off transaction is successfully submitted, you can check  this data in   the transaction records.
+
+
+   <p align="center"> <img src="/img/BitVM2/pic21.png" width="90%"/> </p>
+
+
+## BitVM2 Graph
+
+There are 4 cases for each BitVM2 graph.
+
+**Case 1.** Only peg-in transactions have occurred so far; no operator has initiated a peg-out yet.
+
+**Case 2.** The Operator initiated a peg-out. With no challenges initiated, the Operator received reimbursement. The Graph has progressed to the Take 1 stage.
+
+**Case 3.** The Operator initiated a peg-out, and a challenger raised a dispute. The challenge was successful, proving Operator misconduct. The Operator did not receive reimbursement. The Graph has progressed to the Disprove stage.
+
+**Case 4.** The Operator initiated a peg-out, and a challenger raised a dispute. The challenge failed, indicating a malicious or invalid challenge. The Operator was successfully reimbursed. The Graph has progressed to the Take 2 stage.
+
+
+# Join GOAT BitVM2 Testnet
+
+## Roles Overview 
+
+GOAT BitVM2 allows any user to become an operator or challenger. From the perspective of Optimistic Challenge, an operator acts as a prover while a challenger acts as a verifier. The functionality of those two roles is outlined below in Table 1. 
+
+
+|Role| Functions | Honesty Assumption |
+|--- | ----- | ----- | 
+| Operator | Anyone can be an operator: 1) Generate ZKP Exchange PeggleBTC to native BTC with users Kickoff the reimbursement from Committee; 2) Generate the preimage of the hash time lock to each watchtower | 1/∞ |
+| Challenger|  Anyone can be a challenger: 1) Verify the valid of the reimbursement from operators offchain; 2) Submit the challenge transaction on Bitcoin to force the kick off to unhappy path; 3) Once the kickoff is on the unhappy path, and the operator unveils all the execution trace(Circuit F below), verify finds the flow in the execution trace, and can spend the UTXO from Assert transaction, and stop the operator to continue the reimbursement. | 1/∞ |
+
+Table 1: The Roles in Optimistic Challenge
+
+More details see our [GOAT BitVM2 White Paper](https://www.goat.network/bitvm2-whitepaper). 
+
+To become an operator or challenger, you need to run a BitVM2 Node.
+
+## BitVM2 Node
+
+### Installation
+
+* Build from sourcecode
+
+```shell
+git clone https://github.com/GOATNetwork/bitvm2-node 
+cd bitvm2-node 
+cargo install --path ./node bitvm2-noded
+```
+
+
+After the installation, run the `bitvm2-noded --version` to check that the version should be 0.1.0.
+
+``` shell 
+$ bitvm2-noded --version
+bitvm2-noded 0.1.0
+```
+
+## Run a Node
+
+You generate a file .env in your workspace, you can also download a .env template from [here](https://github.com/GOATNetwork/bitvm2-node/blob/main/.env.template). 
+
+
+```
+# required
+ACTOR=
+
+# required
+GOAT_GATEWAY_CONTRACT_ADDRESS=0xc3c2D73FB80cbc10DD85B6896e639D47ebd21B01
+
+# required
+GOAT_CHAIN_URL=https://rpc.testnet3.goat.network
+
+# required
+PEER_KEY=
+
+# required, operator and challenger should setup its BTC private key, committee can setup a seed string.
+BITVM_SECRET=
+
+# optional, relayer only
+GOAT_PRIVATE_KEY=
+
+# optional, operator only
+GOAT_ADDRESS=
+
+```
+
+ACTOR : It can be `Challenger` or `Operator`.  Currently anyone can be a challenger, but need to be whitelisted to become an operator.  
+
+
+PEER_KEY:  Node peer key
+
+```
+$ bitvm2-noded key peer
+PEER_KEY=
+PEER_ID=
+```
+
+BITVM_SECRET:  your HEXHex-format private key, which is used to submit a challenge to the operator's reimbursement in BitVM2 graph.  
+
+
+After you set up the .env, you need to deposit some tBTC(Bitcoin Testnet) to your P2WSH address, which can be generated by:
+
+```
+$ bitvm2-noded key funding-address
+Funding P2WSH address (for operator and challenger):  tb1q…
+```
+
+It prints a seed and a P2WSH funding address. The amount should be at least 0.007 tBTC.
+
+
+Run the node using the below command.
+
+```shell
+bitvm2-noded --bootnodes ${bootnodes} -d --rpc-addr localhost:8081 --p2p-port 8443 --db-path ${path-to-workspace}/bitvm2-node.db2 
+```
+
+Where the `bootnodes` can be one of the following.
+
+
+**Bootnode0: /ip4/34.210.83.80/tcp/8443/p2p/12D3KooWL2CpYGRmohyCK72B9Ee2A3mX83GhUJ8Duf7bqq9uNnQw**
+
+
+
