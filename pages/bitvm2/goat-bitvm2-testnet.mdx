@@ -17,7 +17,7 @@ BitVM2 is a permissionless bridge protocol that enables Bitcoin to verify arbitr
 
 GOAT BitVM2 extends BitVM2 into a standard Bitcoin zkRollup by solving key limitations such as operator double-spending, inefficient reimbursement, and lack of incentives mechanism. GOAT BitVM2 can allow any operator to finish the reimbursement in 1 day with the powder of zkMIPS and multi-round randomized challenge mechanism, and prevent the operator’s double spend issues by verifying the Rollup chain’s consensus lightclient. 
 
-Combined with GOAT Network’s decentralized sequencer and zkMIPS, GOAT BitVM2 enables GOAT Network to be the first native Bitcoin zkRollup with real yield. See more at [GOAT BitVM2 while paper](https://www.goat.network/bitvm2-whitepaper).
+Combined with GOAT Network’s decentralized sequencer and zkMIPS, GOAT BitVM2 enables GOAT Network to be the first native Bitcoin zkRollup with real yield. See more at [GOAT BitVM2 White Paper](https://www.goat.network/bitvm2-whitepaper).
 
 ## GOAT BitVM2 Bridge Guide
 
@@ -106,12 +106,13 @@ Once the bridge-out is successful, the funds will appear in your receiving walle
    <p align="center"> <img src="/img/BitVM2/pic17.png" width="60%"/> </p>
 
 
-Bridge out BTC from GOAT network to Bitcoin mainnet through GOAT Bridge；
-In GOAT Bridge, select the Bitcoin chain and use the bridge out function.
+3. Bridge out BTC from GOAT network to Bitcoin mainnet through GOAT Bridge；
+
+> a. In GOAT Bridge, select the Bitcoin chain and use the bridge out function.
 
    <p align="center"> <img src="/img/BitVM2/pic18.png" width="90%"/> </p>
 
-Detailed steps for bridging out can be found in the [GOAT Bridge User Guide](/users/bridge).
+> b. Detailed steps for bridging out can be found in the [GOAT Bridge User Guide](/users/bridge).
 
 ### History
 
@@ -153,7 +154,7 @@ GOAT BitVM2 allows any user to become an operator or challenger. From the perspe
 |Role| Functions | Honesty Assumption |
 |--- | ----- | ----- | 
 | Operator | Anyone can be an operator: 1) Generate ZKP Exchange PeggleBTC to native BTC with users Kickoff the reimbursement from Committee; 2) Generate the preimage of the hash time lock to each watchtower | 1/∞ |
-| Challenger|  Anyone can be a challenger: 1) Verify the valid of the reimbursement from operators offchain; 2) Submit the challenge transaction on Bitcoin to force the kick off to unhappy path; 3) Once the kickoff is on the unhappy path, and the operator unveils all the execution trace(Circuit F below), verify finds the flow in the execution trace, and can spend the UTXO from Assert transaction, and stop the operator to continue the reimbursement. | 1/∞ |
+| Challenger|  Anyone can be a challenger: 1) Verify the validity of the reimbursement from operators offchain; 2) Submit the challenge transaction on Bitcoin to force the kick off to unhappy path; 3) Once the kickoff is on the unhappy path, and the operator unveils all the execution trace(Circuit F below), verify finds the flaws in the execution trace, and can spend the UTXO from Assert transaction, and stop the operator to continue the reimbursement. | 1/∞ |
 
 Table 1: The Roles in Optimistic Challenge
 
