@@ -217,6 +217,8 @@ GOAT_PRIVATE_KEY=
 # optional, operator only
 GOAT_ADDRESS=
 
+# network id
+PROTO_NAME=bitvm2t3
 ```
  
 * ACTOR : It can be `Challenger` or `Operator`.  Anyone can be a [challenger](https://docs.google.com/forms/d/e/1FAIpQLSdBaXwzXPimpPR0270Mgt9NYLo5GDUENrIvR-EhvWPDT2xIAg/viewform) or an operator, but the operator needs to be whitelisted in this stage.
@@ -236,8 +238,14 @@ $ bitvm2-noded key funding-address
 Funding P2WSH address (for operator and challenger):  tb1q…
 ```
 
-It prints a seed and a P2WSH funding address. The amount should be at least 0.007 tBTC.
+It prints a P2WSH funding address, and the funding amount for each role is listed below.
 
+| role | balance amount(tBTC) |
+| ---- |---- |
+| Challenger |  0.12 |
+| Operator |0.23 + Peg-in-amount * 0.02 |
+
+The funding is held by your private key and serves as the stake required to initiate a reimbursement or challenge.
 
 Run the node using the below command.
 
