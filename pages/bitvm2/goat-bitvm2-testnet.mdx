@@ -181,6 +181,10 @@ cargo install --path ./node bitvm2-noded
 Download the binary from [bitvm2-noded releases](https://github.com/GOATNetwork/bitvm2-node/releases). 
 
 
+* Use docker 
+
+Use the docker image [bitvm2-node](https://github.com/goatnetwork/bitvm2-node/pkgs/container/bitvm2-node).
+
 
 After the installation, run the `bitvm2-noded --version` to check that the version should be 0.1.0.
 
@@ -219,6 +223,9 @@ GOAT_ADDRESS=
 
 # network id
 PROTO_NAME=bitvm2t3
+
+# Bootnodes, optional
+BOOTNODES=
 ```
  
 * ACTOR : It can be `Challenger` or `Operator`.  Anyone can be a [challenger](https://docs.google.com/forms/d/e/1FAIpQLSdBaXwzXPimpPR0270Mgt9NYLo5GDUENrIvR-EhvWPDT2xIAg/viewform) or an operator, but the operator needs to be whitelisted in this stage.
@@ -251,6 +258,12 @@ Run the node using the below command.
 
 ```shell
 bitvm2-noded --bootnodes ${bootnodes} -d --rpc-addr localhost:8081 --p2p-port 8443 --db-path ${path-to-workspace}/bitvm2-node.db 
+```
+
+Or by docker
+
+```
+docker run -d -v ${data to path}/:/var/data -v $PWD/.env:/app/.env --env-file .env -p 9100:9100 -p 8443:8443 ghcr.io/goatnetwork/bitvm2-node:${version}
 ```
 
 Where the `bootnodes` can be one of the following.
