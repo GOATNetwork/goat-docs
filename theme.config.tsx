@@ -48,7 +48,7 @@ const config: DocsThemeConfig = {
         />
         <link
           rel="icon"
-          href="/img/icons/favicon.svg"
+          href="/img/icons/favicon.ico"
           type="image/x-icon"
         ></link>
       </>
