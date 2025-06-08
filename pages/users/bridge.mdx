@@ -49,8 +49,8 @@ You need to connect two wallets: one BTC wallet and one EVM wallet. One will ser
    <p align="center"> <img src="/img/user-guides/goat-network-bridge/pic2.png"/> </p>
 3. [**Particle Wallet**](https://developers.particle.network/landing/wallet-abstraction/btc-connect)**:** If your connected BTC wallet is **Unisat**, **OKX**, or **Bitget**, Particle will create an AA wallet (EVM address) for you to use as your GOAT Network wallet. You can choose whether or not to use it. The Particle wallet entry is located at the bottom right of the page, and you can send tokens and receipt tokens within the wallet.  
    <p align="center"> <img src="/img/user-guides/goat-network-bridge/pic3.png"/> </p>
+   <br></br>
    <p align="center"> <img src="/img/user-guides/goat-network-bridge/pic4.png"/> </p>
-   <p align="center"> <img src="/img/user-guides/goat-network-bridge/pic5.png" width="400"/> </p>
    BTC Connect enables AA on Bitcoin by unifying users’ Bitcoin accounts and EVM-based smart accounts. It assigns a Bitcoin wallet as a Signer for a smart account on a Bitcoin L2 or EVM network, making users’ Bitcoin wallets the sole point of interaction with L2s, without additional interactions or interfaces.
 
 ### 2.3 Bridge In
@@ -137,9 +137,7 @@ Please connect your EVM wallet as the sending address. By default, the sending a
 6. Link your Telegram account to receive transaction updates via Telegram. Once linked, all future transactions from this EVM wallet will also be notified through Telegram.  
 7. After the transaction is successful, the bridged amount will appear in the receiving wallet's address.
 
-## 5. abbbbbb TODOs
-
-## 6. Transaction History
+## 5. Transaction History
 
 In this module, detailed records of transactions associated with your currently connected wallet will be maintained, making it easier for you to track the transaction activities of this wallet address. You can pay special attention to the following features within this module:
 
@@ -148,11 +146,11 @@ In this module, detailed records of transactions associated with your currently 
 3. **Cancel Transaction**: For BTC bridge-out transactions from GOAT Network to the Bitcoin chain, you can cancel the transaction before it is broadcasted to the blockchain.  
 4. **Increase Base Rate**: For BTC bridge-in transactions from the Bitcoin chain to GOAT Network, you can increase the base fee to accelerate the transaction speed.
 
-## 7. Important Notes
+## 6. Important Notes
 
 1. **How to obtain gas fees on GOAT Network?**  
    The native gas token of GOAT Network is BTC. Please bridge a small amount of BTC from the BTC mainnet to GOAT Network, such as 0.0005 BTC. Please note that **BTCB bridged from the BNB Chain cannot be used to pay gas fees** on GOAT Network.  
-   \[pic6\]  
+
 2. **The gas fee on GOAT Network is too high. How can I fix this issue?**  
    Please manually set the network fee in your wallet. It is recommended to set the **Max Base Fee** to **\[0.005000007\]**, the **Priority Fee** to **\[0.005\]**, and check the option \[Save these values as the default for GOAT Network\] before saving the data. Please refer to the following example:  
    * **MetaMask**  
@@ -210,7 +208,7 @@ In this module, detailed records of transactions associated with your currently 
 
    * If the transaction takes longer to process, please be patient. Do not resubmit the transaction to avoid the risk of asset loss.
 
-## 8. Security Tips
+## 7. Security Tips
 
 1. Always access the cross-chain bridge through official channels. Avoid clicking on unknown links or phishing websites.  
 2. Never disclose your seed phrase, private key, or wallet password.  
