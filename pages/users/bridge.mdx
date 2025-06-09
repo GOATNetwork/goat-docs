@@ -137,7 +137,33 @@ Please connect your EVM wallet as the sending address. By default, the sending a
 6. Link your Telegram account to receive transaction updates via Telegram. Once linked, all future transactions from this EVM wallet will also be notified through Telegram.  
 7. After the transaction is successful, the bridged amount will appear in the receiving wallet's address.
 
-## 5. Transaction History
+
+## 5. Flash Transfer
+
+**Flash Transfer** refers to a fast bridge-in feature allowing you to quickly transfer assets to the GOAT Network from an exchange or wallet. Currently, this feature only supports bridging BTC from the Bitcoin mainnet. If you already hold BTC on an exchange or in a wallet, you can use this method to bridge in BTC and acquire gas fees for the GOAT Network.  
+**Step-by-step Instructions:**
+
+1. Click on "**Flash Transfer**" to get started.  
+   <p align="center"> <img src="/img/user-guides/goat-network-bridge/pic5.png"/> </p>
+2. Connect your EVM wallet to obtain the **Bridge-in Address**.  
+3. Transfer your desired amount of BTC to this bridge-in address.  
+⚠️ **Important:** The amount must exceed **0.0001 BTC** to avoid the transaction being treated as dust.
+   * From an Exchange:  
+      First, select BTC on the Bitcoin mainnet.  
+      Second, use the provided BTC bridge-in address as the recipient address.  
+   * From a Wallet:  
+      First, ensure that the wallet supports the Bitcoin mainnet.  
+      Second, confirm that the asset being transferred is BTC on the Bitcoin mainnet.  
+4. After completing the transfer, obtain the transaction ID and enter it into the input box below.  
+   <p align="center"> <img src="/img/user-guides/goat-network-bridge/pic6.png"/> </p>
+5. Click **\[Submit\]** to submit the transaction, then wait for processing.  
+6. About 10 seconds later, you will see this bridge-in transaction appear in your transaction history.  
+   <p align="center"> <img src="/img/user-guides/goat-network-bridge/pic7.png"/> </p>
+7. Once the transaction is successful, you'll see the transferred assets in your connected EVM wallet.
+
+
+
+## 6. Transaction History
 
 In this module, detailed records of transactions associated with your currently connected wallet will be maintained, making it easier for you to track the transaction activities of this wallet address. You can pay special attention to the following features within this module:
 
@@ -146,7 +172,7 @@ In this module, detailed records of transactions associated with your currently 
 3. **Cancel Transaction**: For BTC bridge-out transactions from GOAT Network to the Bitcoin chain, you can cancel the transaction before it is broadcasted to the blockchain.  
 4. **Increase Base Rate**: For BTC bridge-in transactions from the Bitcoin chain to GOAT Network, you can increase the base fee to accelerate the transaction speed.
 
-## 6. Important Notes
+## 7. Important Notes
 
 1. **How to obtain gas fees on GOAT Network?**  
    The native gas token of GOAT Network is BTC. Please bridge a small amount of BTC from the BTC mainnet to GOAT Network, such as 0.0005 BTC. Please note that **BTCB bridged from the BNB Chain cannot be used to pay gas fees** on GOAT Network.  
@@ -159,7 +185,7 @@ In this module, detailed records of transactions associated with your currently 
      * Set the Max base fee to **\[0.005000007\]** and the Priority fee to **\[0.005\]**, and read and check **\[Save these values as default for GOAT Network.\]**  
      * Finally, click **\[Save\]**, and you won't need to set the gas fee again in the future.
 
-   <p align="center"> <img src="/img/user-guides/goat-network-bridge/pic7.png"/> </p>
+   <p align="center"> <img src="/img/user-guides/goat-network-bridge/pic8.png"/> </p>
 
      
 
@@ -208,7 +234,7 @@ In this module, detailed records of transactions associated with your currently 
 
    * If the transaction takes longer to process, please be patient. Do not resubmit the transaction to avoid the risk of asset loss.
 
-## 7. Security Tips
+## 8. Security Tips
 
 1. Always access the cross-chain bridge through official channels. Avoid clicking on unknown links or phishing websites.  
 2. Never disclose your seed phrase, private key, or wallet password.  
