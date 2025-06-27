@@ -56,7 +56,7 @@ You need to connect two wallets: one BTC wallet and one EVM wallet. One will ser
 ### 2.3 Bridge In
 
 1. Ensure your BTC wallet is connected and your EVM address is set.  
-2. Enter the amount you wish to bridge in, or click **“Max”** to use the maximum available balance. The minimum bridging amount is **0.0005 BTC**.  
+2. Enter the amount you wish to bridge in, or click **“Max”** to use the maximum available balance. The minimum bridging amount is **0.0001 BTC**.  
 3. Select the fee rate for the Bitcoin network, which determines the processing speed of your transaction.  
 4. Verify the cross-chain details (source chain, target chain, amount, and base fee). Ensure the total (bridging amount \+ base fee) does not exceed your BTC wallet’s **BTC** balance.  
 5. Click **\[Transfer\]**, and a transaction confirmation window will pop up in your wallet. Confirm the transaction and pay the gas fee in your wallet.  
@@ -67,9 +67,9 @@ You need to connect two wallets: one BTC wallet and one EVM wallet. One will ser
 ### 2.4 Bridge Out
 
 1. Ensure your EVM wallet is connected and your BTC address is set.  
-2. Enter the amount you wish to bridge out, or click **“Max”** to use the maximum available balance. The minimum bridging-out amount is **0.0005 BTC**.  
+2. Enter the amount you wish to bridge out, or click **“Max”** to use the maximum available balance. The minimum bridging-out amount is **0.0001 BTC**.  
 3. Select the fee rate for the Bitcoin network, which determines the processing speed of your transaction.  
-4. Verify the cross-chain details (source chain, target chain, amount, and bridge fee). Ensure the total (bridging amount \+ bridge fee) does not exceed your EVM wallet **BTC** balance. The **bridge fee** includes the **service fee** and **base fee**, with the service fee being **0.1%** of the bridged-out amount.  
+4. Verify the cross-chain details (source chain, target chain, amount, and bridge fee). Ensure the total (bridging amount + bridge fee + gas fee) does not exceed your EVM wallet **BTC** balance. The **bridge fee** includes the service fee and base fee, with the service fee being **0.1%** of the bridged-out amount.
 5. Click **\[Transfer\]**, and a transaction confirmation window will pop up in your wallet. Confirm the transaction and pay the gas fee in your wallet.  
 6. After a successful signature, wait for the transaction to be processed. You can track the progress in **“Transaction History”**.  
 7. Link your Telegram account to receive transaction updates via Telegram. Once linked, all future EVM wallet bridging-out transactions will be notified through Telegram.  
@@ -175,7 +175,7 @@ In this module, detailed records of transactions associated with your currently 
 ## 7. Important Notes
 
 1. **How to obtain gas fees on GOAT Network?**  
-   The native gas token of GOAT Network is BTC. Please bridge a small amount of BTC from the BTC mainnet to GOAT Network, such as 0.0005 BTC. Please note that **BTCB bridged from the BNB Chain cannot be used to pay gas fees** on GOAT Network.  
+   The native gas token of GOAT Network is BTC. Please bridge a small amount of BTC from the BTC mainnet to GOAT Network, such as 0.0001 BTC. Please note that **BTCB bridged from the BNB Chain cannot be used to pay gas fees** on GOAT Network.  
 
 2. **The gas fee on GOAT Network is too high. How can I fix this issue?**  
    Please manually set the network fee in your wallet. It is recommended to set the **Max Base Fee** to **\[0.005000007\]**, the **Priority Fee** to **\[0.005\]**, and check the option \[Save these values as the default for GOAT Network\] before saving the data. Please refer to the following example:  
