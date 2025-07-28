@@ -1,16 +1,16 @@
 ---
-title: GOAT BitVM2 Testnet 
+title: GOAT BitVM2 Testnet3 Beta
 lang: en-US
 ---
 
 import { Callout, Tabs, Tab } from 'nextra/components'
 
-# **GOAT BitVM2 Testnet**
+# **GOAT BitVM2 Testnet3 Beta**
 
 ## Introduction
 
 <Callout type="info">
-**GOAT BitVM2 Testnet was born to enable efficient interoperability between the Bitcoin and the GOAT Network.**
+**GOAT BitVM2 Testnet3 Beta was born to enable efficient interoperability between the Bitcoin and the GOAT Network.**
 </Callout>
 
 BitVM2 is a permissionless bridge protocol that enables Bitcoin to verify arbitrary off-chain computations without a hard fork, using presigned transactions, one-time signatures, and SNARK proofs. It improves capital efficiency over BitVM by allowing anyone to challenge and penalize a faulty operator within three on-chain transactions and a delay of no more than 2–3 weeks, though it remains impractical for real-world deployment.
@@ -83,7 +83,7 @@ Combined with GOAT Network’s decentralized sequencer and zkMIPS, GOAT BitVM2 e
 
 7. Once the bridge-out is successful, the funds will appear in your receiving wallet.
 
-### Path 2
+#### Path 2
 1. Other users and Operators not participating in Peg-in transactions can use this path to bridge out PegBTC to the Bitcoin mainnet.
 
 
@@ -146,7 +146,46 @@ There are 4 cases for each BitVM2 graph.
 **Case 4.** The Operator initiated a peg-out, and a challenger raised a dispute. The challenge failed, indicating a malicious or invalid challenge. The Operator was successfully reimbursed. The Graph has progressed to the Take 2 stage.
 
 
-## Join GOAT BitVM2 Testnet
+## Proofs 
+
+The real-time proving is now live on BitVM2 Testnet3 Beta. This major milestone is the first implementation of a BitVM2 Bridge capable of generating and verifying withdrawal proofs in sync with block production - without delay or backlog. 
+
+The system is powered end-to-end by Ziren, ZKM’s production-grade zkVM and proving stack, delivering the throughput, latency, and compression required to make peg-outs on Bitcoin usable in practice.
+
+
+### Key features
+
+* Instant kickoff availability powered by Ziren: Achieved a block proof average of 2.6s, aggregation proof in 2.7s, and Groth16 proof in ~10.38s.
+
+* Comprehensive proof visualization: Introduced a dedicated proof UI that displays the full proof generation pipeline and detailed validity proofs for each peg-out.
+
+* Capital efficiency for operators: Without real-time proof generation, delays accumulate block by block. This can force operators to wait days or weeks to withdraw.
+
+### Proof UI 
+
+Entrypoint: https://bitvm2.testnet3.goat.network/proof
+
+* Track live proof generation:
+
+   <p align="center"> <img src="/img/BitVM2/proof-ui-1.png" width="90%"/> </p>
+
+* Click on the pipeline to inspect detailed proof stages:
+
+   <p align="center"> <img src="/img/BitVM2/proof-ui-2.png" width="90%"/> </p>
+
+Note: A single proof takes ~13s, but with five provers running in parallel, average time per proof drops below 3s.
+
+
+* Dashboard: Displays BitVM2 transaction graphs and proof records:
+
+   <p align="center"> <img src="/img/BitVM2/proof-ui-3.png" width="90%"/> </p>
+
+* Click a proof: View the Groth16 proof used for corresponding reimbursement:
+
+   <p align="center"> <img src="/img/BitVM2/proof-ui-4.png" width="90%"/> </p>
+
+
+## Join GOAT BitVM2 Testnet3 Beta
 
 ### Roles Overview 
 
@@ -163,6 +202,8 @@ Table 1: The Roles in Optimistic Challenge
 More details see our [GOAT BitVM2 White Paper](https://www.goat.network/bitvm2-whitepaper). 
 
 To become an operator or challenger, you need to run a BitVM2 Node.
+
+
 
 ### BitVM2 Node
 
