@@ -49,10 +49,14 @@ For the sake of clarity and to prevent any confusion, a sequencer node serves as
 
 ## Deployment Steps
 
+<Callout type="info">
+  Check if the host has the following two paths: `/data/goat` and `/data/geth`. 
+  Alternatively, you can customize these paths by modifying the volumes in your `docker-compose.yml` file.
+</Callout>
+
 ### Run the node
 
 Fetch the `docker-compose.yml` from [Gist](https://github.com/GOATNetwork/goat/tree/main/docker) according to your network type,
-
 Start the services:
 
 ```bash:pages/builders/sequencers/validator.mdx
