@@ -1,0 +1,155 @@
+---
+title: 'Github Contributor Eligibility Check'
+description: 'Bind your EVM address for the GOAT Network Github contributor eligibility.'
+---
+
+import { Callout, Steps, Card, Cards } from 'nextra/components'
+
+# GOAT Network Github Contributor Eligibility Check
+
+Hard-working, forward-thinking developers are the lifeblood of any successful blockchain. In the case of GOAT Network, we've collaborated with numerous amazing devs to build infrastructure for our network, with an emphasis on our zkVM and BitVM architecture.
+
+With that in mind, we're excited to announce the first round of exclusive rewards for the open-source builders who have contributed to the GOAT Network genesis process!
+
+Below, we've outlined the process that will allow contributors to bind their EVM address for the GOAT Network Github contributor eligibility check. (Please note, rewards will be airdropped to all eligible addresses post TGE, which is coming soon.)
+
+<Callout type="info">
+If your name doesn't appear on this list but you've been contributing to GOAT Network's code base, don't fret! We will continue to collect and review new GitHub repositorie, giving you a chance to be part of the next phase of our Github Contributor Airdrop (after TGE), with new contributors included in the next snapshot.
+</Callout>
+
+Contribute to the [GOAT Network repos](https://github.com/GOATNetwork) and help build the future of the Bitcoin ecosystem!
+
+**Most recent snapshot date**: September 8, 2025
+
+---
+
+## Eligible Repositories
+
+1. 0xpolygonzero/plonky2
+2. arkworks-rs/algebra
+3. bitvm/bitvm
+4. bluealloy/revm
+5. cometbft/tendermint-rs
+6. consensys/gnark
+7. cosmos/cosmos-sdk
+8. ethereum/go-ethereum
+9. foundry-rs/forge-std
+10. foundry-rs/foundry
+11. goatnetwork/bitvm
+12. goatnetwork/bitvm2-node
+13. libp2p/rust-libp2p
+14. openzeppelin/openzeppelin-contracts
+15. openzeppelin/openzeppelin-contracts-upgradeable
+16. paradigmxyz/reth
+17. plonky3/plonky3
+18. powdr-labs/powdr
+19. projectzkm/zkm
+20. projectzkm/zkm-project-template
+21. projectzkm/zkm-prover
+22. projectzkm/ziren
+23. rust-bitcoin/rust-bitcoin
+24. rustcrypto/elliptic-curves
+25. rustcrypto/hashes
+26. rustcrypto/rsa
+27. rustcrypto/traits
+28. semaphore-protocol/semaphore
+29. tendermint/tendermint
+30. zkcrypto/ff
+
+---
+
+## Installation Methods
+
+You can run this application in three ways:
+
+1. **Using the pre-built Docker image** (recommended)
+2. **Using the automated setup script** (installs Node.js if needed)  
+3. **Using Docker** (no local Node.js installation required)
+
+<Cards>
+  <Card 
+    title="GOAT Network Github Contributor Eligibility Check" 
+    href="https://github.com/GOATNetwork/goat-contributor-eligibility-check"
+    description="GOAT Network Github Contributor Eligibility Check"
+  />
+</Cards>
+
+### Method 1: Pre-built Docker Image (Recommended)
+
+Run the application using the official pre-built Docker image.
+
+**Prerequisites**
+
+- Docker installed on your system
+
+**Quick Start**
+
+1. **Run the application**:
+   
+   ```bash
+   docker run -it --rm \
+     -v ~/.ssh:/root/.ssh:ro \
+     -v $(pwd)/__sh_cache__:/app/__sh_cache__ \
+     ghcr.io/goatnetwork/goat-contributor-eligibility:latest
+   ```
+
+2. **Access the application**:
+   The container will start in interactive mode where you can interact with the application through the terminal.
+
+### Method 2: Native Installation with Setup Script
+
+**Quick Start**
+
+Run the automated setup script that will check and install dependencies:
+
+```bash
+git clone git@github.com:GOATNetwork/goat-contributor-eligibility-check.git
+cd goat-contributor-eligibility-check
+./script/start.sh
+```
+
+This script will:
+
+- Check if Node.js 22+ is installed
+- Install Node.js if missing
+- Install npm dependencies
+- Run the eligibility binding application
+
+### Method 3: Docker Setup
+
+Run the application using Docker without installing Node.js locally.
+
+**Prerequisites**
+
+- Docker and Docker Compose installed on your system
+
+**Quick Start**
+
+1. **Run the application**:
+   ```bash
+   git clone git@github.com:GOATNetwork/goat-contributor-eligibility-check.git
+   cd goat-contributor-eligibility-check
+   ./script/docker-run.sh
+   ```
+
+2. **Access the application**:
+   The script will build the Docker image and start an interactive container where you can interact with the application through the terminal.
+
+---
+
+## Troubleshooting
+
+### For Native Installation
+
+If the setup script fails, ensure you have:
+
+- Bash shell available
+- Internet connection for downloading Node.js
+- Write permissions in the project directory
+
+### For Docker Setup
+
+If you encounter permission issues with SSH keys:
+```bash
+chmod 600 ~/.ssh/id_rsa
+```
