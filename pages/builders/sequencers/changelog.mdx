@@ -12,6 +12,52 @@ import { Callout } from 'nextra/components'
     This page lists all the history upgrade logs. If you have any questions, please contact us: [Join the Community](/builders/quick-start#join-the-community) 
 </Callout>
 
+## v0.3.3
+
+This is a mandatory hard fork upgrade for the Ethereum Pectra Upgrade. It introduces several protocol changes and requires all nodes to upgrade **before** the scheduled activation time to ensure continued compatibility with the network.
+
+Priority: **High** 
+
+### Included EIPs
+
+[EIP-2537](https://eips.ethereum.org/EIPS/eip-2537): Precompile for BLS12-381 curve operations
+
+[EIP-7623](https://eips.ethereum.org/EIPS/eip-7623): Increase calldata cost
+
+[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702): Set EOA account code
+
+[EIP-7685](https://eips.ethereum.org/EIPS/eip-7685): General purpose execution layer requests
+
+[EIP-2935](https://eips.ethereum.org/EIPS/eip-2935): Save historical block hashes in state (Note: GOAT uses a different storage address 0xBA11eE51ecC770fC9aCdC6F2ad91528549a071De)
+
+[EIP-7840](https://eips.ethereum.org/EIPS/eip-7840): Add blob schedule to EL config files
+
+
+### Upgrade Schedule & Required Versions
+**Testnet3**
+
+Activation Time: 2025-07-15T02:00:00Z
+
+Required Versions:
+* geth: v0.1.9
+* goat: v0.3.3
+
+Gist: [docker-compose reference](https://github.com/GOATNetwork/goat/blob/main/docker/testnet3.yaml)
+
+
+**Mainnet**
+
+Activation Time: 2025-07-22T02:00:00Z
+
+Required Versions:
+* geth: v0.3.3
+* goat: v0.3.3
+
+Gist: [docker-compose reference](https://github.com/GOATNetwork/goat/blob/main/docker/mainnet.yaml)
+
+### Additional Notes
+It also adds a new indexer to improve log filter performance, and it'll take a few hours to complete the indexing, before it's done, the `eth_getLogs` call might be slower.
+
 ## v0.3.1
 
 Priority: **High** 
