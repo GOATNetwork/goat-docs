@@ -8,30 +8,33 @@ import { Card, Cards } from 'nextra/components'
 import { Callout, Tabs, Tab } from 'nextra/components'
 import React from 'react';
 
-## Overview
+## GOAT Safebox User guide
 
-We all know that people are currently cautious about investing directly in Bitcoin. The [Safebox](https://safebox.goat.network/) product was created to address concerns about the security of Bitcoin investments. Users simply deposit BTC into Safebox, and we will return an equivalent amount of UTXO with a Timelock to the user's BTC wallet. Once the Timelock expires, users can spend the UTXO. During the lock period, users can also earn BTC profits. This solution cleverly uses Timelocked UTXO to keep users' BTC assets in their own wallets, eliminating worries about losing the principal.
+We all know that people are currently cautious about investing directly in Bitcoin. The [Safebox](https://safebox.goat.network/) product was created to address concerns about the security of Bitcoin investments. 
+1. Users simply transfer BTC into Safebox, and we will return a UTXO of equivalent value with a 90-day timelock to the user’s BTC wallet.
+2. Once the timelock expires, users can spend the UTXO. During the lock period, users can earn BTC at a 1.5% yield. 
+
+This solution cleverly uses Timelocked UTXO to keep users' BTC in their own wallets, eliminating worries about losing the principal.
 
 ## How to Obtain a Locking Order
 
-1. Become a **Partner** through [the application link](https://docs.google.com/forms/d/e/1FAIpQLScygx6iR-o1Bg5sL6iqGEPOXkkx613Mu5fD0CXnGHHxVIOr3A/viewform).  
+1. Safebox is a whitelist-only product. Please apply for **the whitelist access ID** through [the application link](https://forms.gle/aoWrh3aTXUP2dWGN8).  
 2. After receiving your application, we will proactively contact you.  
 3. If you decide to lock BTC, please provide the following information so we can create a valid locking order in the contract.
 
 | Info | Description |
 | :---- | :---- |
-| Locking Amount | The amount of BTC you want to lock, which must be greater than 0.0005 BTC. |
-| Deadline | The deadline for locking the order; the expired order will be invalidated. |
-| Public Key | The public key of the receiving wallet for the UTXO with Timelock. After the unlock time, only the private key corresponding to this public key (specifically for this wallet) can spend the UTXO. |
+| Locking Amount | Locked amount per round. For each round, each account must lock at least 1 BTC. The amount may be split across multiple transactions, each ≥ 0.01 BTC. |
 | Receiving Address | The receiving address for spending the UTXO after it is unlocked. Note that **the receiving address must match the receiving wallet’s public key**, and currently, only **Native Segwit (P2WPKH)** address types are supported. |
+| Public Key | The public key of the receiving wallet for the UTXO with Timelock. After the unlock time, only the private key corresponding to this public key (specifically for this wallet) can spend the UTXO. || Receiving Address | The receiving address for spending the UTXO after it is unlocked. Note that **the receiving address must match the receiving wallet’s public key**, and currently, only **Native Segwit (P2WPKH)** address types are supported. |
 
 ## How to Use
 
 ### Method 1: Operate on the Website 
 
-**Bridge in BTC**
+**Transfer BTC into Safebox**
 
-1. Enter the exclusive Partner ID in the interface and click **"Confirm"**.
+1. Enter the exclusive Access ID in the interface and click **"Confirm"**.
 
    <p align="center"> <img src="/img/user-guides/safebox/pic1.png"/> </p>
 
@@ -41,7 +44,7 @@ We all know that people are currently cautious about investing directly in Bitco
 
    <p align="center"> <img src="/img/user-guides/safebox/pic2.png"/> </p>
 
-4. Click the **"Lock"** button to bridge in.  
+4. Click the **"Lock"** button to transfer.  
 
    <p align="center"> <img src="/img/user-guides/safebox/pic3.png"/> </p>
 
@@ -53,13 +56,13 @@ We all know that people are currently cautious about investing directly in Bitco
 
 7. After successful submission, please wait patiently for blockchain confirmation. Approximately one hour later, you will receive an equivalent amount of Timelocked UTXO. If you encounter any issues, please contact your customer manager promptly.  
 
-8. Once you receive the Timelocked UTXO, you can view the corresponding deposit certificate on the website interface.  
+8. Once you receive the Timelocked UTXO, you can view the corresponding locking certificate on the website interface.  
 
    <p align="center"> <img src="/img/user-guides/safebox/pic5.png"/> </p>
 
 **Spend the BTC**
 
-1. When your order matures, remember to visit the website interface to spend the UTXO. Enter your Partner ID again to retrieve the transaction record;  
+1. When your order matures, remember to visit the website interface to spend the UTXO. Enter your Access ID again to retrieve the transaction record;  
 
    <p align="center"> <img src="/img/user-guides/safebox/pic6.png"/> </p>
 
@@ -82,9 +85,9 @@ We all know that people are currently cautious about investing directly in Bitco
 
 ### Method 2: Use a Script for Local Execution
 
-**Bridge in BTC**
+**Transfer BTC into Safebox**
 
-1. Enter the exclusive Partner ID in the interface and click **"Confirm"**;  
+1. Enter the exclusive Access ID in the interface and click **"Confirm"**;  
 
    <p align="center"> <img src="/img/user-guides/safebox/pic11.png"/> </p>
 
@@ -93,13 +96,13 @@ We all know that people are currently cautious about investing directly in Bitco
 
    <p align="center"> <img src="/img/user-guides/safebox/pic12.png"/> </p>
 
-4. Click the **"Copy"** button in the popup to copy the sample code into your local development environment for modification. Run the script locally to complete the BTC bridge-in. Please make sure the amount in the script exactly matches the order. Otherwise, the Timelocked UTXO cannot be returned to you.  
+4. Click the **"Copy"** button in the popup to copy the sample code into your local development environment for modification. Run the script locally to complete the BTC transfer. Please make sure the amount in the script exactly matches the order. Otherwise, the Timelocked UTXO cannot be returned to you.  
 
    <p align="center"> <img src="/img/user-guides/safebox/pic13.png"/> </p>
 
 **Spend the BTC**
 
-1. When your order matures, remember to visit the website to check the status of your order. Enter your Partner ID again to retrieve the transaction record;  
+1. When your order matures, remember to visit the website to check the status of your order. Enter your Access ID again to retrieve the transaction record;  
 
    <p align="center"> <img src="/img/user-guides/safebox/pic14.png"/> </p>
 
@@ -119,7 +122,7 @@ We all know that people are currently cautious about investing directly in Bitco
 
 ## ⚠️ Important Notes
 
-1. **Partner ID** is your unique account identifier. Please keep it safe.  
-2. Once the bridge-in transaction is submitted, **please do not resubmit,** as this may cause your funds to be transferred to the GOAT Network, requiring a manual refund process.  
-3. When bridging in via script, make sure the **amount and deposit address** exactly match the order. Any discrepancy may result in funds being bridged to the GOAT Network and requiring a refund process.  
-4. If more than **2 hours has passed** since the bridge-in and no transaction record appears on the frontend, the delay might be caused by **network congestion** on Bitcoin mainnet. If you're concerned, please contact your account manager for assistance.
+1. **Access ID** is your unique account identifier. Please keep it safe.  
+2. Once the order is created, please complete the transfer within **48 hours**. Otherwise, the lock will expire and you will need to contact support for a manual refund.
+3. Once the transfer transaction is submitted, **please do not resubmit**. Duplicate submissions may cause issues requiring manual intervention and refund processing.
+4. If more than **2 hours have passed** since the transfer and no transaction record appears on the frontend, the delay might be caused by **network congestion** on Bitcoin mainnet. If you're concerned, please contact your account manager for assistance.
