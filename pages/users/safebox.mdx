@@ -8,7 +8,7 @@ import { Card, Cards } from 'nextra/components'
 import { Callout, Tabs, Tab } from 'nextra/components'
 import React from 'react';
 
-## Overview
+## GOAT Safebox User guide
 
 We all know that people are currently cautious about investing directly in Bitcoin. The [Safebox](https://safebox.goat.network/) product was created to address concerns about the security of Bitcoin investments. 
 1. Users simply transfer BTC into Safebox, and we will return a UTXO of equivalent value with a 90-day timelock to the user’s BTC wallet.
@@ -26,7 +26,7 @@ This solution cleverly uses Timelocked UTXO to keep users' BTC in their own wall
 | :---- | :---- |
 | Locking Amount | Locked amount per round. For each round, each account must lock at least 1 BTC. The amount may be split across multiple transactions, each ≥ 0.01 BTC. |
 | Receiving Address | The receiving address for spending the UTXO after it is unlocked. Note that **the receiving address must match the receiving wallet’s public key**, and currently, only **Native Segwit (P2WPKH)** address types are supported. |
-| Public Key | The public key of the receiving wallet for the UTXO with Timelock. After the unlock time, only the private key corresponding to this public key (specifically for this wallet) can spend the UTXO. |
+| Public Key | The public key of the receiving wallet for the UTXO with Timelock. After the unlock time, only the private key corresponding to this public key (specifically for this wallet) can spend the UTXO. || Receiving Address | The receiving address for spending the UTXO after it is unlocked. Note that **the receiving address must match the receiving wallet’s public key**, and currently, only **Native Segwit (P2WPKH)** address types are supported. |
 
 ## How to Use
 
