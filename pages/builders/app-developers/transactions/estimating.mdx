@@ -106,8 +106,9 @@ const transaction = {
   to: tokenContractAddress,
   data: tokenContract.methods.transfer(recipientAddress, amount).encodeABI(),
   gasLimit: gasEstimate,
-  maxPriorityFeePerGas: web3.utils.toWei('100000', 'wei'), // Minimal priority fee
+  maxPriorityFeePerGas: web3.utils.toWei('130000', 'wei'), // Minimal priority fee
 };
+// Minimal priority fee (0.00013 Gwei)
 
 const totalFee = await estimateTransactionFee(transaction);
 console.log(`Estimated Fee: ${web3.utils.fromWei(totalFee, 'ether')} ETH`);

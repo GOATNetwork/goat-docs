@@ -117,9 +117,11 @@ In the `Edit gas fee` window, choose the `Advanced` tab.
 
 3. Enter custom values
 
-**Max Base Fee (GWEI)**: 0.005000007
+**Max Base Fee (GWEI)**: 0.000130007
 
-**Priority Fee (GWEI)**: 0.005
+**Base Fee (GWEI)**: 0.000000007
+
+**Priority Fee (GWEI)**: 0.00013
 
 <p align="center"> <img src="/img/user-guides/quick-start/quick-start-3.png" width="300"/> </p>
 
@@ -147,13 +149,13 @@ Total Fee = Gas Used × (Base Fee + Priority Fee)
 
 **Example Calculation (ERC-20 Transfer)**
 
-Let's say you're sending an ERC-20 token, and the transaction uses 21,000 gas units (a typical value for a simple transfer). Using the recommended Priority Fee of 0.005 Gwei and the provided Max Base Fee of 0.005000007 Gwei.
+Let's say you're sending an ERC-20 token, and the transaction uses 21,000 gas units (a typical value for a simple transfer). Using the recommended Priority Fee of 0.00013 Gwei and the provided Max Base Fee of 0.000130007 Gwei.
 
-**Estimated Maximum Gas Costs** = Gas Limit * (Max Base Fee + Priority Fee) = 21,000 * (0.005000007 + 0.005) = 210.000147 Gwei = 0.000000210000147 BTC
+**Estimated Maximum Gas Costs** = Gas Limit * (Max Base Fee + Priority Fee) = 21,000 * (0.000130007 + 0.00013) = 5.460147 Gwei = 0.000000005460147 BTC
 
 In times of low network congestion, the actual base fee consumed may be as low as 0.000000007, you'll pay is as follows:
 
-**Typical Gas Costs** = Gas Limit * (Base Fee + Priority Fee) = 21,000 * (0.000000007 + 0.005) = 105.000147 Gwei = 0.000000105000147 BTC
+**Typical Gas Costs** = Gas Limit * (Base Fee + Priority Fee) = 21,000 * (0.000000007 + 0.00013) = 2.730147 Gwei = 0.000000002730147 BTC
 
 **Important Considerations**
 
