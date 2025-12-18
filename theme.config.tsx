@@ -4,6 +4,11 @@ import { useConfig } from "nextra-theme-docs";
 import { useRouter } from "next/router";
 
 const config: DocsThemeConfig = {
+  useNextSeoProps() {
+    return {
+      titleTemplate: '%s – GOAT Network Docs'
+    }
+  },
   logo: () => {
     const { resolvedTheme } = useTheme();
     return (

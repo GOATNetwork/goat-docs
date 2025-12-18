@@ -30,7 +30,8 @@ GOAT Network implements a gas-efficient fee structure that leverages [**EIP-1559
 **Total Transaction Fee** = `Gas Used` * min(`Max Fee`, `Base Fee` + `ProrityFee`)
 
 - **Gas Used**: The actual amount of gas consumed during transaction execution.
-- **Priority Fee**: The minimal priority fee on GOAT Network is 100,000 Wei.
+- **Base Fee**: The minimal base fee on GOAT Network is 7 Wei.
+- **Priority Fee**: The minimal priority fee on GOAT Network is 130,000 Wei.
 - **Max Fee**: Maximum fee the user is willing to pay (must be ≥ Base Fee + Priority Fee).
 
 **Note**: For transactions involving batch operations, gas usage is significantly reduced per operation.
