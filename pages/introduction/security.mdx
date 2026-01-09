@@ -1,0 +1,132 @@
+# Security Model
+
+GOAT BitVM2 implements a trust-minimized security model that fundamentally differs from traditional multi-signature bridge designs. At its core, the protocol operates under the 1-of-n honesty assumption, inherited from BitVM2, which requires only a single honest participant among all protocol actors to guarantee security. This represents a significant improvement over traditional t-of-n threshold schemes that require an honest majority.
+
+The security model is built on optimistic computation with fraud proofs, permissionless challenging, and cryptoeconomic incentive alignment. Together, these mechanisms ensure that user funds remain secure as long as at least one participant acts honestly and the underlying Bitcoin blockchain maintains its security guarantees.
+
+## GOAT Bridge Economics & Security Guarantees
+
+### **1-of-n Honesty Assumption**
+
+The 1-of-n honesty assumption, inherited from BitVM2, remains secure if at least one participant out of n total participants behaves honestly.
+
+The 1-of-n model provides two critical security guarantees for GOAT’s BitVM Bridge:
+
+1. Liveness: Maintained by at least one active Operator who processes peg-in and peg-out requests
+2. Validity: Enforced by at least one honest Challenger who monitors and disputes dishonest Operators
+
+Fund theft is prevented as long as a single honest participant exists who can detect and challenge malicious behavior.
+
+For a more detailed overview of the participants’ honesty assumptions of the protocol, refer to https://docs.goat.network/introduction/bridge.
+
+### **Universal Operator Model**
+
+GOAT also introduces the Universal Operator Model, which consolidates all system roles into a single unified identity. Participants stake tokens on L2 and rotate through different roles across epochs. Therefore, these roles can be fulfilled by different participants, and the system remains secure even if all but one participant is malicious. This design provides:
+
+- Balanced Economics: Operators rotate through profit-generating roles (Sequencer) and cost-incurring roles (Prover), ensuring sustainable economics.
+- Aligned Incentives: Short-term costs in one epoch can be offset by profits in subsequent epochs through cross-subsidization.
+- Enhanced Reliability: There is no permanent dependency on single entities and responsibilities reassign on Operator failure.
+
+### **Operator Collateral**
+
+Operators lock collateral on L2, which simplifies the watchtower’s design and enables efficient slashing. The same collateral can back multiple withdrawal requests through the Pre-Kickoff chain mechanism, improving capital efficiency. Operator locking serves as a prerequisite for network participation and duty fulfillment, such as handling Peg-in/Peg-out operations and generating proofs.
+
+### **Slashing Mechanism**
+
+System security is not based on trusting the Operator's honesty. The slashing mechanism is the core defense against malicious operator behavior. If an Operator is proven to have acted maliciously e.g., submitting invalid proofs, their entire collateral is slashed. By making the economic cost of malicious behavior far exceed any potential gain, the slashing mechanism fundamentally discourages the Operator from acting maliciously.
+
+### **Timelocks**
+
+The bridge operates on an optimistic model where withdrawals proceed unless challenged. The protocol uses a series of timelocks to enforce safety during both the peg-in and peg-out processes.
+
+To view more information about the timelocks, refer to the GOAT BitVM2-GV whitepaper.
+
+### **Security Guarantees**
+
+The following are the security guarantees provided by GOAT:
+
+- Incorrect peg-outs cannot succeed as long as one honest Challenger exists to dispute them.
+- Double-spending is prevented by anchoring L2 state to Bitcoin via sequencer set commitments.
+- Honest Operators can always defend against malicious challenges by providing valid proofs.
+- User funds remain secure even and liveness failures are minimized with GOAT’s decentralized sequencing mechanism.
+
+## GOAT Bridge Threat Model and Attack Resistance
+
+The security model assumes computationally bounded adversaries with the following capabilities:
+
+- Can control up to n-1 participants in any role category
+- May collude across different roles
+- Cannot break cryptographic primitives (hash functions, signatures, SNARKs)
+- Cannot compromise Bitcoin's consensus security.
+
+The following are some possible attack vectors and mitigations for GOAT’s BitVM bridge:
+
+### **Operator Double-Spending Attack**
+
+In the scenario that a malicious operator creates a valid proof for an incorrect or forked L2 state, the decentralized sequencer set commitment scheme prevents operators from withdrawing funds. The Watchtower mechanism commits the sequencer set to Bitcoin, establishing a verifiable public input. The operator's proof must be based on the canonical L2 state verified through Bitcoin block headers. The mechanism is as follows:
+
+1. The system commits the sequencer set's public keys to Bitcoin via pre-signed transactions.
+2. Sequencer set updates require 2/3 approval from current sequencers before being anchored on Bitcoin.
+3. The committed sequencer state becomes a verifiable public input for withdrawal proofs.
+4. Watchtowers verify that withdrawal proofs reference the canonical L2 state derived from the committed sequencer set.
+
+### **Griefing Attacks**
+
+To address malicious challengers repeatedly challenging honest operators which force costly Assert transactions, Challengers must post collateral that covers the operator's on-chain costs. Failed challenges result in collateral loss, making griefing economically irrational.
+
+### **Committee Collusion**
+
+In the scenario that all committee members collude to sign unauthorized transactions, the 1-of-n assumption requires only one honest signer who deletes their key. Users can join the committee to personally guarantee this assumption. Note, future Bitcoin covenants would eliminate this requirement entirely.
+
+### **Bitcoin Light Client Attacks**
+
+If an operator mines a private Bitcoin fork to generate fraudulent proofs. As part of BitVM, the PowPV light client design uses superblock challenges requiring the attacker to outmine the entire Bitcoin network during a measurement period. This attack costs more than potential gains.
+
+## L2 Consensus Security Model
+
+GOAT uses CometBFT's consensus algorithm, which provides immediate finality and can tolerate up to 1/3 of validators behaving maliciously. Key characteristics include:
+
+- Instant Finality: Blocks are final once committed, with no possibility of reorganization under normal operation.
+- Byzantine Fault Tolerance: The network tolerates up to (n-1)/3 Byzantine validators without compromising safety or liveness.
+- Deterministic Block Production: Validators take turns proposing blocks in a deterministic rotation, with voting power proportional to their stake.
+
+GOAT’s Cosmos-SDK-based implementation utilizing CometBFT for its consensus, is built on the Locking, Relayer, and Bitcoin interconnected modules.
+
+### **Locking Module**
+
+The Locking Module manages validator registration, staking, and power calculation. It enforces economic security through stake-weighted voting power and slashing mechanisms. The Locking Module processes Byzantine evidence submitted by CometBFT. When evidence of misbehavior is detected, the validator has their staked slashed. Slashed validators are immediately removed from the power ranking and validator set with voting power set to zero.
+
+### **Relayer Module**
+
+Relayer operations require 2/3 threshold approval from the active relayer set. The threshold is calculated as: (1 + voters) × 2/3, ensuring Byzantine fault tolerance (from CometBFT) within the relayer network itself.
+
+The relayer network also uses BLS aggregate signatures for efficient multi-party signing. This allows multiple relayers to produce a single compact signature that can be verified on-chain, reducing transaction costs and enabling efficient consensus verification.
+
+Additionally, Proposers are elected through a RANDAO-based rotation mechanism that ensures unpredictable and fair selection. The election process operates as follows:
+
+- Each valid relayer transaction updates the RANDAO value using SHA256.
+- Proposer rotation occurs at configurable intervals
+- If a proposer fails to produce valid transactions within a time period, a new proposer is elected.
+- Epoch numbers increment with each rotation, preventing replay attacks.
+
+## Cryptographic Security Primitives
+
+The following are the cryptographic schemes used in GOAT, each with its own cryptographic security assumptions.
+
+Additionally, the cryptographic security is also related to that of [Ziren](https://github.com/ProjectZKM/Ziren), the zkVM that GOAT Network utilizes to generate validity proofs. GOAT is provided with 100-bit security, inherited from BitVM2 and Ziren. GOAT also assumes all cryptographic assumptions required for the security of Ziren’s proof system stack, which includes the generation of individual STARK proofs, proof aggregation, and a final Groth16 wrap.
+
+**Signature Schemes:**
+
+- secp256k1: Used for Bitcoin-compatible signatures and key management.
+- BLS12-381: Used for aggregate signatures in the relayer network, enabling efficient multi-party verification.
+- Lamport Signatures: Used for committing GC input/output labels (160-bit hash output) on Bitcoin.
+
+**Hash Functions:**
+
+- SHA256: Primary hash function for Bitcoin compatibility, RANDAO updates, and signature documents.
+- Poseidon2: ZK-friendly hash function used for GC construction with KoalaBear prime field (p = 2³¹ - 2²⁴ + 1).
+
+**Elliptic Curves:**
+
+- BN254: Pairing-friendly curve for efficient SRS verification; GC size ~7.9 GB with 506M non-free gates.
+- Sect233k1: Binary extension field curve for smaller GCs; GC size ~141 MB with 8.8M non-free gates (100x reduction).

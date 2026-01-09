@@ -3,15 +3,19 @@
     "title": "Bitcoin Layer 2",
     "display": "normal"
   },
-  "ocp": {
-    "title": "Optimistic Challenge Protocol",
-    "display": "normal"
-  },
   "decseq": {
     "title": "Decentralized Sequencing",
     "display": "normal"
   },
-  "security": {
+  "bitvm": {
+    "title": "BitVM Introduction",
+    "display": "normal"
+  },
+  "bridge": {
+    "title": "GOAT BitVM Bridge",
+    "display": "normal"
+  },
+    "security": {
     "title": "Security Model",
     "display": "normal"
   }

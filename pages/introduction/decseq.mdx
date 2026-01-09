@@ -1,0 +1,57 @@
+# GOAT Network’s Decentralized Sequencer
+
+A sequencer is responsible for ordering and executing transactions on a L2 network prior to submitting them to the underlying L1 (e.g., Bitcoin).
+
+In traditional centralized sequencer models, we have to rely on trusting the centralized sequencer to correctly sequence, tell us the current state, and promise inclusion of the transaction. Unlike traditional sequencers, GOAT implements a decentralized sequencer model to enhance security, censorship resistance properties and strong liveness guarantees for all L2 transactions from day one.
+
+With the decentralized sequencer model, GOAT shares network ownership with outside sequencer node operators and mitigates centralized sequencer model concerns such as single-point-of-failure risk while helping to ensure 24/7 liveness on the network. Decentralized sequencers on GOAT also play a role for generating sequencer revenues, and real sustainable yield for investors supplying BTC or DOGE.
+
+## Key Features
+
+The following are the key benefits offered by GOAT’s permissionless decentralized sequencer model:
+
+- **Trust-minimization** – no single party can manipulate transaction order for profit while also relieving concerns over a single sequencer having a monopoly over all MEV. Block production rotates among staked validators through a deterministic selection process, introducing a competitive dynamic among the involved parties, limits MEV extraction, and in turn, mitigates users bearing potential losses incurred by the sequencer’s control over MEV.
+- **Censorship resistance** – transactions are ordered through consensus with distributed nodes, preventing any single entity from censoring user-submitted transactions or hindering any additional network operations. In a decentralized sequencer framework, users can still relay their transaction to alternate sequencers in the network if their transaction is declined, compared to many traditional rollups with centralized sequencers which only have forced inclusions as an escape hatch mechanism.
+- **Liveness guarantees** – this eliminates concerns when a centralized sequencer goes down. In the centralized sequencer scenario, if the sequencer stops working, transactions from the L2 will not be processed and all L2 operations will be ceased. GOAT Network remains operational even if some nodes fail. With CometBFT-based consensus, the network continues functioning as long as at least 2/3 validators are online and honest.
+
+## Architecture Overview
+
+GOAT Network uses a hybrid architecture with CometBFT for transaction ordering and goat-geth to handle EVM execution, the separation between the layers allowing for robust consensus and full EVM compatibility. The consensus layer instructs the execution layer to build blocks and validates the results before finalizing.
+
+The consensus layer consisting of a CometBFT-based consensus client is responsible for transaction ordering, validator management, and bridging coordination. The execution layer consisting of a geth-based execution client, is responsible for transaction execution and maintaining the smart contract state.
+
+### **Operator Roles**
+
+The sequencer consists of two operators:
+
+- **Validators:** Participate in CometBFT consensus to order transactions and produce blocks. Validators stake tokens to earn the right to participate and receive block rewards.
+- **Relayers** (Voters): Operate the bridge by voting on Bitcoin block headers and processing deposit and withdrawal requests. Relayers use BLS threshold signatures to authorize bridge operations.
+
+A separate relayer network handles GOAT’s Bridge operations. See https://docs.goat.network/introduction/bridge for more details.
+
+## Decentralized Sequencer Mechanism
+
+The following describes the decentralized sequencer mechanism used by GOAT:
+
+### **Staking and Validator Registration:**
+
+Validators join the network by staking tokens through the Locking smart contract on the execution layer. For more details, refer here:  https://docs.goat.network/builders/sequencers/validator.
+
+### **Block Production Flow**
+
+1. Transaction Submission: Users submit transactions to any GOAT RPC node. Transactions enter the mempool and propagate across the network.
+2. Proposer Selection: CometBFT selects a block proposer based on voting power. The proposer rotates each block.
+3. Block Building: The proposer collects pending transactions from the mempool, requests for an execution block to be built and packages the execution payload into a consensus block proposal.
+4. Consensus Voting: Other validators verify the proposal by checking the proposer is valid, validating the execution payload against the execution layer, voting to accept or reject.
+5. Finalization: Once at least 2/3 of validators vote to accept, the block is confirmed. To note, GOAT provides immediate finality through BFT consensus to allow for faster bridging to and from Bitcoin and overall enhanced experience for users.
+
+### **Slashing Conditions for Validators**
+
+To ensure validators behave honestly and remain online, they face penalties for the following misbehaviors:
+
+- Double signing by proposing conflicting blocks – the validator committing this offense will have their stake slashed and be permanently removed from the validator set.
+- Extended downtime by missing too many blocks – the validator will be temporarily jailed and removed from the active set.
+
+By leveraging a decentralized sequencer model, GOAT Network achieves a robust, secure, and efficient transaction processing system that adheres to the principles of decentralization and trust-minimization, essential for a scalable and secure Bitcoin L2 solution.
+
+For more detailed technical specifications, refer to GOAT’s decentralized sequencer implementation here: https://github.com/GOATNetwork/goat
