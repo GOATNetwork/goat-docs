@@ -6,7 +6,5 @@
   "subgraph": "Subgraph",
   "oracle": "Oracle",
   "vrf": "VRF",
-  "concepts": "Core Concepts",
-  "security": "Security",
   "testing": "Testing"
 }
