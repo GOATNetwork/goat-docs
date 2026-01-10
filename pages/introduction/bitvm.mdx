@@ -1,0 +1,113 @@
+# BitVM Overview
+
+BitVM is a paradigm that enables arbitrary program execution on Bitcoin without requiring changes to Bitcoin’s consensus rules. Any off-chain computation can be verified on Bitcoin via validity proofs rather than executing the computation onchain, saving onchain costs while also inheriting Bitcoin’s security natively.
+
+For more technical details on BitVM, refer to: https://bitvm.org/.
+
+## Bitcoin’s Limitations
+
+At its core, BitVM operates on the optimistic challenge principle, assuming operators are honest unless proven otherwise. This approach sidesteps Bitcoin's inherent scripting limitations by moving computation offchain while ensuring that any fraudulent claims can be challenged and disproven onchain.
+
+While Bitcoin's scripting language can theoretically express any bounded computation, it has limitations that make on-chain verification infeasible, including:
+
+- Block size constraints: the maximum Bitcoin block size is currently 4MB and scripts exceeding this size cannot fit in a single block.
+- Execution environment constraints: the execution environment has strict resource constraints e.g., the execution stack is limited to 1,000 elements and is therefore more difficult to emulate more complex opcodes.
+- Opcode limitations: Complex operations such as elliptic curve pairings are not natively supported, making it not possible to natively verifying pairing-based ZK proofs such as Groth16.
+
+These constraints make it impractical to verify complex computations, such as SNARK proofs, directly on Bitcoin. BitVM provides a workaround through its optimistic verification model.
+
+## How BitVM Works
+
+### **Optimistic Computation – how BitVM minimizes onchain costs**
+
+To reduce on-chain costs, BitVM follows an optimistic challenge model similar to optimistic rollups on Ethereum, where the operator is assumed to be honest until proven guilty through fraud proofs by the challenger.
+
+A high-level overview of the optimistic computation process is as follows:
+
+1. **Assertion:** An operator claims that a computation is correct, committing on-chain of correctly executing a SNARK verifier for an arbitrary program encoding the computation.
+2. **Challenge Period:** Anyone acting as a challenger can dispute the claim within a defined timeframe.
+3. **Resolution:** If challenged, the operator must prove correctness or lose their staked collateral.
+
+If no challenge is raised during the challenge period, the assertion is accepted as valid. This dramatically reduces on-chain costs for honest operations since full computation only happens in dispute cases.
+
+The involved parties are as follows:
+
+- **Operator:** the computing party, acting as liquidity providers and executors
+- **Challenger:** the observing party; an arbitrary individual can challenge an invalid insertion made by an operator even if they weren’t part of the initial setup. Therefore, BitVM allows for permissionless challenging where anyone with a Bitcoin full node can challenge faulty operators, not just a predefined fixed set of operators.
+- **Watchtower** (in GOAT’s design): act as verifier that monitors the network for potential fraud and are economically incentivized to perform verification
+
+### **SNARK Verification – what BitVM verifies**
+
+Rather than verifying complex and computationally heavy programs directly on Bitcoin which is impractical given Bitcoin’s limitations, BitVM compresses computations using SNARK proofs. In this way, the correct execution of the program is proven off-chain using a SNARK proof and only the SNARK verifier program needs to run on Bitcoin.
+
+BitVM therefore verifies the correct execution of a SNARK verifier that verifies a proof for the correct execution of the arbitrary program encoding the computation (as opposed to verifying the program itself).
+
+The protocol is as follows:
+
+1. The arbitrary program is compressed via SNARKs.
+2. The SNARK verifier is implemented in Bitcoin Script. To note, the SNARK verifier exceeds the Bitcoin block size (e.g., Groth16 is approximately 3GB compared to the block size limit of 4MB). Therefore, the SNARK verifier program is split into sequential sub-program chunks so that each chunk can be executed in a Bitcoin block.
+3. During the setup phase, the operator commits to executing a SNARK verifier program correctly so that the challenger can later on make a dispute in the case of misbehavior from the operator.
+4. If an operator wants to withdraw funds such as taking out BTC during a peg-out, the operator posts the output of the SNARK verifier onchain.
+5. If an operator commits to incorrect computation results, any challenger can make a dispute within a defined challenge period. The challenger can identify the faulty step, execute that specific sub-program in a single transaction on-chain, and prove the mismatch. This invalidates the operator's claim and results in their collateral being slashed.
+
+### **BitVM Evolution**
+
+BitVM has evolved significantly since its initial design.
+
+The original BitVM design was limited to a two-party setting, required a hefty challenge-response mechanism of up to 70 on-chain transactions for a single dispute resolution, a fixed set of operators who could challenge, and could take weeks or months to resolve disputes. For more information on BitVM’s original design, refer here: https://bitvm.org/bitvm.pdf.
+
+BitVM2 introduced major improvements, including permissionless challenging where anyone can challenge a faulty operator, reducing the 70+ on-chain transactions to just 3 transactions that can be executed within 1-2 weeks instead of taking months, and reducing the trust assumption from honest majority to 1-of-n honesty. For more information on BitVM2, refer here: https://bitvm.org/bitvm_bridge.pdf.
+
+BitVM3 further optimized BitVM2’s limitation of the large onchain transactions verifying SNARK proofs by moving all computation offchain using garbled circuits. As an overview:
+
+- Setup: the Garbler creates a garbled circuit for SNARK verification, commits to a Taproot tree, and the Evaluator verifies if the Taproot tree is valid.
+- Assertion: the Garbler publishes the SNARK proof and claims its validity.
+- Challenge: if the SNARK proof is incorrect, the Evaluator uses the Taproot tree to generate a fraud proof onchain proving the incorrect assertion during the challenge period.
+
+This reduces assertion transactions from 4MB to approximately 66kB and lowering collateral requirements from over $10,000 to under $100, with the tradeoff of a 280GB offchain storage requirement per garbled circuit. For more information on BitVM3, refer here: https://bitvm.org/bitvm3.pdf.
+
+### **BitVM’s Trust Model**
+
+BitVM operates under a 1-of-n honesty assumption. At least one of the n signers in the committee responsible for the correct setup of the BitVM2 instance for a program is assumed to be honest.
+
+- Safety: Requires at least one honest challenger to prevent fraud
+- Liveness: Requires at least one active rational operator
+
+This reduces trust assumptions compared to traditional multisig bridges that require honest majorities (such as 3-of-5 or 5-of-7 schemes).
+
+## BitVM’s role for L2s – trust-minimized bridging
+
+BitVM's primary application for L2s such as GOAT, is enabling trust-minimized bridges between Bitcoin and the respective L2. To note, BitVM can be applied to other sidesystems, in addition to trust-minimized bridging via L2’s. Traditional bridges that facilitate the transfer of BTC from Bitcoin to other networks as wrapped assets, rely on multi or threshold signature schemes: t-of-n signers entrusted with safekeeping. BitVM’s advantage lies in its 1-of-n honesty assumption.
+
+The following is an overview of the peg-in and peg-out processes for the BitVM2 bridge:
+
+## **Peg-In (Deposit)**
+
+The peg-in process involves creating a wrapped representation of BTC on the L2:
+
+1. User deposits (locks) an amount of wrapped BTC from Bitcoin into a BitVM2 instance.
+2. The L2 verifies that the peg-in transaction of the deposit was included in the Bitcoin L1.
+3. The wrapped BTC is minted to the user’s account on the L2. The user can now freely use the wrapped BTC on the L2.
+
+## **Peg-Out (Withdrawal)**
+
+The peg-out process involves redeeming the wrapped BTC on the L2 to native BTC when the user wants to withdraw the amount of wrapped BTC previously locked in the peg-in transaction:
+
+1. User burns the wrapped BTC on the L2 making the wrapped BTC unspendable.
+2. Operator fronts the BTC payment by creating a peg-out transaction on Bitcoin that pays the user directly. In this way, users don’t wait for the challenge period as they receive BTC immediately from the operator.
+3. The operator waits for confirmations, including the peg-out transaction on Bitcoin and L2 state commitment on Bitcoin.
+4. The operator generates the SNARK proof of the peg-out transaction off-chain.
+5. The operator claims reimbursement from BitVM by initiating a Kickoff transaction.
+6. A challenge window period is initiated and the operator commits to the proof inputs.
+7. During the challenge period, the challenger can force a dispute resolution for the operator to prove their claim.
+8. If unchallenged, the operator receives the locked BTC as reimbursement.
+
+## How GOAT uses BitVM
+
+GOAT Network leverages BitVM2 as the foundation for its trust-minimized Bitcoin bridge. By building on BitVM's optimistic verification model, GOAT enables secure bridging between Bitcoin and its zkRollup without requiring changes to Bitcoin's protocol.
+
+The integration uses BitVM2's pre-signed transaction graphs to enforce protocol rules, combined with SNARK proofs generated by [ZKM’s zkVM (Ziren)](https://docs.zkm.io) to verify L2 state transitions. This allows users to deposit BTC and receive PegBTC on GOAT, then later withdraw back to Bitcoin with strong security guarantees.
+
+For more details on how GOAT uses BitVM for its bridge and how it addresses some of BitVM’s current limitations, please see here: 
+
+[GOAT BitVM Bridge](/introduction/bridge).
