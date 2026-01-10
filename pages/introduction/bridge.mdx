@@ -104,3 +104,13 @@ BitVM requires relatively large (around 4MB) transactions for assertions and dis
 BitVM requires operators and challengers to lock collateral on Bitcoin L1, creating capital inefficiency.  GOAT addresses this by moving collateral to L2 smart contracts and uses Child-Pays-For-Parent (CPFP) for dynamic fee management, improving capital efficiency and simplifying the penalty mechanism.
 
 For a complete formal specification of GOAT BitVM2, including cryptographic details of the garbled circuit construction and DV-SNARK verification, please refer to the GOAT BitVM2-GC whitepaper.
+
+## Dual-Bridge Architecture
+
+GOAT Network offers users a choice between two bridge architectures, each with different security and performance trade-offs.
+
+### MPC Bridge
+
+The MPC Bridge is based on an MPC wallet where all sequencers act as a node in the wallet. When a user initiates a withdrawal, the majority of sequencers sign the transaction to directly pay the user from the shared MPC wallet to the user’s address. After 6 blocks, the sequencer re-checks whether the transaction is confirmed before completing with withdrawal. In this model, the MPC wallet functions as a shared operator. Advantages in using the MPC Bridge are more efficient and faster withdrawals, with the tradeoff of relying on the honesty majority assumption. The BitVM-based bridge, as described in this page, operates under the 1-of-n honesty assumption which provides stronger security guarantees.
+
+Users can choose the bridge that best fits their needs based on their priorities for speed versus security guarantees.
