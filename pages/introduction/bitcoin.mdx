@@ -88,22 +88,8 @@ In the GOAT Network, validity proofs ensure the correctness and security of off-
    - The final Groth16 proof is posted on Bitcoin, where it can be verified by anyone.
 
 3. **Challenge Process**:
-   - The Optimistic Challenge Protocol (OCP) allows participants to challenge the validity of a proof if they believe it is incorrect.
+   - BitVM2 allows participants to challenge the validity of a proof if they believe it is incorrect.
    - If a challenge is raised, the challenger must provide a counter-proof.
    - Successful challenges invalidate the original proof, and the associated transactions are rolled back. Unsuccessful challenges confirm the proof's validity, and the transaction is finalized.
-
-## Network Performance [December 2024]
-
-Current Testnet3 statistics demonstrate the network's scalability:
-
-- Total Blocks: 725,242+
-- Total Transactions: 6,218,395+
-- Daily Transactions: 1.8k+
-- Active Addresses: 270,289+
-- Average Block Time: < 3.5s
-
-For detailed technical specifications of our scaling solution, refer to our [Technical Whitepaper](https://drive.google.com/file/d/1U-thxS4DRfSTOsLxC2ezQNk1KNrrLBd3/view).
-
-Monitor network performance in real-time on our [Block Explorer](https://explorer.testnet3.goat.network).
 
 
