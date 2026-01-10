@@ -1,0 +1,116 @@
+# GOAT BitVM Bridge
+
+GOAT Network features an enshrined Bitcoin bridge based on BitVM2 that enables trust-minimized transfer of BTC between Bitcoin L1 and GOAT Network’s L2.
+
+Unlike traditional multisig bridges that require an honest majority, GOAT BitVM2 operates under a 1-of-n honesty assumption inherited by BitVM, where as long as a single participant acts honestly, the safety and liveness of the bridge are guaranteed. For more information on the security model, refer to https://docs.goat.network/introduction/security.
+
+This page provides a high-level overview of GOAT’s BitVM Bridge. For more technical details, refer to the GOAT BitVM2-GC whitepaper.
+
+## Participant Roles
+
+### Participants Overview
+
+The GOAT BitVM2 bridge involves several key participants:
+
+- Committee – Acts as n-of-n signers for pre-signed BitVM2 transaction graph and commits active sequencer set to Bitcoin.
+- Operator – Exchanges PegBTC for native BTC with users, generates validity proofs, initiates reimbursements and responds to challenges.
+- Challenger – Verifies reimbursement correctness off-chain, submits challenge transactions to force disputes, and detects fraud in execution traces.
+- Watchtower – Submits block headers from the longest chain and commits sequencer updates to determine public input correctness.
+- Designated Verifier – Participates in SRS generation and maintains and reveals secrets for DV-SNARK verifier circuit.
+- Relayer – Relays correlation information between Bitcoin and GOAT.
+
+Through GOAT’s Universal Operator abstraction, participants stake tokens on L2 and rotate through different roles over time, ensuring no single entity is permanently burdened with high-cost roles or benefits from only profitable ones.
+
+### Trust assumptions
+
+GOAT BitVM2 is trust-minimized under the following conditions:
+
+- One honest Committee member ensures funds can only follow pre-approved spend path (1/n).
+- One honest Watchtower can detect and block claims anchored to an incorrect Bitcoin chain (1/∞).
+- One rational Challenger can prove an invalid computation and slash a malicious Operator's collateral (1/∞).
+- One honest Designated Verifier ensures the garbled circuit verification process remains secure (1/n).
+
+## Bridge Operations
+
+GOAT’s Bridge operations consist of three main stages: a setup phase where operators stake their bond, deposits (peg-in) where BTC is moved to L2, and withdrawals (peg-out) where BTC is moved back to Bitcoin.
+
+### Deposit (Peg-In): BTC → PegBTC
+
+The deposit process allows users to lock BTC on Bitcoin and receive equivalent PegBTC tokens on GOAT Network:
+
+The Peg-in process consists of three transactions:
+
+- **Peg-In-Prepare:** User locks BTC in a specific output to initiate the deposit process.
+- **Peg-In-Confirm:** Confirms the deposit operation. Subsequently, the user receives equivalent PegBTC on the L2 chain.
+- **Peg-In-Cancel:** A fallback path. The user can refund their BTC if the Peg-In-Confirm transaction is not confirmed when the timelock expires.
+
+The following is the process for a deposit:
+
+1. The User initiates a Peg-in request via the Layer 2 contract and broadcasts the request to the P2P network, locking the relevant UTXO.
+2. Committee members validate the request and respond on-chain. The Committee acts as n-of-n signers, meaning all participating members must agree. The participating set for this deposit is then finalized and locked in.
+3. The User constructs Peg-In-Prepare, Peg-In-Cancel, and Peg-In-Confirm transactions and broadcasts Peg-In-Prepare.
+4. The Operator verifies the transactions and constructs a Transaction Graph: a pre-defined, interconnected set of Bitcoin transactions that form a directed acyclic graph. This structure enforces the challenge-response protocol on Bitcoin without requiring changes to Bitcoin's core protocol. The Operator pre-signs required components and sends the Graph to the Committee.
+5. Committee members verify the Operator's stake on Layer 2 and pre-sign the Graph.
+6. The Operator aggregates signatures, finalizes the Graph, and broadcasts it.
+7. Committee members sign both the Peg-In-Confirm transaction and the Graph digest, a hash representing the entire Transaction Graph, ensuring all parties have agreed to the same set of pre-signed transactions.
+8. A Relayer aggregates Committee signatures and broadcasts Peg-In-Confirm.
+9. After the Peg-In-Confirm transaction is included in a Bitcoin block , the transaction along with an SPV (Simplified Payment Verification) proof is submitted to the Layer 2 contract. The SPV proof is a lightweight cryptographic proof that verifies the transaction's inclusion in a Bitcoin block without requiring the full block data.
+10. The contract verifies correctness and mints PegBTC to the User.
+
+### Withdrawal (Peg-Out): PegBTC → BTC
+
+The Withdrawal allows a user to redeem PegBTC on Layer 2 for actual BTC on Bitcoin. A withdrawal consists of Atomic Swap and Peg-Out.
+
+During the atomic swap, the user locks PegBTC with a hash on L2 and the Operator locks BTC with the same hash on Bitcoin. The user unlocks BTC and publishes the preimage, then the Operator unlocks PegBTC with the preimage.
+
+The following is the process for a withdrawal:
+
+1. An Operator locks the corresponding amount of PegBTC in the Layer-2 contract. The contract records the current Bitcoin block height and locks the associated Peg-in reference to prevent double-withdrawal.
+2. The Operator broadcasts the transaction Kickoff, initializing the Bitcoin spending path.
+3. Relayers or the Operator submits the Kickoff transaction and burns the locked PegBTC. The contract verifies the Bitcoin SPV proof and transaction consistency.
+4. Watchtowers monitor the Bitcoin network and submit proofs if they detect misbehavior. A challenge period is initiated.
+5. Challengers can dispute Operator behavior by broadcasting Challenge transactions. Failure to respond or incorrect proofs can result in slashing of the Operator’s collateral.
+6. After all challenges and Watchtower proofs are resolved, and all timelocks expire, the Operator may receive reimbursement by transaction broadcasting.
+7. If any challenge succeeds, the Operator's stake is slashed and distributed to the Challenger and relayers, ensuring economic incentive alignment and safety.
+
+GOAT BitVM2 requires the operators to lock their collateral on L2, which simplifies the watchtower's design. Operator locking serves as a prerequisite for network participation and duty fulfillment, such as handling Peg-in/Peg-out operations and generating proofs.
+
+The slashing mechanism is the core defense against malicious operator behavior. System security is not based on trusting the Operator's honesty but on a cryptoeconomic game theory mechanism. By making the economic cost of malicious behavior far exceed any potential gain, the slashing mechanism fundamentally discourages the Operator from acting maliciously.
+
+As long as one Operator acts honestly, any malicious conduct by the remaining Operators will not result in loss of user assets.
+
+## GOAT’s Optimizations
+
+GOAT BitVM2 incorporates several optimizations to the current BitVM design to reduce on-chain costs and improve efficiency.
+
+### State Verification
+
+The original BitVM2 design had no mechanism to verify that operators use the correct L2 state. A malicious operator could potentially use a forked or incorrect state to fraudulently withdraw funds. GOAT addresses this by implementing a decentralized sequencer set whose public keys are committed on Bitcoin. Watchtowers monitor Bitcoin's chain and submit proofs, ensuring operators must use the canonical L2 state.
+
+### Fixed Withdrawal Amounts
+
+The original BitVM2 design only supports fixed deposit amounts per instance, making it impractical for users who want to withdraw arbitrary amounts. To address this, GOAT integrates atomic swaps with the BitVM2 bridge, allowing users to withdraw any amount while operators handle reimbursement through the standard peg-out process.
+
+### Challenger Incentives
+
+BitVM2's incentive structure has gaps in that challengers may not receive rewards if miners front-run transactions, and long periods without fraud leave challengers unmotivated. To improve upon the participant incentives, GOAT introduces Universal Operators where all roles (operator, challenger, sequencer, etc.) are unified and participants rotate through different responsibilities. This creates balanced incentives where costs in one role are offset by profits in another.
+
+### On-Chain Costs
+
+BitVM requires relatively large (around 4MB) transactions for assertions and disputes, making bridge operation expensive. GOAT integrates garbled circuits with Designated-Verifier SNARKs (DV-SNARKs), dramatically reducing transaction sizes and lowering collateral requirements.
+
+### Capital Efficiency
+
+BitVM requires operators and challengers to lock collateral on Bitcoin L1, creating capital inefficiency.  GOAT addresses this by moving collateral to L2 smart contracts and uses Child-Pays-For-Parent (CPFP) for dynamic fee management, improving capital efficiency and simplifying the penalty mechanism.
+
+For a complete formal specification of GOAT BitVM2, including cryptographic details of the garbled circuit construction and DV-SNARK verification, please refer to the GOAT BitVM2-GC whitepaper.
+
+## Dual-Bridge Architecture
+
+GOAT Network offers users a choice between two bridge architectures, each with different security and performance trade-offs.
+
+### MPC Bridge
+
+The MPC Bridge is based on an MPC wallet where all sequencers act as a node in the wallet. When a user initiates a withdrawal, the majority of sequencers sign the transaction to directly pay the user from the shared MPC wallet to the user’s address. After 6 blocks, the sequencer re-checks whether the transaction is confirmed before completing with withdrawal. In this model, the MPC wallet functions as a shared operator. Advantages in using the MPC Bridge are more efficient and faster withdrawals, with the tradeoff of relying on the honesty majority assumption. The BitVM-based bridge, as described in this page, operates under the 1-of-n honesty assumption which provides stronger security guarantees.
+
+Users can choose the bridge that best fits their needs based on their priorities for speed versus security guarantees.
