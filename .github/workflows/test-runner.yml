@@ -5,4 +5,4 @@ jobs:
   test:
     runs-on: [self-hosted, linux, x64, mainnet-publish]
     steps:
-      - run: echo "Hello from runner"
+      - run: echo "Hello from runner test"
