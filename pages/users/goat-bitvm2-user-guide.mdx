@@ -140,37 +140,14 @@ After the installation, run the `bitvm2-noded --version` to check that the versi
 
 ```shell
 $ bitvm2-noded --version
-bitvm2-noded 0.1.0
+bitvm2-noded 0.3.1
 ```
 
 #### Run a Node
 
-You generate a file .env in your workspace, you can also download a .env template from [here](https://github.com/GOATNetwork/bitvm2-node/blob/main/.env.template).
+You generate a file .env in your workspace, you can also download a .env template from [here](https://github.com/GOATNetwork/bitvm2-node/blob/dev/deployment/testnet4/bitvm2-nodes/challenge_0/.env.challenge_0).
 
-```shell
-# required
-ACTOR=
-
-# required
-GOAT_GATEWAY_CONTRACT_ADDRESS=0xc3c2D73FB80cbc10DD85B6896e639D47ebd21B01
-
-# required
-GOAT_CHAIN_URL=https://rpc.testnet3.goat.network
-
-# required
-PEER_KEY=
-
-# required, operator and challenger should setup its BTC private key, committee can setup a seed string.
-BITVM_SECRET=
-
-# optional, relayer only
-GOAT_PRIVATE_KEY=
-
-# optional, operator only
-GOAT_ADDRESS=
-```
-
-- **ACTOR**: It can be `Challenger` or `Operator`. Currently anyone can be a challenger, but need to be whitelisted to become an operator.
+Specially, you need to prepare for your keys as below.
 
 - **PEER_KEY**: Node peer key
 
@@ -191,12 +168,4 @@ Funding P2WSH address (for operator and challenger): tb1q…
 
 It prints a seed and a P2WSH funding address. The amount should be at least 0.007 tBTC.
 
-Run the node using the below command.
-
-```shell
-bitvm2-noded --bootnodes ${bootnodes} -d --rpc-addr localhost:8081 --p2p-port 8443 --db-path ${path-to-workspace}/bitvm2-node.db
-```
-
-Where the `bootnodes` can be one of the following:
-
-**Bootnode 0:** `/ip4/34.210.83.80/tcp/8443/p2p/12D3KooWGWAbTi8RskFboeCQR1TP1S4gPzuEPAp4aje5vgmgJveb`
+Run the node with [run.sh](https://github.com/GOATNetwork/bitvm2-node/blob/dev/deployment/testnet4/bitvm2-nodes/challenge_0/run.sh).
