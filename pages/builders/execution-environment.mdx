@@ -1,0 +1,19 @@
+## GOAT Network Execution Environment
+
+GOAT Network's execution environment is a **Type-1 zkEVM**, using **BTC** as its native token. As a Type-1 zkEVM, GOAT achieves full bytecode compatibility with Ethereum, allowing developers to deploy existing EVM-compatible smart contracts without any modifications while benefiting from fully ZK-proven state transitions.
+
+Type 1 ZK-EVMs aim to be fully equivalent to Ethereum Execution Layer. They do not alter any part of the Ethereum system to facilitate proof generation. This means GOAT retains all original elements of the Ethereum protocol, including hashes, state trees, precompiles etc.
+
+For more information on the Network Configuration for GOAT, please refer to: [GOAT Networks & RPC](https://www.notion.so/GOAT-Docs-2f5e267c266d8087994bff398e1ccfad?pvs=21). 
+
+At the core of GOAT's execution environment is **Ziren**, a production-grade zkVM based on the MIPS32r2 instruction set. Ziren serves as a critical compatibility layer with BitVM2, enabling offchain programmability that is verifiable via Bitcoin Script. For more information on Ziren, including details on the prover architecture design, computational throughput and performance metrics, please visit the [Ziren documentation](https://www.notion.so/ZKM-Proof-UI-2b1e267c266d80849532fd094f5b21ed?pvs=21). 
+
+## Key Characteristics
+
+GOAT Network is 100% EVM-compatible with the Cancun upgrade. Developers can use all existing Ethereum toolchains to build dApps on GOAT Network, including Solidity, Vyper, Hardhat, Truffle, and Foundry.
+
+Below are notable differences from Ethereum:
+
+- EIP-4844: Not supported. Blob fees are zero.
+- No Burned Fees: Since GOAT uses BTC as the gas token (bridged from Bitcoin), burned fees are instead included in the total transaction fee to incentivize miners. GOAT instead implements a gas-efficient fee structure that leverages EIP-1559 for optimized token operations while ensuring secure settlement on Bitcoin. For more information regarding transaction fees on GOAT, please refer [here.](https://docs.goat.network/builders/app-developers/transactions/fees)
+- GOAT uses **BTC** as its native token for gas fees and transfers within the network.
