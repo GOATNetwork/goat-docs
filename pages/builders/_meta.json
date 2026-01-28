@@ -6,7 +6,6 @@
   "execution-environment": "Execution Environment",
   "networks-rpc": "Networks & RPC",
   "contracts": "Contract Addresses",
-  "bridged": "Bridge",
   "subgraph": "Subgraph",
   "oracle": "Oracle",
   "vrf": "VRF",
