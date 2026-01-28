@@ -8,6 +8,5 @@
   "contracts": "Contract Addresses",
   "subgraph": "Subgraph",
   "oracle": "Oracle",
-  "vrf": "VRF",
-  "testing": "Testing"
+  "vrf": "VRF"
 }
