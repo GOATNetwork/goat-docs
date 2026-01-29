@@ -3,6 +3,8 @@
   "app-developers": "Application Development",
   "sequencers": "Sequencer Operations",
   "execution-environment": "Execution Environment",
+  "node-deployment": "Node Setup & Deployment",
+  "committee-signers": "Committee Signers",
   "networks-rpc": "Networks & RPC",
   "contracts": "Contract Addresses",
   "subgraph": "Subgraph",

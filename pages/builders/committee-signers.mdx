@@ -1,0 +1,80 @@
+# Committee Signers
+
+GOAT Network's trust-minimized Bitcoin bridge, relies on a set of Committee Signers to secure the bridge. The signers specifically by participate in an N-of-N signing protocol to secure deposits and enable the bridge's core functionality. These entities pre-sign the allowed spend rules in the BitVM2 transaction graph, emulating covenant-like restrictions on Bitcoin. As long as one signer remains honest, funds can only move along GOAT BitVM2's approved paths.
+
+## Role of Committee Signers
+
+Committee Signers are a group of N participants that:
+
+- **Pre-sign BitVM2 transaction graphs** —Certain inputs in the transaction graph require Committee pre-signatures, establishing the allowed spending paths for bridge operations.
+- **Commit the active sequencer set to Bitcoin** — The Committee commits the active decentralizer sequencer set to Bitcoin, anchoring the L2 state to Bitcoin's security.
+- **Verify operator qualifications** — Before pre-signing, Committee members verify that operators have sufficient stake locked on GOAT to participate in bridge operations based on the locking contract.
+- **Enable deposit confirmations** — Committee members sign Peg-In-Confirm transactions and the Graph digest, allowing users to receive PegBTC on GOAT.
+
+The bridge uses an N-of-N signing scheme for deposits where the bridge remains secure as long as at least one signer's key is secure and at least one signer remains honest.
+
+## Committee Roles & Workflow
+
+The following describes the specific roles that committee signers take in the deposit progress, sequencer set commitment, and operator unlock verification. 
+
+### Deposit (Peg-In) Process
+
+1. User initiates a Peg-In request via the L2 contract
+2. Committee members validate the request and respond on-chain
+3. Once a threshold is reached, the participating Committee set is finalized
+4. Committee members verify the Operator's stake on the L2 and pre-sign the BitVM2 transaction Graph
+5. Committee members sign both the Peg-In-Confirm transaction and the Graph digest
+6. A Relayer aggregates Committee signatures and broadcasts Peg-In-Confirm
+7. After Bitcoin confirmation, the user receives PegBTC on Layer 2
+
+### Sequencer Set Commitment
+
+The Committee commits the sequencer set's public keys to Bitcoin using a chain of pre-signed transactions. This ensures any change to the L2 Sequencer set is approved by a sufficient number (e.g., 2/3) of the current sequencer members and is anchored on Bitcoin. 
+
+The commitment process involves two key transaction types:
+
+- Sequencer-Update — Triggers and organizes the update process
+- Sequencer-Commit — Carries the hash commitment of the next cycle's Sequencer set, signed by a majority of sequencers
+
+### L2 Committee Management
+
+The **CommitteeManagement** contract on the L2 is a multisig contract that manages:
+
+- Committee member registration
+- Member rotation
+- Member exit procedures
+
+This contract leverages GOAT’s decentralized sequencer network to achieve consensus on committee changes.
+
+### Operator Unlock Verification
+
+To unlock funds from the locking contract, an operator must:
+
+1. Submit an unlock request to the Committee with proof that all relevant transactions have been fully processed or discarded
+2. The Committee verifies the proof
+3. If valid, a sufficient number of Committee members sign to approve the request
+4. With enough Committee signatures, the unlock transaction is submitted
+
+## Security Guarantees
+
+The Committee signer set provides the following security guarantees:
+
+- 1-of-N Honesty — The bridge is secure as long as at least one signer remains honest and maintains their private key security
+- Covenant Emulation — Pre-signed transactions ensure funds can only move along approved paths defined in the transaction graph
+- No Single Point of Failure — Multiple independent Committee members distribute trust across the signing set
+- Dual Slashing Security — Combines native slashing in Bitcoin's verification layer with GOAT's consensus layer penalties
+
+## Universal Operator Abstraction
+
+GOAT BitVM2 introduces the **Universal Operator** concept, which consolidates system roles (Prover, Challenger, Sequencer, and Designated Verifier) into a single Operator identity. Universal Operators:
+
+- Stake tokens on L2
+- Are assigned different roles in rotating epochs
+- Balance economics by rotating through both profit-generating and cost-incurring roles
+- Improve system reliability through role redistribution if an Operator fails
+
+This design mitigates centralization risks and supports a sustainable incentive mechanism while maintaining the 1-of-n honesty assumption for network security.
+
+For more information about the technical implementation, trust assumptions of the protocol, and related roles alongside the Committee, see the [GOAT BitVM2 Whitepaper](https://www.notion.so/Committee-Signers-2f7e267c266d80e39fbbdf46b000290d?pvs=21). 
+
+For details on running a Committee node, refer to the [Node Deployment Setup.](https://github.com/GOATNetwork/bitvm2-node)
