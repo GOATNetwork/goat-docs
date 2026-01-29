@@ -1,0 +1,338 @@
+# **BitVM2 Node Deployment Guide**
+
+The following describes how to deploy and run a BitVM2 node for different roles in the GOAT Network BitVM2 system. For full details on running the node, visit [here](https://github.com/GOATNetwork/bitvm2-node/tree/dev/deployment). 
+
+## Role Overview
+
+The BitVM2 network consists of four main actor roles:
+
+- Committee: Signs presign transactions and participates in the federation
+- Operator: Manages bridge operations and processes peg-in/peg-out transactions
+- Challenger: Verifies operator behavior and submits challenges when fraud is detected
+- Watchtower: Monitors the network and submits BTC chain proofs when needed
+
+For a more detailed description of the responsibilities for these roles, refer to the [GOAT BitVM2 Whitepaper](https://www.goat.network/bitvm2-whitepaper). 
+
+## Requirements
+
+### Toolchain Requirements
+
+- Rust Toolchain: Latest stable version.
+- ZKM Toolchain: This is required for compiling circuits. The install location is `~/.zkm-toolchain` . The environment must be sourced prior to building.
+
+### Network Requirements
+
+- Open ports for P2P communication (e.g.,  8443)
+- Open ports for RPC server (default: 9100)
+
+## Installation Steps
+
+To build from source, refer to the following commands: 
+
+```bash
+# Clone repository 
+git clone https://github.com/GOATNetwork/bitvm2-node
+cargo install --git https://github.com/GOATNetwork/bitvm2-node bitvm2-noded
+cd bitvm2-node
+
+# Source the ZKM Toolchain environment:
+source ~/.zkm-toolchain/env
+
+# Build the project in release mode: 
+cargo build -r --all-targets
+```
+
+In building  the project in release mode, the compiled binary will be located at `target/release/bitvm2-noded`. To check the version after installation, run: 
+
+```cpp
+bitvm2-noded --version
+```
+
+To check node help, run: 
+
+```cpp
+bitvm2-noded --help
+```
+
+In addition to building from source, users can also download a pre-built binary from the latest release located at [bitvm2-noded releases](https://github.com/GOATNetwork/bitvm2-node/releases). For Docker deployment, users can use the official Docker image: `ghcr.io/goatnetwork/bitvm2-node:0.1.0` .
+
+## Configuration
+
+The node loads environment variables from a `.env` file in the current working directory. To generate required keys to add to your `.env`: 
+
+**Generate Peer Key:**
+
+```bash
+bitvm2-noded key peer
+```
+
+Output:
+
+```
+PEER_KEY=<base64-encoded-key>
+PEER_ID=<peer-id>
+```
+
+**Generate Funding Address (for operator and challenger):** 
+
+```bash
+bitvm2-noded key funding-address
+```
+
+Output:
+
+```
+Funding P2WSH address (for operator and challenger): tb1q...
+```
+
+### Common Environment Variables
+
+The following are descriptions for the environment variables. Note that different roles require different variables. 
+
+| Variable | Description | Required |
+| --- | --- | --- |
+| `ACTOR` | Node role: `Committee`, `Operator`, `Challenger`, or `Watchtower` | Yes |
+| `BITCOIN_NETWORK` | Bitcoin network: `bitcoin`, `testnet`, `testnet4`, or `regtest` | Yes |
+| `GOAT_NETWORK` | GOAT network: `main` or `test` | Yes |
+| `GOAT_CHAIN_URL` | RPC URL for the GOAT chain | Yes |
+| `BTC_CHAIN_URL` | URL for Bitcoin chain API (Esplora endpoint) | Yes |
+| `PEER_KEY` | Base64-encoded libp2p private key | Yes |
+| `BITVM_SECRET` | Hex-format BTC private key or seed string | Yes |
+| `GOAT_GATEWAY_CONTRACT_ADDRESS` | Gateway contract address on GOAT | Yes |
+| `GOAT_GATEWAY_EVENT_THE_GRAPH_URL` | The Graph URL for Gateway events | Yes |
+| `GOAT_GATEWAY_EVENT_FILTER_FROM` | Block number to start filtering events | Yes |
+| `PROTO_NAME` | P2P protocol identifier | Yes |
+| `BOOTNODES` | Multiaddr of bootnodes for P2P discovery | Yes* |
+| `GOAT_ADDRESS` | GOAT chain address of the node | Role-specific |
+| `GOAT_PRIVATE_KEY` | Private key for GOAT chain transactions | Optional |
+| `GOAT_PROOF_BUILD_URL` | URL for proof builder service | Optional |
+| `GOAT_SWAP_CONTRACT_ADDRESS` | Swap contract address | Optional |
+| `GOAT_SWAP_EVENT_THE_GRAPH_URL` | The Graph URL for Swap events | Optional |
+| `GOAT_SWAP_EVENT_FILTER_FROM` | Block number for Swap event filtering | Optional |
+| `ENABLE_RELAYER` | Enable relayer functionality (Committee only) | Optional |
+| `ENABLE_UPDATE_SPV_CONTRACT` | Enable SPV contract updates (Committee only) | Optional |
+| `ALWAYS_CHALLENGE` | Always initiate challenges (Watchtower only) | Optional |
+| `NODE_NAME` | Custom name for the node | Optional |
+| `RUST_LOG` | Logging level (e.g., `info`, `debug`) | Optional |
+
+### Network-Specific Configuration
+
+the following are example values from the Bitcoin Testnet4 configuration for a committee member: 
+
+| Parameter | Value |
+| --- | --- |
+| `BITCOIN_NETWORK` | `testnet4` |
+| `BTC_CHAIN_URL` | `https://mempool.space/testnet4/api` |
+| `GOAT_CHAIN_URL` | `https://rpc.testnet3.goat.network` |
+| `GOAT_NETWORK` | `test` |
+| `GOAT_GATEWAY_CONTRACT_ADDRESS` | `0x440c6dCA87C3511E1eBf4FDB1f584ddaA49dD029` |
+| `GOAT_GATEWAY_EVENT_THE_GRAPH_URL` | `https://graph.goat.network/subgraphs/name/bitvm2_testnet4` |
+| `GOAT_GATEWAY_EVENT_FILTER_FROM` | `10670000` |
+| `GOAT_SWAP_CONTRACT_ADDRESS` | `0xe510D5781C6C849284Fb25Dc20b1684cEC445C8B` |
+| `GOAT_SWAP_EVENT_THE_GRAPH_URL` | `https://graph.goat.network/subgraphs/name/bitvm2_escrow_manager_testnet4` |
+| `GOAT_SWAP_EVENT_FILTER_FROM` | `10670000` |
+| `PROTO_NAME` | `bitvm2t4` |
+| `BOOTNODES` | `/ip4/34.215.238.232/tcp/8445/p2p/12D3KooWCrPTAmhFdC5DBGgkxZvJi6iuSeiDWKRL87isrt4iMHXv` |
+
+## Role-Specific Deployment
+
+The following are the steps for deploying specific roles. The following are common arguments to be specified during deployment to  start an RPC server and store data in a local database:
+
+- `-rpc-addr <ADDR>`: Address for the RPC server (default: `0.0.0.0:8080`)
+- `-db-path <PATH>`: Path to the SQLite database (default: `sqlite:/tmp/bitvm2-node.db`)
+- `-p2p-port <PORT>`: Port for P2P communication (default: `0`)
+- `-bootnodes <MULTIADDR>`: Bootnode address to connect to
+
+### Committee
+
+The Committee is responsible for signing presign transactions and can optionally run a relayer.
+
+Example `.env` for testnet4 configuration: 
+
+```
+RUST_LOG=info
+
+# Required
+ACTOR=Committee
+ENABLE_RELAYER=true
+
+# Bitcoin Network Configuration 
+BITCOIN_NETWORK=testnet4
+BTC_CHAIN_URL=https://mempool.space/testnet4/api
+
+# GOAT Network Configuration
+GOAT_CHAIN_URL=https://rpc.testnet3.goat.network
+GOAT_PROOF_BUILD_URL=http://127.0.0.1:8900
+
+# Graph Configuration
+GOAT_GATEWAY_CONTRACT_ADDRESS=0x440c6dCA87C3511E1eBf4FDB1f584ddaA49dD029
+GOAT_GATEWAY_EVENT_THE_GRAPH_URL=https://graph.goat.network/subgraphs/name/bitvm2_testnet4
+GOAT_GATEWAY_EVENT_FILTER_FROM=10670000
+GOAT_SWAP_CONTRACT_ADDRESS=0xe510D5781C6C849284Fb25Dc20b1684cEC445C8B
+GOAT_SWAP_EVENT_THE_GRAPH_URL=https://graph.goat.network/subgraphs/name/bitvm2_escrow_manager_testnet4
+GOAT_SWAP_EVENT_FILTER_FROM=10670000
+
+# node config
+BITVM_SECRET=<your-bitvm-secret-key>
+GOAT_PRIVATE_KEY=<your-goat-private-key>
+
+# libp2p config
+PEER_KEY=<your-peer-key>
+PROTO_NAME=bitvm2t4
+BOOTNODES=/ip4/34.215.238.232/tcp/8445/p2p/12D3KooWCrPTAmhFdC5DBGgkxZvJi6iuSeiDWKRL87isrt4iMHXv
+```
+
+**Run Command:**
+
+```bash
+./bitvm2-noded \
+  --rpc-addr 0.0.0.0:9100 \
+  --p2p-port 8443 \
+  --db-path sqlite:./committee.db
+```
+
+### Operator
+
+The Operator manages bridge operations and processes peg-in/peg-out transactions. 
+
+**Funding Requirement:** Deposit BTC to your P2WSH funding address to serve as stake for reimbursements.
+
+Example `.env` for testnet4 configuration: 
+
+```
+RUST_LOG=info
+
+# Required
+ACTOR=Operator
+
+# Bitcoin Network Configuration 
+BITCOIN_NETWORK=testnet4
+BTC_CHAIN_URL=https://mempool.space/testnet4/api
+
+# GOAT Network Configuration 
+GOAT_CHAIN_URL=https://rpc.testnet3.goat.network
+
+# Graph Configuration
+GOAT_GATEWAY_CONTRACT_ADDRESS=0x440c6dCA87C3511E1eBf4FDB1f584ddaA49dD029
+GOAT_GATEWAY_EVENT_THE_GRAPH_URL=https://graph.goat.network/subgraphs/name/bitvm2_testnet4
+GOAT_GATEWAY_EVENT_FILTER_FROM=10670000
+GOAT_SWAP_CONTRACT_ADDRESS=0xe510D5781C6C849284Fb25Dc20b1684cEC445C8B
+GOAT_SWAP_EVENT_THE_GRAPH_URL=https://graph.goat.network/subgraphs/name/bitvm2_escrow_manager_testnet4
+GOAT_SWAP_EVENT_FILTER_FROM=10670000
+
+# Node Configuration 
+BITVM_SECRET=<your-bitvm-secret-key>
+GOAT_ADDRESS=0x0b4B6F52153c6ADC52A1B3999fD67BacbE7DE4F1
+
+# libp2p Configuration
+PEER_KEY=<your-peer-key>
+BOOTNODES=/ip4/34.215.238.232/tcp/8445/p2p/12D3KooWCrPTAmhFdC5DBGgkxZvJi6iuSeiDWKRL87isrt4iMHXv
+PROTO_NAME=bitvm2t4
+
+## Proof
+GENESIS_SEQUENCER_COMMIT_TXID=9afa052d65a7f8e6b2616e56719fe8419ba90469021b6b4696d81360fe842026
+GOAT_PROOF_BUILD_URL=http://127.0.0.1:8900
+```
+
+**Run Command:**
+
+```bash
+./bitvm2-noded \
+  --rpc-addr 0.0.0.0:9100 \
+  --p2p-port 8443 \
+  --db-path sqlite:./operator.db
+```
+
+### Challenger
+
+The Challenger verifies operator operations and submits challenges if fraud is detected. Anyone can run a Challenger.
+
+**Funding Requirement:** Deposit BTC to your P2WSH funding address to serve as stake for challenges.
+
+Example `.env` for testnet4 configuration: 
+
+```
+RUST_LOG=info
+
+# Required
+ACTOR=Challenger
+
+# Bitcoin Network Configuration 
+BITCOIN_NETWORK=testnet4
+BTC_CHAIN_URL=https://mempool.space/testnet4/api
+
+# GOAT Network Configuration 
+GOAT_CHAIN_URL=https://rpc.testnet3.goat.network
+
+# Graph Configuration
+GOAT_GATEWAY_CONTRACT_ADDRESS=0x440c6dCA87C3511E1eBf4FDB1f584ddaA49dD029
+GOAT_GATEWAY_EVENT_THE_GRAPH_URL=https://graph.goat.network/subgraphs/name/bitvm2_testnet4
+GOAT_GATEWAY_EVENT_FILTER_FROM=10670000
+GOAT_SWAP_CONTRACT_ADDRESS=0xe510D5781C6C849284Fb25Dc20b1684cEC445C8B
+GOAT_SWAP_EVENT_THE_GRAPH_URL=https://graph.goat.network/subgraphs/name/bitvm2_escrow_manager_testnet4
+GOAT_SWAP_EVENT_FILTER_FROM=10670000
+
+# Node Configuration
+BITVM_SECRET=<your-bitvm-secret-key>
+GOAT_ADDRESS=0x0b4B6F52153c6ADC52A1B3999fD67BacbE7DE4F1
+
+# libp2p Configuration
+PEER_KEY=
+BOOTNODES=/ip4/34.215.238.232/tcp/8445/p2p/12D3KooWCrPTAmhFdC5DBGgkxZvJi6iuSeiDWKRL87isrt4iMHXv
+PROTO_NAME=bitvm2t4
+```
+
+**Run Command:**
+
+```bash
+./bitvm2-noded \
+  --rpc-addr 0.0.0.0:9100 \
+  --p2p-port 8443 \
+  --db-path sqlite:./challenger.db
+```
+
+### Watchtower
+
+The Watchtower monitors the network and submits BTC chain proofs when needed.
+
+Example `.env` for testnet4 configuration: 
+
+```
+RUST_LOG=info
+
+# Required
+ACTOR=Watchtower
+
+# Bitcoin Network Configuration 
+BITCOIN_NETWORK=testnet4
+BTC_CHAIN_URL=https://mempool.space/testnet4/api
+
+# GOAT Network Configuration 
+GOAT_CHAIN_URL=https://rpc.testnet3.goat.network
+GOAT_PROOF_BUILD_URL=http://127.0.0.1:8900
+
+# Graph Configuration 
+GOAT_GATEWAY_CONTRACT_ADDRESS=0x440c6dCA87C3511E1eBf4FDB1f584ddaA49dD029
+GOAT_GATEWAY_EVENT_THE_GRAPH_URL=https://graph.goat.network/subgraphs/name/bitvm2_testnet4
+GOAT_GATEWAY_EVENT_FILTER_FROM=10670000
+GOAT_SWAP_CONTRACT_ADDRESS=0xe510D5781C6C849284Fb25Dc20b1684cEC445C8B
+GOAT_SWAP_EVENT_THE_GRAPH_URL=https://graph.goat.network/subgraphs/name/bitvm2_escrow_manager_testnet4
+GOAT_SWAP_EVENT_FILTER_FROM=10670000
+
+# Node Configuration 
+BITVM_SECRET=
+ALWAYS_CHALLENGE=true
+
+# libp2p Configuration 
+PEER_KEY=
+BOOTNODES=/ip4/34.215.238.232/tcp/8445/p2p/12D3KooWCrPTAmhFdC5DBGgkxZvJi6iuSeiDWKRL87isrt4iMHXv
+PROTO_NAME=bitvm2t4
+```
+
+**Run Command:**
+```bash
+./bitvm2-noded \
+  --rpc-addr 0.0.0.0:9100 \
+  --p2p-port 8443 \
+  --db-path sqlite:./watchtower.db
+```
