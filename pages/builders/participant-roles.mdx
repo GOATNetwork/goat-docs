@@ -1,0 +1,169 @@
+# Participant Roles
+
+GOAT-BitVM2, GOAT Network's trust-minimized Bitcoin bridge, relies on several key participant roles working together to secure the bridge and enable transfers between Bitcoin L1 and GOAT Network's L2. This page provides detailed information about each role, their responsibilities, and the trust assumptions that underpin the protocol's security.
+
+## Roles Overview
+
+The following describes the role types with the associated responsibilities and honesty assumptions for each participant, including: 
+
+- Committee
+- Operator
+- Challenger
+- Watchtower
+- Designated Verifier
+- Relayer
+
+| Role | Responsibilities | Honesty Assumption |
+| --- | --- | --- |
+| **Committee** | N-of-N signers for pre-signed BitVM2 transaction graph; commits active sequencer set to Bitcoin | 1/n |
+| **Operator** | Exchanges PegBTC for native BTC with users; generates validity proofs; initiates reimbursements; responds to challenges | 1/∞ |
+| **Challenger** | Verifies reimbursement correctness off-chain; submits challenge transactions; detects fraud in execution traces | 1/∞ |
+| **Watchtower** | Monitors Bitcoin's longest chain; submits block headers; commits sequencer updates on Bitcoin | 1/n |
+| **Designated Verifier** | Participates in SRS generation; maintains and reveals secrets for DV-SNARK verifier circuit | 1/n |
+| **Relayer** | Relays correlation information between Bitcoin and GOAT Network | 1/∞ |
+
+For more details about the roles, please refer to [GOAT’s BitVM2 Whitepaper](https://www.goat.network/bitvm2-whitepaper). 
+
+## Committee
+
+The Committee acts as the foundational signing authority for the GOAT BitVM2 bridge. The signers participate in an N-of-N signing protocol to secure deposits and enable the bridge's core functionality. These entities pre-sign the allowed spend rules in the BitVM2 transaction graph, emulating covenant-like restrictions on Bitcoin. As long as one signer remains honest, funds can only move along GOAT BitVM2's approved paths.
+
+Committee Signers are a group of N participants that are responsible for the following: 
+
+- Pre-signing BitVM2 transaction graphs — All Committee-signed inputs in the transaction graph (marked blue in protocol diagrams) require unanimous Committee pre-signatures, establishing the allowed spending paths for bridge operations
+- Committing the active sequencer set to Bitcoin — The Committee publishes the decentralized sequencer network's public keys on Bitcoin, ensuring L2 state is anchored to Bitcoin's security
+- Verifying operator qualifications — Before pre-signing, Committee members verify that operators have sufficient stake locked on Layer 2 to participate in bridge operations
+- Enabling deposit confirmations — Committee members sign Peg-In-Confirm transactions and the Graph digest, allowing users to receive PegBTC on Layer 2
+
+For sequencer set commitments, the Committee commits the sequencer set's public keys to Bitcoin using a chain of pre-signed transactions. This process ensures any change to the L2 Sequencer set is approved by a sufficient number (e.g., 2/3) of the current members and anchored on Bitcoin.
+
+The commitment process involves two key transaction types:
+
+- Sequencer-Update — Triggers and organizes the update process, using Update-Connector-N as the first input
+- Sequencer-Commit — Carries the hash commitment of the next cycle's Sequencer set, revealing the pre-image of the next round's sequencer set and using an `OP_RETURN` output to commit the hash
+
+The CommitteeManagement contract on the L2 is a multisig contract that manages:
+
+- Committee member registration
+- Member rotation
+- Member exit procedures
+
+This contract leverages GOAT’s decentralized sequencer network to achieve consensus on committee changes.
+
+The Committee operates on a 1/n honesty assumption. The bridge uses an N-of-N signing scheme for deposits, functioning as a key deletion covenant. One honest Committee member ensures funds can only follow pre-approved spend paths. 
+
+## Operator
+
+Operators are the primary actors facilitating bridge operations between Bitcoin and GOAT Network. Anyone can act as an Operator, which makes this role permissionless.
+
+Operators are responsible for: 
+
+- Exchanging PegBTC for native BTC with users — Operators facilitate user withdrawals through atomic swaps
+- Generating validity proofs — Generate ZK proofs attesting to the correctness of L2 state transitions
+- Initiating reimbursements — After processing user withdrawals, operators initiate the Kickoff transaction sequence to receive reimbursement
+- Responding to challenges — When challenged, operators must publish Watchtower-Challenge-Init transactions and reveal execution traces through Assert-Init and Assert-Commit transactions
+- Revealing pre-images of hashed timelocks to Watchtowers — Enable the watchtower challenge mechanism
+
+GOAT BitVM2 also requires operators to lock collateral on L2 rather than L1, which simplifies the protocol and improves capital efficiency. The locking mechanism serves as a prerequisite for network participation, enabling the Committee to verify operator qualification for Peg-in operations and providing assurances through slashable stake. 
+
+To unlock funds, an operator must:
+
+1. Submit an unlock request to the Committee with proof that all associated Take1/Take2 transactions have been processed or discarded
+2. Spend the latest PreKickoff-connector output via a Non-PreKickoff transaction, demonstrating no further Kickoff transactions can be initiated
+3. Receive sufficient Committee member signatures to approve the request
+
+The Operator operates on a 1/∞ assumption where as long as one Operator acts honestly, any malicious conduct by remaining Operators will not result in loss of user assets.
+
+## Challenger
+
+Challengers serve as the protocol's fraud detection system, verifying operator behavior and initiating disputes when fraud is detected. Anyone can act as a Challenger, which makes this role permissionless.
+
+Challengers are responsible for: 
+
+- Verifying reimbursement correctness off-chain — Monitor Operator’s Kickoff transactions and verify the validity of claimed L2 state
+- Submitting challenge transactions — Broadcast Challenge transactions to force dishonest operators onto the "unhappy path," ending their ability to exit via Take1
+- Detecting fraud in execution traces — After dishonest operators reveal their execution trace during the unhappy path, analyze it to find inconsistencies
+- Submitting Disprove transactions — If fraud is found, spend the Assert UTXO with a fraud proof to halt operator reimbursement and claim rewards
+
+The following describes the Challenge process for Challengers: 
+
+1. Challenger locks 0.02 BTC and broadcasts a Challenge transaction
+2. Operator must respond by publishing Watchtower-Challenge-Init and initializing hash time-locked contracts (HTLCs) with each watchtower
+3. After the watchtower challenge phase, the operator reveals the execution trace via Assert-Init and Assert-Commit transactions
+4. Challenger evaluates the trace; if invalid, submits a Disprove transaction with the fraud proof
+5. Successful challenge results in operator stake being slashed and distributed to the challenger
+
+The Challenger operates on a 1/∞ assumption and only one rational Challenger is needed to  prove an invalid computation and slash a malicious Operator's collateral after going through the Challenge process.
+
+## Watchtower
+
+Watchtowers are specialized challengers responsible for monitoring Bitcoin's chain state and ensuring operators use the correct L2 state for withdrawals. This role addresses the potential double-spending attack vector from operators where an operator could use a forked or incorrect state.
+
+The following are the main responsibilities for the Watchtower: 
+
+- Monitoring Bitcoin's longest chain — Track the canonical Bitcoin blockchain to verify state correctness
+- Submitting block headers from the longest Bitcoin chain — Provide proofs attesting to the correct chain during challenges
+- Committing sequencer updates on Bitcoin — Anchor L2 sequencer set information to determine public input correctness during challenges
+- Submitting Groth16 proofs — At least one watchtower submits their Bitcoin longest header chain proof during the challenge process in the form of a Groth16 proof.
+
+During the Peg-out process, if a challenge is issued the following describes the challenge mechanism: 
+
+1. The operator must initialize HTLCs with each watchtower via Watchtower-Challenge-Init
+2. The operator allocates each watchtower a hash lock while keeping the pre-image initially
+3. Watchtowers submit their witness transactions (Watchtower-Challenge) containing their Bitcoin longest header chain
+4. After timeout T4, the operator must acknowledge the watchtower's witness by revealing the pre-image within timeout T5
+
+This mechanism ensures the state used for proofs is based on the canonical L2 chain, mitigating operator-led double-spending attacks by leveraging Bitcoin's security model.
+
+The Watchtower operates on a 1/n honesty assumption where one honest Watchtower can detect and block claims anchored to an incorrect Bitcoin chain (1/n assumption).
+
+## Designated Verifier
+
+Designated Verifiers enable the efficient garbled circuit (GC) verification process that dramatically reduces on-chain costs in GOAT BitVM2.
+
+The following are the main responsibilities for the Designated Verifier: 
+
+- Participating in SRS generation — Generate the Structured Reference String (SRS) during Peg-In while holding the trapdoor (secret values).
+- Maintain secrets for Designated Verifier SNARK (DV-SNARK) verifier circuit — Keep the trapdoor secure until needed during challenges
+- Reveal secrets during challenges — Disclose the trapdoor on-chain when operators are challenged, enabling the GC evaluation process
+
+DV-SNARK optimization replaces expensive pairing operations with elliptic curve scalar multiplications, dramatically reducing circuit size. Integrating the BN254 curve reduces GC size by approximately 5x with SRS correctness verified via pairing checks. Integrating the Sect233k1 curve reduces GC size by approximately two orders of magnitude (from hundreds of GB to a few GB) and SRS validity ensured via Cut & Choose technique combined with random challenge mechanism. 
+
+To ensure security, the protocol requires at least one honest Designated Verifier (1/n assumption). During Peg-in setup, n verifiers (e.g., 10) are selected, and GCs are produced in n independent copies. If at least one verifier is honest and performs correctly, they can prevent a malicious Operator from executing an illegal BTC withdrawal.
+
+## Relayer
+
+Relayers serve as the communication bridge between Bitcoin and GOAT Network, passing messages and proofs between the two chains.
+
+The following are the main responsibilities for the Relayer: 
+
+- Relaying correlation information between Bitcoin and GOAT — Pass transaction data and proofs between chains
+- Monitoring Peg-In-Confirm transactions — Submit confirmed transactions to the Gateway contract on L2
+- Aggregating Committee signatures — Collect and broadcast signed transactions
+- Submitting SPV proofs — Provide Simplified Payment Verification proofs to L2 contracts for transaction verification
+- Monitoring Kickoff and Take transactions — Track bridge operations and update contract state accordingly
+
+Relayers form a decentralized message-passing network but are not required to ensure the authenticity of messages themselves (forming a 1/∞ assumption). The protocol's security does not depend on the honesty of the relayer. 
+
+## Universal Operator Abstraction
+
+GOAT BitVM2 introduces the **Universal Operator** concept, which consolidates all system roles (Operator, Challenger, Sequencer, Prover, and Designated Verifier) into a single identity. Universal Operators stake tokens on L2 and are assigned different roles in rotating epochs.
+
+Universal Operators:
+
+- Stake tokens on L2
+- Are assigned different roles in rotating epochs
+- Balance economics by rotating through both profit-generating and cost-incurring roles
+- Improve system reliability through role redistribution if an Operator fails
+
+The following are the key advantages present with the Universal Operator design: 
+
+- Balanced Economics — Operators rotate through both profit-generating roles (e.g., Sequencer earning fees) and cost-incurring roles (e.g., Prover generating proofs), ensuring sustainable balance between income and costs
+- Aligned Incentives — Short-term costs in one epoch are offset by profits in subsequent epochs, creating a cross-subsidization effect
+- Enhanced Reliability — The system avoids permanent dependency on any single entity; if an Operator fails, responsibilities are reassigned in the next epoch
+
+This design mitigates centralization risks and supports a sustainable incentive mechanism while maintaining the 1-of-n honesty assumption for network security.
+
+For more information about the technical implementation, trust assumptions of the protocol, and related roles alongside the Committee, see the [GOAT BitVM2 Whitepaper](https://www.notion.so/Committee-Signers-2f7e267c266d80e39fbbdf46b000290d?pvs=21). 
+
+For details on running a Committee node, refer to the [Node Deployment Setup.](https://github.com/GOATNetwork/bitvm2-node)
