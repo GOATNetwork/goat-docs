@@ -1,0 +1,18 @@
+{
+  "decseq": {
+    "title": "Decentralized Sequencing",
+    "display": "normal"
+  },
+  "bitvm": {
+    "title": "BitVM and Bitcoin Layer 2",
+    "display": "normal"
+  },
+  "bridge": {
+    "title": "GOAT BitVM Bridge",
+    "display": "normal"
+  },
+    "security": {
+    "title": "Security Model",
+    "display": "normal"
+  }
+}

@@ -9,8 +9,60 @@ import { Callout } from 'nextra/components'
 # Change Logs
 
 <Callout type="info">
-    This page lists all the history upgrade logs. If you have any questions, please contact us: [Join the Community](/builders/quick-start#join-the-community) 
+    This page lists all the history upgrade logs. If you have any questions, please contact us: [Join the Community](/builders/quick-start#join-the-community)
 </Callout>
+
+## v0.4.2
+
+Priority: **Low**
+
+This release sets default mempool size to 10. Validators need to upgrade to this version at your convenience time.
+
+**Docker Images**
+* goat: `ghcr.io/goatnetwork/goat:v0.4.2`
+
+Gist: [docker-compose reference](https://github.com/GOATNetwork/goat/blob/main/docker)
+
+## v0.4.1 - Osaka Hardfork
+
+This is a hard fork release implementing the Ethereum Fusaka upgrade ([EIP-7607](https://eips.ethereum.org/EIPS/eip-7607)). 
+
+Priority: **High**
+
+### Required Versions
+
+**Mainnet**
+
+Activation Time: 2025-12-19T16:00:00Z
+
+* geth: v0.4.0
+* goat: v0.4.1
+
+Docker Images:
+* geth: `ghcr.io/goatnetwork/goat-geth:v0.4.0`
+* goat: `ghcr.io/goatnetwork/goat:v0.4.1`
+
+**Testnet3**
+
+Activation Time: 2025-12-15T15:00:00Z
+
+* geth: v0.1.10
+* goat: v0.4.1
+
+Docker Images:
+* geth: `ghcr.io/goatnetwork/goat-geth:v0.1.10`
+* goat: `ghcr.io/goatnetwork/goat:v0.4.1`
+
+Gist: [docker-compose reference](https://github.com/GOATNetwork/goat/blob/main/docker)
+
+### Rollback Instructions (Testnet3 Only)
+
+If you mistakenly upgraded to v0.4.0, follow these steps:
+
+1. Stop the service: `docker-compose rm -fs goat`
+2. Update the image tag to v0.4.1 in docker-compose.yml
+3. Execute rollback: `docker-compose run --rm goat rollback`
+4. Wait for completion, then restart: `docker-compose up -d goat`
 
 ## v0.3.3
 
