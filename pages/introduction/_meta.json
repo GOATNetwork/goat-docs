@@ -14,5 +14,9 @@
     "security": {
     "title": "Security Model",
     "display": "normal"
-  }
+  }, 
+    "execution-environment": {
+      "title": "Execution Environment", 
+      "display": "normal"
+    }
 }

@@ -104,3 +104,17 @@ BitVM requires relatively large (around 4MB) transactions for assertions and dis
 BitVM requires operators and challengers to lock collateral on Bitcoin L1, creating capital inefficiency.  GOAT addresses this by moving collateral to L2 smart contracts and uses Child-Pays-For-Parent (CPFP) for dynamic fee management, improving capital efficiency and simplifying the penalty mechanism.
 
 For a complete formal specification of GOAT BitVM2, including cryptographic details of the garbled circuit construction and DV-SNARK verification, please refer to the GOAT BitVM2-GC whitepaper.
+
+## Data Availability 
+
+A data availability (DA) layer for zkRollups must satisfy three key properties: mandatory publication of all state-transition data, public retrievability by any verifier, and consensus-level enforcement where missing data invalidates the corresponding state update.
+
+Bitcoin alone cannot serve as a complete data availability layer for zkRollups. While arbitrary data can be embedded in Bitcoin transactions (via `OP_RETURN` or witness data), Bitcoin provides no native mechanism to reject state transitions when such data is unavailable. This means a ZK proof may attest to the correctness of a rollup state transition even when the underlying data is unavailable, placing data availability strictly outside Bitcoin's consensus scope.
+
+GOAT Network addresses these limitations through its decentralized sequencer architecture:
+
+- **Decentralized Sequencer Network**: A set of decentralized sequencers forms a permissionless execution layer, where each sequencer maintains a full replica of the Rollup state and collectively guarantees system liveness.
+- **L2 State Chain**: All Layer 2 state transitions are recorded in an L2 State Chain, whose blocks encode incremental state differences. These state differences are accumulated until reaching a pre-defined size threshold, after which they are published to Bitcoin as data commitments.
+- **Verification via Watchtowers**: Using the Watchtower mechanism in conjunction with Bitcoin header chain proofs, the system verifies that data publication transactions have been confirmed on Bitcoin. This provides a verifiable and censorship-resistant record in tracking L2 state. transitions.
+
+This architecture ensures that while Bitcoin serves as the settlement and commitment layer, GOAT's decentralized sequencer network provides the data availability guarantees necessary for a fully functional zkRollup.
