@@ -1,0 +1,174 @@
+---
+title: ERC-8004 for GOAT Network
+lang: en-US
+description: Practical guide to ERC-8004 (Trustless Agents) and a GOAT-ready implementation blueprint with cross-chain references.
+---
+
+import { Callout } from 'nextra/components'
+
+# ERC-8004 for GOAT Network
+
+ERC-8004 is an Ethereum ERC draft for **trustless agent discovery and trust signaling** through three on-chain registries: **Identity**, **Reputation**, and **Validation**.
+
+This page summarizes the ERC, maps it to GOAT Network, and provides a practical implementation plan plus cross-chain references.
+
+<Callout type="warning">
+  ERC-8004 is currently a <strong>Draft</strong> ERC. Interfaces and semantics may evolve before finalization.
+</Callout>
+
+## Why ERC-8004 Matters for GOAT
+
+GOAT is increasingly positioned for AI-agent-native use cases. ERC-8004 provides a standard trust layer that can complement GOAT's payment and settlement stack.
+
+In practice:
+
+- **Identity**: discoverable, portable on-chain agent identity
+- **Reputation**: structured feedback signals from clients/users
+- **Validation**: on-chain hooks for independent verification (e.g., validators/oracles/attestors)
+
+ERC-8004 does **not** define payment rails. Payment protocols (for example x402-style flows) are complementary.
+
+## Core Architecture (ERC-8004)
+
+### 1) Identity Registry
+
+- ERC-721-based identity registry (agent NFT)
+- `tokenId` = `agentId`
+- `tokenURI` = `agentURI` (points to agent registration file)
+- Canonical global identifier model:
+  - `agentRegistry = {namespace}:{chainId}:{identityRegistryAddress}`
+  - `agentId = ERC-721 tokenId`
+
+For EVM chains, namespace is typically `eip155`.
+
+Example GOAT-format identifiers:
+
+- Mainnet: `eip155:2345:<identityRegistryAddress>`
+- Testnet3: `eip155:48816:<identityRegistryAddress>`
+
+### 2) Reputation Registry
+
+- Feedback as signed fixed-point values (`value`, `valueDecimals`)
+- Optional tags and off-chain URI/hash references
+- Supports querying and aggregation (`getSummary`, `readAllFeedback`, etc.)
+- Registry-level schema standardization enables composable on-chain/off-chain scoring
+
+### 3) Validation Registry
+
+- Supports validation request/response workflow
+- Intended for validator contracts or trust modules (e.g., re-execution, attestation)
+- The wider validation part of the standard is still actively evolving
+
+## GOAT Implementation Blueprint (Recommended)
+
+### Phase A — Foundation
+
+1. **Deploy singleton registries on GOAT Mainnet/Testnet3**
+   - IdentityRegistry
+   - ReputationRegistry
+   - ValidationRegistry
+2. **Publish canonical registry addresses** in docs and explorer pages.
+3. **Define GOAT canonical `agentRegistry` values**:
+   - `eip155:2345:<mainnetIdentityRegistry>`
+   - `eip155:48816:<testnetIdentityRegistry>`
+
+### Phase B — Developer Experience
+
+1. Publish a **GOAT Agent Registration JSON template**.
+2. Ship **SDK helpers**:
+   - register agent
+   - update agent URI
+   - submit feedback
+   - submit/read validations
+3. Provide **indexing examples** (Subgraph/ETL + query APIs).
+
+### Phase C — Trust Products
+
+1. Add **curated reviewer sets** and weighted reputation views.
+2. Add **validation classes** (basic checks, strong checks, domain-specific checks).
+3. Create **risk-tiered trust profiles** (low/medium/high value operations).
+
+## Reference Registration File (Minimal)
+
+```json
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "GoatAgent",
+  "description": "Autonomous service agent on GOAT",
+  "image": "https://example.com/agent.png",
+  "services": [
+    { "name": "A2A", "endpoint": "https://agent.example/.well-known/agent-card.json", "version": "0.3.0" },
+    { "name": "MCP", "endpoint": "https://mcp.agent.example/", "version": "2025-06-18" }
+  ],
+  "registrations": [
+    { "agentRegistry": "eip155:2345:0x...", "agentId": 1 }
+  ],
+  "supportedTrust": ["reputation", "crypto-economic", "tee-attestation"]
+}
+```
+
+## Cross-Chain 8004 Landscape (Research Summary)
+
+### A) Official ERC Track (Ethereum Ecosystem)
+
+- ERC-8004 is authored and discussed in Ethereum standards channels (EIP + Ethereum Magicians).
+- Official contracts repository publishes addresses across many EVM networks.
+
+### B) Multi-Chain EVM Deployments
+
+The ERC-8004 contracts repository currently publishes deployments for chains including:
+
+- Ethereum
+- Base
+- Arbitrum
+- Avalanche
+- BSC
+- Polygon
+- Optimism
+- Scroll
+- Linea
+- and more
+
+This indicates practical portability across EVM chains with a shared interface model.
+
+### C) Non-EVM / Other-Chain Adaptation Signals
+
+- **Stacks**: a SIP proposal thread/PR references an ERC-8004-style trait design for Stacks.
+- **TRON**: community repositories exist using "TRC-8004" naming.
+
+<Callout type="info">
+  Current evidence for non-EVM variants appears mostly as ecosystem proposals/implementations rather than a finalized, canonical cross-chain "8004" standard outside Ethereum ERC governance.
+</Callout>
+
+## Security Considerations for GOAT
+
+1. **Registration is not trust by itself**.
+   - Identity proves ownership/control path, not behavior quality.
+2. **Sybil resistance is mandatory** for production scoring.
+   - Use reviewer reputation, stake, allowlists, or hybrid scoring.
+3. **Prefer content-addressed or hash-anchored payloads**.
+   - Keep off-chain artifacts auditable (`URI + hash`).
+4. **Validation tiers should match value at risk**.
+   - Light checks for low-value tasks; stronger checks for high-value actions.
+
+## Recommended Docs Follow-Ups
+
+- Add a GOAT-specific page: **"Deploying ERC-8004 Registries on GOAT"**
+- Add an SDK tutorial: **"Register an Agent + Submit Reputation"**
+- Add operational guidance: **"Trust Scoring Design Patterns"**
+
+## References
+
+1. ERC-8004 Draft (Ethereum EIPs): https://eips.ethereum.org/EIPS/eip-8004  
+2. ERC-8004 Discussion (Ethereum Magicians): https://ethereum-magicians.org/t/erc-8004-trustless-agents/25098  
+3. ERC-8004 Contracts Repository: https://github.com/erc-8004/erc-8004-contracts  
+4. ERC-8004 Contracts Spec File (`ERC8004SPEC.md`): https://github.com/erc-8004/erc-8004-contracts/blob/main/ERC8004SPEC.md  
+5. A2A Protocol Repository: https://github.com/a2aproject/A2A  
+6. MCP Specification (official docs): https://modelcontextprotocol.io/specification/2025-11-25  
+7. CAIP-2 (Blockchain ID Specification): https://github.com/ChainAgnostic/CAIPs/blob/main/CAIPs/caip-2.md  
+8. Stacks SIP PR (ERC-8004-style proposal): https://github.com/stacksgov/sips/pull/249  
+9. GOAT x402 Reference Integration Repo: https://github.com/GOATNetwork/x402
+
+---
+
+If you are integrating this in production on GOAT, treat this page as a standards-and-architecture baseline, then lock implementation details against the latest ERC draft and audited contract release.

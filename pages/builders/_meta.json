@@ -1,6 +1,7 @@
 {
   "quick-start": "Quick Start Guide",
   "app-developers": "Application Development",
+  "erc-8004": "ERC-8004 for Agents",
   "sequencers": "Sequencer Operations",
   "execution-environment": "Execution Environment",
   "networks-rpc": "Networks & RPC",
