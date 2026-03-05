@@ -214,3 +214,29 @@ Funding P2WSH address (for operator and challenger): tb1q…
 It prints a seed and a P2WSH funding address.
 
 Run the node with [run.sh](https://github.com/GOATNetwork/bitvm2-node/blob/dev/deployment/testnet4/bitvm2-nodes/challenge_0/run.sh)(This is a link to our github).
+
+## Operate with Agent Skills
+
+You can use agent skills to let the agent execute BitVM2 node operations end-to-end.
+
+All operation docs are maintained in the BitVM2 Node repository:
+
+- [`.claude/commands` on GitHub](https://github.com/GOATNetwork/bitvm2-node/tree/dev/.claude/commands)
+
+### How to Use
+
+1. Tell the agent which operation you want to run.
+2. Provide required parameters when the agent asks (for example: `rpc_url`, `graph_id`, `amount`).
+3. The agent reads the corresponding skill doc, performs prerequisite checks, and runs commands automatically.
+4. The agent returns execution status and outputs; you do not need to run CLI commands manually.
+
+### Operation Mapping
+
+| Agent Skill | Purpose | Command Doc |
+| --- | --- |
+| `/run-operator-node` | Start an operator node | [`run-operator-node.md`](https://github.com/GOATNetwork/bitvm2-node/blob/dev/.claude/commands/run-operator-node.md) |
+| `/run-challenger-node` | Start a challenger node | [`run-challenger-node.md`](https://github.com/GOATNetwork/bitvm2-node/blob/dev/.claude/commands/run-challenger-node.md) |
+| `/pegin-request` | Request/prepare/cancel pegin flow | [`pegin-request.md`](https://github.com/GOATNetwork/bitvm2-node/blob/dev/.claude/commands/pegin-request.md) |
+| `/pegout` | Initiate pegout as operator | [`pegout.md`](https://github.com/GOATNetwork/bitvm2-node/blob/dev/.claude/commands/pegout.md) |
+| `/bridge-out` | Initiate bridge out flow | [`bridge-out.md`](https://github.com/GOATNetwork/bitvm2-node/blob/dev/.claude/commands/bridge-out.md) |
+| `/challenge` | Broadcast challenge transaction | [`challenge.md`](https://github.com/GOATNetwork/bitvm2-node/blob/dev/.claude/commands/challenge.md) |
