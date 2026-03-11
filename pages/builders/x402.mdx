@@ -1,0 +1,302 @@
+---
+title: x402 Payments on GOAT Network
+lang: en-US
+description: Practical integration guide for payment-gated apps and AI agents using GOAT x402.
+---
+
+import { Callout } from 'nextra/components'
+
+# x402 Payments on GOAT Network
+
+x402 is a payment protocol for crypto-native applications. It standardizes how an app or API requests payment and how settlement is verified before service delivery.
+
+x402 is a **payment + settlement** layer that can be paired with trust and identity standards such as [ERC-8004](/builders/erc-8004).
+
+## Payment Flow
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                         GOAT x402 Payment Flow                          │
+│                                                                         │
+│   ┌─────────┐      ┌─────────────┐      ┌─────────────┐      ┌───────┐ │
+│   │         │  1   │             │  2   │             │  4   │       │ │
+│   │  Client │ ───> │  Your API   │ ───> │    GOAT     │ ───> │ Chain │ │
+│   │         │      │             │      │ Facilitator │      │       │ │
+│   │  (User  │ <─── │  (Server)   │ <─── │             │ <─── │       │ │
+│   │   or    │  6   │             │  5   │             │  4   │       │ │
+│   │  Agent) │      │             │      │             │      │       │ │
+│   └─────────┘      └─────────────┘      └─────────────┘      └───────┘ │
+│                                                                         │
+│   1. Client requests protected resource                                 │
+│   2. Server returns HTTP 402 + payment requirements                     │
+│   3. Client signs payment authorization                                 │
+│   4. Facilitator verifies signature + settles on-chain                  │
+│   5. Facilitator returns proof                                          │
+│   6. Server unlocks resource + returns response                         │
+│                                                                         │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+## Supported Chains
+
+The exact set of supported chains depends on each merchant's Core configuration.
+
+| Chain | Chain ID | Tokens | Status |
+| --- | --- | --- | --- |
+| **GOAT Network** | 2345 | USDC, USDT | Live |
+| **Ethereum** | 1 | USDC, USDT | Live |
+| **Polygon** | 137 | USDC, USDT | Live |
+| **Arbitrum** | 42161 | USDC, USDT | Live |
+| **BSC** | 56 | USDC, USDT | Live |
+| **Metis** | 1088 | USDT | Live |
+| **Solana** | — | USDC, USDT | Coming Soon |
+
+## Repository Map
+
+From the official repo:
+
+- `goatx402-sdk` — frontend SDK for EVM wallet integrations
+- `goatx402-sdk-server-ts` — TypeScript server SDK source (published package: `goatx402-sdk-server`)
+- `goatx402-sdk-server-go` — Go server SDK (module: `github.com/goatnetwork/goatx402-sdk-server`)
+- `goatx402-contract` — callback contract examples and test utilities
+- `goatx402-demo` — end-to-end demo app
+- `DEVELOPER_FAST.md` — concise integration guide
+- `API.md` — endpoint and auth notes
+
+## Payment Modes
+
+| Mode | Flow Types | User Transfer Target | Callback Support | Typical Use |
+| --- | --- | --- | --- | --- |
+| DIRECT | `ERC20_DIRECT`, `SOL_DIRECT` | Merchant address | No | Simple payment-gated access |
+| DELEGATE | `ERC20_3009`, `ERC20_APPROVE_XFER`, `SOL_APPROVE_XFER` | TSS / delegated settlement address | Yes | Advanced settlement and callback workflows |
+
+For all flows, the payer transfers funds to the `payToAddress` returned by order creation.
+
+## Environment Variables
+
+```bash
+GOATX402_API_URL=https://api.x402.goat.network
+GOATX402_API_KEY=your_api_key
+GOATX402_API_SECRET=your_api_secret
+GOATX402_MERCHANT_ID=your_merchant_id
+```
+
+- For local development with the demo app, use `http://localhost:8286`
+- For production, use `https://api.x402.goat.network` or the base URL provided for your onboarding environment
+- Older docs may mention `GOATX402_BASE_URL`; prefer `GOATX402_API_URL`
+
+<Callout type="warning">
+  Keep `GOATX402_API_SECRET` server-side only. Never expose API secrets in frontend code.
+</Callout>
+
+## Core Order Lifecycle
+
+1. Frontend requests order creation from your backend.
+2. Backend calls `POST /api/v1/orders`.
+3. Core returns an x402 payment-required payload (**HTTP 402 is the expected success path** for order creation).
+4. If `calldataSignRequest` exists, frontend signs it and backend submits the signature.
+5. Frontend performs the token transfer to `payToAddress`.
+6. Backend polls order status until a terminal state.
+7. Backend retrieves proof after confirmation.
+8. Backend cancels stale unpaid orders when they remain cancellable.
+
+### Order States
+
+- `CHECKOUT_VERIFIED` — order created, waiting for payment (only cancellable state)
+- `PAYMENT_CONFIRMED` — payment observed and confirmed
+- `INVOICED` — completed in the current flow
+- `FAILED` — failed
+- `EXPIRED` — expired before completion
+- `CANCELLED` — cancelled while still cancellable
+
+## API Reference
+
+### Authentication
+
+Backend requests use HMAC-SHA256 authentication with these headers:
+
+- `X-API-Key` — your API key
+- `X-Timestamp` — Unix seconds (validated within ~5 minutes)
+- `X-Sign` — HMAC-SHA256 hex signature
+
+Signature algorithm: take request body fields + `api_key` + `timestamp`, remove `sign` field and empty values, sort ASCII, build `k1=v1&k2=v2` string, HMAC-SHA256 with API secret, hex-encode result.
+
+### Endpoints
+
+| Server SDK Method | Endpoint | Auth |
+| --- | --- | --- |
+| `createOrder` | `POST /api/v1/orders` | Yes |
+| `getOrderStatus` | `GET /api/v1/orders/{order_id}` | Yes |
+| `getOrderProof` | `GET /api/v1/orders/{order_id}/proof` | Yes |
+| `submitCalldataSignature` | `POST /api/v1/orders/{order_id}/calldata-signature` | Yes |
+| `cancelOrder` | `POST /api/v1/orders/{order_id}/cancel` | Yes |
+| `getMerchant` | `GET /merchants/{merchant_id}` | No |
+
+### Create Order Request
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `dapp_order_id` | string | Yes | Your app's unique order identifier |
+| `chain_id` | number | Yes | Target chain (e.g. `2345` for GOAT Network) |
+| `token_symbol` | string | Yes | Payment token (e.g. `USDC`) |
+| `token_contract` | string | No | Token contract address |
+| `from_address` | string | Yes | Payer address |
+| `amount_wei` | string | Yes | Token amount in wei |
+| `callback_calldata` | string | No | For DELEGATE mode only |
+| `merchant_id` | string | No | Merchant identifier |
+
+### Order Response Fields (Frontend)
+
+When the backend normalizes the x402 response for frontend use, the fields builders most often consume are:
+
+- `orderId` — Core order identifier
+- `payToAddress` — the address the user actually transfers to
+- `amountWei` — token amount for the transfer
+- `calldataSignRequest` — optional EIP-712 payload for callback-enabled flows
+- `status` — the latest order state from backend polling
+
+### Error Handling
+
+| Status | Meaning |
+| --- | --- |
+| `200` | Success |
+| `400` | Validation or business errors |
+| `401` | Authentication error |
+| `402` | Payment Required — **normal success path for order creation** |
+| `403` | Authorization error |
+| `404` | Not found |
+| `500` | Internal error |
+
+## Fast Start
+
+### 1) Clone and install
+
+```bash
+git clone https://github.com/GOATNetwork/x402.git
+cd x402
+
+cd goatx402-demo && pnpm install
+cd ../goatx402-sdk-server-ts && pnpm install
+cd ../goatx402-demo
+```
+
+### 2) Configure the demo backend
+
+Create `goatx402-demo/.env`:
+
+```bash
+GOATX402_MERCHANT_ID=your_merchant_id
+GOATX402_API_URL=http://localhost:8286
+GOATX402_API_KEY=your_api_key
+GOATX402_API_SECRET=your_api_secret
+PORT=3001
+```
+
+<Callout type="info">
+  `GOATX402_MERCHANT_ID`, `GOATX402_API_KEY`, and `GOATX402_API_SECRET` are onboarding credentials for your x402 environment. Replace `GOATX402_API_URL` with your hosted base URL if you are not running Core locally.
+</Callout>
+
+### 3) Run the demo
+
+```bash
+pnpm dev
+```
+
+### 4) Verify backend health and config
+
+```bash
+curl http://localhost:3001/api/health
+curl http://localhost:3001/api/config
+```
+
+## DELEGATE Mode and Callback Contracts
+
+DELEGATE mode enables payments to trigger on-chain logic — NFT mints, staking, DeFi actions — via a callback contract.
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      DELEGATE Mode Payment Flow                         │
+│                                                                         │
+│  ┌────────┐     ┌──────────┐     ┌─────────────┐     ┌───────────────┐ │
+│  │        │  1  │          │  2  │             │  4  │               │ │
+│  │  User  │ ──> │  DApp    │ ──> │  GOAT x402  │ ──> │ Your Adapter  │ │
+│  │        │     │ Backend  │     │    Core     │     │   Contract    │ │
+│  │        │ <── │          │ <── │             │ <── │               │ │
+│  │        │  7  │          │  6  │             │  5  │               │ │
+│  └────────┘     └──────────┘     └─────────────┘     └───────────────┘ │
+│       │                                │                                │
+│       │              3                 │                                │
+│       └────────────────────────────────┘                                │
+│              (User signs & pays to TSS)                                 │
+│                                                                         │
+│  1. User requests action (e.g. mint NFT)                                │
+│  2. Backend creates order with callbackCalldata                         │
+│  3. User signs EIP-712 + pays to TSS address                           │
+│  4. Core settles payment + calls adapter.onX402Callback()               │
+│  5. Your contract executes logic (mint, stake, etc.)                    │
+│  6. Core returns success/proof                                          │
+│  7. DApp confirms to user                                               │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Callback Interface
+
+Your adapter contract must implement `IX402CallbackAdapter`:
+
+```solidity
+interface IX402CallbackAdapter {
+    function onX402Callback(
+        address payer,
+        address token,
+        uint256 amount,
+        bytes calldata calldata_
+    ) external returns (bool success);
+}
+```
+
+### Integration Steps
+
+1. Deploy your adapter contract implementing `IX402CallbackAdapter` from `goatx402-contract`
+2. Use the deployment script `DeployMerchantCallback.s.sol` in the repo
+3. Register the merchant callback metadata with the x402 operator:
+   - `merchant_id`, `chain_id`, `callback_contract`, `eip712_name`, `eip712_version`
+4. Ensure `eip712_name`, `eip712_version`, and `spent_address` are configured consistently
+5. Add the authorized x402 caller to the callback contract allowlist
+6. Test the full `calldataSignRequest -> signature submit -> payment -> callback` flow
+
+### Adapter Contract Security Checklist
+
+- Only allow the x402 Core address to call `onX402Callback`
+- Validate `payer` address (non-zero)
+- Validate `amount` matches expected payment
+- Validate `calldata_` structure and bounds
+- Use reentrancy guards if calling external contracts
+- Emit events for off-chain tracking
+
+Reference docs:
+
+- `goatx402-contract/README.md`
+- `goatx402-contract/QUICK_START.md`
+- `goatx402-contract/MERCHANT_CALLBACK.md`
+
+## Production Checklist
+
+- Keep API credentials isolated on the backend
+- Use `https://api.x402.goat.network` as the production base URL
+- Monitor fee balance because insufficient balance blocks order creation
+- Auto-cancel stale `CHECKOUT_VERIFIED` orders to reclaim reserved balance and fees
+- Implement bounded polling with retries and timeouts
+- Retrieve and persist settlement proof for auditability
+- For DELEGATE flows, test calldata-signature and callback paths end to end
+
+## References
+
+1. GOAT x402 repository: https://github.com/GOATNetwork/x402
+2. README: https://github.com/GOATNetwork/x402/blob/main/README.md
+3. Developer guide: https://github.com/GOATNetwork/x402/blob/main/DEVELOPER_FAST.md
+4. API reference: https://github.com/GOATNetwork/x402/blob/main/API.md
+5. Demo app README: https://github.com/GOATNetwork/x402/blob/main/goatx402-demo/README.md
+6. Contract README: https://github.com/GOATNetwork/x402/blob/main/goatx402-contract/README.md
+7. Contract quick start: https://github.com/GOATNetwork/x402/blob/main/goatx402-contract/QUICK_START.md
+8. Merchant callback notes: https://github.com/GOATNetwork/x402/blob/main/goatx402-contract/MERCHANT_CALLBACK.md

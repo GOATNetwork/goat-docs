@@ -1,6 +1,8 @@
 {
   "quick-start": "Quick Start Guide",
   "app-developers": "Application Development",
+  "erc-8004": "ERC-8004 for Agents",
+  "x402": "x402 Payments",
   "sequencers": "Sequencer Operations",
   "execution-environment": "Execution Environment",
   "networks-rpc": "Networks & RPC",
