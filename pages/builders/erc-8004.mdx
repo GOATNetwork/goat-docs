@@ -1,0 +1,181 @@
+---
+title: ERC-8004 for Agents
+lang: en-US
+description: Builder guide to ERC-8004 on GOAT Network, including registry usage, contract addresses, and integration notes.
+---
+
+import { Callout } from 'nextra/components'
+
+# ERC-8004 for Agents
+
+ERC-8004 defines a trust layer for agent ecosystems using three registries:
+
+- **Identity Registry** for agent discovery and ownership
+- **Reputation Registry** for feedback and scoring signals
+- **Validation Registry** for third-party verification workflows
+
+This page focuses on how GOAT Network builders should integrate the standard.
+
+## Contract Deployments on GOAT Network
+
+The canonical `erc-8004-contracts` repository uses deterministic deployment. GOAT Network is included in the official mainnet deployment set:
+
+| Contract | Address | Version |
+| --- | --- | --- |
+| IdentityRegistry | [`0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`](https://explorer.goat.network/address/0x8004A169FB4a3325136EB29fA0ceB6D2e539a432) | 2.0.0 |
+| ReputationRegistry | [`0x8004BAa17C55a88189AE136b182e5fdA19dE9b63`](https://explorer.goat.network/address/0x8004BAa17C55a88189AE136b182e5fdA19dE9b63) | 2.0.0 |
+
+## Builder Flow
+
+### 1) Construct the registry identifier for GOAT Network
+
+Use the Identity Registry address and GOAT Network chain ID to construct the `agentRegistry` identifier:
+
+- `eip155:{chainId}:{identityRegistryAddress}`
+
+On GOAT Network mainnet (chain ID `2345`):
+
+- `eip155:2345:0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`
+
+### 2) Register the agent in Identity Registry
+
+The canonical implementation supports three registration entry points:
+
+- `register()`
+- `register(agentURI)`
+- `register(agentURI, metadata)`
+
+Example using ethers.js on GOAT Network mainnet:
+
+```javascript
+import { ethers } from 'ethers';
+
+const IDENTITY_REGISTRY = '0x8004A169FB4a3325136EB29fA0ceB6D2e539a432';
+const IDENTITY_ABI = [
+  'function register(string agentURI) external returns (uint256)',
+  'function setAgentWallet(uint256 agentId, address newWallet, uint256 deadline, bytes signature) external',
+  'function setMetadata(uint256 agentId, string key, bytes value) external'
+];
+
+const provider = new ethers.JsonRpcProvider('https://rpc.goat.network');
+const signer = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+const registry = new ethers.Contract(IDENTITY_REGISTRY, IDENTITY_ABI, signer);
+
+// Register with a URI pointing to the registration JSON
+const tx = await registry.register('ipfs://QmYourRegistrationJSON');
+const receipt = await tx.wait();
+console.log('Agent registered, tx:', receipt.hash);
+```
+
+Useful follow-up methods include:
+
+- `setAgentURI(agentId, newURI)`
+- `getMetadata(agentId, metadataKey)`
+- `setMetadata(agentId, metadataKey, metadataValue)` — `metadataValue` is `bytes`
+- `getAgentWallet(agentId)`
+- `setAgentWallet(agentId, newWallet, deadline, signature)`
+- `unsetAgentWallet(agentId)`
+- `isAuthorizedOrOwner(spender, agentId)`
+
+`agentURI` should resolve to a registration JSON document, typically over IPFS or HTTPS.
+
+<Callout type="info">
+  `agentWallet` is a reserved payment-receiving field in the spec. It defaults to the owner wallet on registration and should be changed with `setAgentWallet(...)`, not by writing generic metadata.
+</Callout>
+
+### 3) Publish a registration JSON that matches the spec
+
+The `agentURI` set during registration points to an off-chain JSON document (hosted on IPFS or HTTPS). This is not stored on-chain — only the URI is recorded in the contract. The following top-level fields are expected in this document per the ERC-8004 spec:
+
+- `type`
+- `name`
+- `description`
+- `image`
+- `services` — each entry contains `name`, `endpoint`, `version`, and optionally `skills` and `domains`
+- `x402Support` — boolean indicating payment capability via x402
+- `active`
+- `registrations`
+
+`supportedTrust` is optional.
+
+### 4) Collect trust signals through Reputation Registry
+
+Write paths:
+
+- `giveFeedback(agentId, value, valueDecimals, tag1, tag2, endpoint, feedbackURI, feedbackHash)`
+- `revokeFeedback(agentId, feedbackIndex)`
+- `appendResponse(agentId, clientAddress, feedbackIndex, responseURI, responseHash)`
+
+Read paths:
+
+- `readFeedback(agentId, clientAddress, feedbackIndex)`
+- `readAllFeedback(agentId, clientAddresses, tag1, tag2, includeRevoked)`
+- `getSummary(agentId, clientAddresses, tag1, tag2)`
+- `getLastIndex(agentId, clientAddress)`
+- `getResponseCount(agentId, clientAddress, feedbackIndex, responders)`
+- `getClients(agentId)`
+
+For production integrations, keep the on-chain record compact and store richer evidence off-chain behind `feedbackURI`, with `feedbackHash` when you need integrity verification.
+
+### 5) Combine ERC-8004 with payment rails when needed
+
+ERC-8004 is a trust and discovery layer. If your agent also charges for access, combine it with a payment protocol such as x402 rather than treating ERC-8004 itself as the payment layer. See the [x402 Payments on GOAT Network](/builders/x402) guide for integration details.
+
+## Registration JSON Example
+
+```json
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "GoatAgent",
+  "description": "Autonomous service agent on GOAT Network",
+  "image": "https://example.com/agent.png",
+  "services": [
+    {
+      "name": "A2A",
+      "endpoint": "https://agent.example/.well-known/agent-card.json",
+      "version": "0.3.0"
+    },
+    {
+      "name": "MCP",
+      "endpoint": "https://mcp.agent.example/",
+      "version": "2025-06-18"
+    },
+    {
+      "name": "x402",
+      "endpoint": "https://agent.example/api/x402/orders",
+      "version": "1.0.0"
+    }
+  ],
+  "x402Support": true,
+  "active": true,
+  "registrations": [
+    {
+      "agentRegistry": "eip155:2345:0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+      "agentId": 1
+    }
+  ],
+  "supportedTrust": ["reputation", "crypto-economic", "tee-attestation"]
+}
+```
+
+If you are using ERC-8004 only for discovery, you can omit `supportedTrust` or leave it empty. Set `x402Support` to reflect your real payment capabilities rather than treating it as a decorative field. When `x402Support` is `true`, include a corresponding `x402` service entry in `services` so that callers can locate the payment endpoint.
+
+## Operational Recommendations
+
+1. **Treat registration as discoverability, not automatic trust.**
+2. **Pin the registration JSON and any feedback evidence** to stable storage such as IPFS when possible.
+3. **Use `feedbackURI` + `feedbackHash`** for auditable off-chain evidence.
+4. **Set a verified agent receiving wallet** with `setAgentWallet(...)` when payments should not go to the owner address.
+5. **Verify on-chain state** via the [GOAT Network Explorer](https://explorer.goat.network) after registration and wallet updates to confirm transactions landed correctly.
+
+## References
+
+1. ERC-8004 page (Ethereum EIPs): https://eips.ethereum.org/EIPS/eip-8004
+2. Canonical ERC markdown: https://raw.githubusercontent.com/ethereum/ERCs/master/ERCS/erc-8004.md
+3. ERC-8004 contracts repository: https://github.com/erc-8004/erc-8004-contracts
+4. ERC-8004 contracts README: https://raw.githubusercontent.com/erc-8004/erc-8004-contracts/main/README.md
+5. ERC-8004 spec file: https://github.com/erc-8004/erc-8004-contracts/blob/main/ERC8004SPEC.md
+6. ERC-8004 ABIs directory: https://github.com/erc-8004/erc-8004-contracts/tree/main/abis
+7. GOAT Network IdentityRegistry explorer page: https://explorer.goat.network/address/0x8004A169FB4a3325136EB29fA0ceB6D2e539a432
+8. GOAT Network ReputationRegistry explorer page: https://explorer.goat.network/address/0x8004BAa17C55a88189AE136b182e5fdA19dE9b63
+9. GOAT Network x402 repository: https://github.com/GOATNetwork/x402
