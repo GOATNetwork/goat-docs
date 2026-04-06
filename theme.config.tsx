@@ -14,9 +14,9 @@ const config: DocsThemeConfig = {
     return (
       <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
         {resolvedTheme === "dark" ? (
-          <img src="/img/GOATlogo/logo-dark.svg" alt="GOAT Logo Dark" width={146} height={35} />
+          <img src="/img/GOATlogo/logo-dark.svg" alt="GOAT Logo Dark" style={{ height: 35, width: 'auto' }} />
         ) : (
-          <img src="/img/GOATlogo/logo-light.svg" alt="GOAT Logo Light" width={146} height={35} />
+          <img src="/img/GOATlogo/logo-light.svg" alt="GOAT Logo Light" style={{ height: 35, width: 'auto' }} />
         )}
       </span>
     );
